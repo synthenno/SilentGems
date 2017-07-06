@@ -10,7 +10,6 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.silentchaos512.gems.SilentGems;
@@ -28,6 +27,7 @@ import net.silentchaos512.gems.item.ItemFluffyPuffSeeds;
 import net.silentchaos512.gems.item.ItemFoodSG;
 import net.silentchaos512.gems.item.ItemGem;
 import net.silentchaos512.gems.item.ItemGemShard;
+import net.silentchaos512.gems.item.ItemGemSuper;
 import net.silentchaos512.gems.item.ItemGlowRoseFertilizer;
 import net.silentchaos512.gems.item.ItemHoldingGem;
 import net.silentchaos512.gems.item.ItemNodeMover;
@@ -63,6 +63,7 @@ import net.silentchaos512.lib.registry.SRegistry;
 public class ModItems implements IRegistrationHandler<Item> {
 
   public static final ItemGem gem = new ItemGem();
+  public static final ItemGemSuper gemSuper = new ItemGemSuper();
   public static final ItemGemShard gemShard = new ItemGemShard();
   public static final ItemCrafting craftingMaterial = new ItemCrafting();
   public static final ItemTipUpgrade tipUpgrade = new ItemTipUpgrade();
@@ -122,6 +123,7 @@ public class ModItems implements IRegistrationHandler<Item> {
   public void registerAll(SRegistry reg) {
 
     reg.registerItem(gem).setCreativeTab(GemsCreativeTabs.materials);
+    reg.registerItem(gemSuper).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(gemShard).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(craftingMaterial).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(tipUpgrade).setCreativeTab(GemsCreativeTabs.utility);

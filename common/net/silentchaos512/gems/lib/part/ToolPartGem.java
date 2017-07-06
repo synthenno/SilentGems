@@ -27,8 +27,7 @@ public class ToolPartGem extends ToolPartMain {
 
   public ToolPartGem(EnumGem gem, boolean supercharged) {
 
-    super(SilentGems.RESOURCE_PREFIX + gem.name().toLowerCase() + (supercharged ? "_super" : ""),
-        supercharged ? gem.getItemSuper() : gem.getItem());
+    super(SilentGems.RESOURCE_PREFIX + gem.name().toLowerCase() + (supercharged ? "_super" : ""), supercharged ? gem.getItemSuper() : gem.getItem());
     this.craftingOreDictName = supercharged ? gem.getItemSuperOreName() : gem.getItemOreName();
     this.gem = gem;
     this.tier = supercharged ? EnumMaterialTier.SUPER : EnumMaterialTier.REGULAR;
@@ -43,27 +42,34 @@ public class ToolPartGem extends ToolPartMain {
   public int getColor(ItemStack toolOrArmor) {
 
     Item item = toolOrArmor.getItem();
-    if (item instanceof IArmor || item instanceof ItemGemShield || item instanceof ItemGemBow)
+    if (item instanceof IArmor || item instanceof ItemGemShield || item instanceof ItemGemBow) {
+      // Armor, shields, and bows: just color a white texture
       return gem.getColor();
-    else
-      return gem.ordinal() > 15 ? ToolRenderHelper.DARK_GEM_SHADE : 0xFFFFFF;
+    } else if (gem.ordinal() > 15 && gem.ordinal() < 32) {
+      // Dark gems
+      return ToolRenderHelper.DARK_GEM_SHADE;
+    } else if (gem.ordinal() > 31) {
+      // Pale gems
+      return gem.getColor();
+    } else {
+      // Normal gems
+      return 0xFFFFFF;
+    }
   }
 
   @Override
   public String getDisplayName(ItemStack stack) {
 
-    if (stack.hasDisplayName() || stack.getItem() != ModItems.gem)
+    if (stack.hasDisplayName() || !(stack.getItem() == ModItems.gem || stack.getItem() == ModItems.gemSuper))
       return stack.getDisplayName();
 
-    return SilentGems.localizationHelper.getLocalizedString("item",
-        Names.GEM + (stack.getItemDamage() & 0x1F) + ".name");
+    return SilentGems.localizationHelper.getLocalizedString("item", Names.GEM + stack.getItemDamage() + ".name");
   }
 
   @Override
   public String getDisplayNamePrefix(ItemStack stack) {
 
-    return tier == EnumMaterialTier.SUPER
-        ? SilentGems.instance.localizationHelper.getItemSubText(Names.GEM, "superPrefix") : "";
+    return tier == EnumMaterialTier.SUPER ? SilentGems.instance.localizationHelper.getItemSubText(Names.GEM, "superPrefix") : "";
   }
 
   @Override
@@ -71,7 +77,17 @@ public class ToolPartGem extends ToolPartMain {
 
     String name = ((IRegistryObject) tool.getItem()).getName();
     name = SilentGems.RESOURCE_PREFIX + name + "/" + name;
-    String gemNum = tool.getItem() instanceof ItemGemBow ? "" : "" + gem.ordinal();
+
+    String gemNum;
+    if (tool.getItem() instanceof ItemGemBow)
+      // Bows don't use separate models
+      gemNum = "";
+    else if (gem.ordinal() >= EnumGem.PYROPE.ordinal())
+      // Color pale gems in code (so we use the opal textures)
+      gemNum = "15";
+    else
+      gemNum = "" + gem.ordinal();
+
     String frameNum = frame == 3 ? "_3" : "";
 
     switch (pos) {

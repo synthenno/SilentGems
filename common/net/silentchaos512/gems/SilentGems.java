@@ -129,11 +129,6 @@ public class SilentGems {
     // Headcrumbs
     FMLInterModComms.sendMessage("headcrumbs", "add-username", Names.SILENT_CHAOS_512);
 
-    // Load TCon compatibility stuff?
-    if (Loader.isModLoaded("tconstruct")) {
-      TConstructGemsCompat.init();
-    }
-
     VeinMinerCompat.init();
 
     proxy.preInit(registry);
@@ -147,6 +142,11 @@ public class SilentGems {
     GemsConfig.INSTANCE.save();
 
     proxy.init(registry);
+
+    // Load TCon compatibility stuff?
+    if (Loader.isModLoaded("tconstruct")) {
+      TConstructGemsCompat.init();
+    }
   }
 
   @EventHandler
@@ -155,13 +155,13 @@ public class SilentGems {
     proxy.postInit(registry);
   }
 
-//  @EventHandler
-//  public void onMissingMapping(FMLMissingMappingsEvent event) {
-//
-//    for (FMLMissingMappingsEvent.MissingMapping mismap : event.get()) {
-//      MC10IdRemapper.remap(mismap);
-//    }
-//  }
+  // @EventHandler
+  // public void onMissingMapping(FMLMissingMappingsEvent event) {
+  //
+  // for (FMLMissingMappingsEvent.MissingMapping mismap : event.get()) {
+  // MC10IdRemapper.remap(mismap);
+  // }
+  // }
 
   @EventHandler
   public void onServerStarting(FMLServerStartingEvent event) {

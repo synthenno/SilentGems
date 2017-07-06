@@ -1,7 +1,10 @@
 Silent's Gems - Changelog
 
+2.4.1
+
+
 2.4.0
-Updated to work with 1.11.2. Support for 1.10.2 on the way.
+Updated for Silent Lib 2.2.5 (adds MC 1.10.2 and 1.11.2 compatibility)
 Added: Config to show chaos bar at all times, instead of just when you gain/lose chaos (disabled by default)
 Changed: Chaos bar has been replaced with something nicer looking (icons above your food bar)
 

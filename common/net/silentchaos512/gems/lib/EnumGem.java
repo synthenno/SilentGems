@@ -29,7 +29,7 @@ public enum EnumGem implements IStringSerializable {
   MORGANITE       ("Morganite",       256, 10.0f, 4.0f, 2.0f, 12, 0.9f, 3.0f, 14, 0xFFABE3),
   ONYX            ("Onyx",            128,  8.0f, 7.0f, 2.0f,  8, 0.7f, 1.0f, 12, 0x2E2E2E),
   OPAL            ("Opal",            192,  8.0f, 3.0f, 6.0f, 13, 0.7f, 2.0f, 16, 0xFFFFFF),
-  //--------------------------------------------------------------------------
+  //----------------------------------------------------------------------------------------
   CARNELIAN       ("Carnelian",       256,  9.0f, 2.0f, 3.0f, 12, 0.9f, 2.0f, 14, 0x990000),
   SPINEL          ("Spinel",          512,  8.0f, 5.0f, 2.0f, 11, 0.7f, 1.0f, 16, 0x992600),
   CITRINE         ("Citrine",         384, 10.0f, 4.0f, 2.0f, 13, 1.0f, 2.0f, 14, 0x994000),
@@ -45,12 +45,28 @@ public enum EnumGem implements IStringSerializable {
   LEPIDOLITE      ("Lepidolite",      128,  4.0f, 3.0f, 7.0f, 13, 1.0f, 1.0f, 12, 0x990099),
   AMETRINE        ("Ametrine",        384,  8.0f, 4.0f, 2.0f, 10, 0.7f, 4.0f, 12, 0xBF0080),
   BLACK_DIAMOND   ("BlackDiamond",    768, 10.0f, 3.0f, 4.0f,  9, 0.8f, 1.0f, 18, 0x1A1A1A),
-  ALEXANDRITE     ("Alexandrite",     512,  8.0f, 3.0f, 3.0f, 10, 0.8f, 2.0f, 14, 0xC2C2C2);
+  ALEXANDRITE     ("Alexandrite",     512,  8.0f, 3.0f, 3.0f, 10, 0.8f, 2.0f, 14, 0xC2C2C2),
+  //----------------------------------------------------------------------------------------
+  PYROPE          ("Pyrope",          384,  8.0f, 6.0f, 2.0f, 12, 1.0f, 1.0f, 16, 0xFF6A6A),
+  CORAL           ("Coral",           192,  9.0f, 3.0f, 5.0f, 18, 1.2f, 3.0f, 20, 0xFF966A),
+  SUNSTONE        ("Sunstone",        256,  7.0f, 5.0f, 5.0f, 16, 0.9f, 2.0f, 16, 0xFFB46A),
+  CATS_EYE        ("CatsEye",         512,  9.0f, 3.0f, 4.0f, 16, 1.1f, 1.0f, 18, 0xFFE06A),
+  ZIRCON          ("Zircon",          384,  8.0f, 4.0f, 3.0f, 12, 1.3f, 2.0f, 14, 0xFFFE6A),
+  JADE            ("Jade",            256,  6.0f, 4.0f, 4.0f, 16, 1.0f, 4.0f, 16, 0xE0FF6A),
+  CHRYSOPRASE     ("Chrysoprase",     384,  7.0f, 3.0f, 2.0f, 14, 1.1f, 1.0f, 18, 0x6AFF6A),
+  APATITE         ("Apatite",         192,  7.0f, 2.0f, 4.0f, 15, 1.0f, 3.0f, 16, 0x6AFFC3),
+  FLUORITE        ("Fluorite",        128,  6.0f, 2.0f, 5.0f, 17, 0.9f, 4.0f, 14, 0x6AFFFF),
+  KYANITE         ("Kyanite",         384, 12.0f, 4.0f, 6.0f, 16, 1.2f, 2.0f, 16, 0x6A6AFF),
+  SODALITE        ("Sodalite",        384,  8.0f, 3.0f, 3.0f, 12, 1.1f, 2.0f, 18, 0xA56AFF),
+  AMMOLITE        ("Ammolite",        192,  7.0f, 3.0f, 6.0f, 18, 1.2f, 3.0f, 14, 0xE06AFF),
+  KUNZITE         ("Kunzite",         256,  6.0f, 5.0f, 4.0f, 14, 0.8f, 1.0f, 20, 0xFF6AFF),
+  ROSE_QUARTZ     ("RoseQuartz",      256,  8.0f, 4.0f, 3.0f, 15, 1.0f, 2.0f, 16, 0xFFBAFF),
+  TEKTITE         ("Tektite",         192,  8.0f, 4.0f, 3.0f, 17, 1.0f, 1.0f, 18, 0x787878),
+  PEARL           ("Pearl",           128,  7.0f, 3.0f, 4.0f, 20, 1.2f, 3.0f, 14, 0xFFFFFF);
   // @formatter:on
 
-  public static final PropertyEnum VARIANT_GEM = PropertyEnum.create("gem", EnumGem.class, RUBY,
-      GARNET, TOPAZ, AMBER, HELIODOR, PERIDOT, BERYL, INDICOLITE, AQUAMARINE, SAPPHIRE, IOLITE,
-      AMETHYST, AGATE, MORGANITE, ONYX, OPAL);
+  public static final PropertyEnum VARIANT_GEM = PropertyEnum.create("gem", EnumGem.class, RUBY, GARNET, TOPAZ, AMBER, HELIODOR, PERIDOT, BERYL, INDICOLITE,
+      AQUAMARINE, SAPPHIRE, IOLITE, AMETHYST, AGATE, MORGANITE, ONYX, OPAL);
   // public static final PropertyEnum VARIANT_GEM_DARK = PropertyEnum.create("variant", EnumGem.class,
   // CARNELIAN, SPINEL, CITRINE, JASPER, GOLDEN_BERYL, MOLDAVITE, MALACHITE, TURQUOISE, MOONSTONE,
   // BLUE_TOPAZ, TANZANITE, VIOLET_SAPPHIRE, LEPIDOLITE, AMETRINE, BLACK_DIAMOND, ALEXANDRITE);
@@ -79,9 +95,8 @@ public enum EnumGem implements IStringSerializable {
   protected final int protection;
   protected final int color;
 
-  private EnumGem(String name, int durability, float miningSpeed, float meleeDamage,
-      float magicDamage, int enchantability, float meleeSpeed, float chargeSpeed, int protection,
-      int color) {
+  private EnumGem(String name, int durability, float miningSpeed, float meleeDamage, float magicDamage, int enchantability, float meleeSpeed, float chargeSpeed,
+      int protection, int color) {
 
     this.name = name;
     this.durability = durability;
@@ -138,8 +153,7 @@ public enum EnumGem implements IStringSerializable {
 
   public int getEnchantability(EnumMaterialTier tier) {
 
-    return tier == EnumMaterialTier.SUPER ? enchantability + SUPER_ENCHANTABILITY_BOOST
-        : enchantability;
+    return tier == EnumMaterialTier.SUPER ? enchantability + SUPER_ENCHANTABILITY_BOOST : enchantability;
   }
 
   public float getMeleeSpeed(EnumMaterialTier tier) {
@@ -190,8 +204,7 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getBlock() {
 
-    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlock : ModBlocks.gemBlockDark, 1,
-        ordinal() & 0xF);
+    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlock : ModBlocks.gemBlockDark, 1, ordinal() & 0xF);
   }
 
   /**
@@ -207,8 +220,7 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getBlockSuper() {
 
-    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlockSuper : ModBlocks.gemBlockSuperDark, 1,
-        ordinal() & 0xF);
+    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlockSuper : ModBlocks.gemBlockSuperDark, 1, ordinal() & 0xF);
   }
 
   /**
@@ -224,8 +236,7 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getOre() {
 
-    return new ItemStack(ordinal() < 16 ? ModBlocks.gemOre : ModBlocks.gemOreDark, 1,
-        ordinal() & 0xF);
+    return new ItemStack(ordinal() < 16 ? ModBlocks.gemOre : ModBlocks.gemOreDark, 1, ordinal() & 0xF);
   }
 
   /**
@@ -257,7 +268,7 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getItemSuper() {
 
-    return new ItemStack(ModItems.gem, 1, ordinal() + 32);
+    return new ItemStack(ModItems.gemSuper, 1, ordinal());
   }
 
   /**
@@ -266,6 +277,16 @@ public enum EnumGem implements IStringSerializable {
   public String getItemSuperOreName() {
 
     return getItemOreName() + STR_SUPER;
+  }
+
+  public String getOreDictName(EnumMaterialTier tier) {
+
+    return getOreDictName(tier, "gem");
+  }
+
+  public String getOreDictName(EnumMaterialTier tier, String prefix) {
+
+    return prefix + name + (tier == EnumMaterialTier.SUPER ? STR_SUPER : "");
   }
 
   /**

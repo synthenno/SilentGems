@@ -1,6 +1,7 @@
 package net.silentchaos512.gems.item;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
@@ -21,7 +22,7 @@ public class ItemGem extends ItemSL {
 
   public ItemGem() {
 
-    super(64, SilentGems.MODID, Names.GEM);
+    super(EnumGem.values().length, SilentGems.MODID, Names.GEM);
   }
 
   @Override
@@ -30,8 +31,7 @@ public class ItemGem extends ItemSL {
     EnumGem gem = EnumGem.getFromStack(stack);
     boolean controlDown = KeyTracker.isControlDown();
 
-    if (controlDown && (gem == EnumGem.RUBY || gem == EnumGem.BERYL || gem == EnumGem.SAPPHIRE
-        || gem == EnumGem.TOPAZ)) {
+    if (controlDown && (gem == EnumGem.RUBY || gem == EnumGem.BERYL || gem == EnumGem.SAPPHIRE || gem == EnumGem.TOPAZ)) {
       list.add(SilentGems.localizationHelper.getItemSubText(itemName, "original4"));
     }
   }
@@ -41,8 +41,7 @@ public class ItemGem extends ItemSL {
 
     for (EnumGem gem : EnumGem.values()) {
       // Supercharged gems
-      recipes.addShapedOre("gem_super_" + gem.name(), gem.getItemSuper(), "cgc", "cdc", "cgc", 'g',
-          gem.getItem(), 'd', "dustGlowstone", 'c', "gemChaos");
+      recipes.addShapedOre("gem_super_" + gem.name(), gem.getItemSuper(), "cgc", "cdc", "cgc", 'g', gem.getItem(), 'd', "dustGlowstone", 'c', "gemChaos");
       // Gems <--> shards
       recipes.addCompression("gem_" + gem.name(), gem.getShard(), gem.getItem(), 9);
       ItemStack shards = gem.getShard();
@@ -61,31 +60,16 @@ public class ItemGem extends ItemSL {
   }
 
   @Override
-  public boolean hasEffect(ItemStack stack) {
-
-    return stack.getItemDamage() > 31;
-  }
-
-  @Override
   public void getModels(Map<Integer, ModelResourceLocation> models) {
 
     int i;
-    String name;
-    for (i = 0; i < 16; ++i) {
-      name = (getFullName() + i).toLowerCase();
-      models.put(i, new ModelResourceLocation(name, "inventory"));
-    }
-    for (i = 0; i < 16; ++i) {
-      name = (getFullName() + "Dark" + i).toLowerCase();
-      models.put(i + 16, new ModelResourceLocation(name, "inventory"));
-    }
-    for (i = 0; i < 16; ++i) {
-      name = (getFullName() + "Super" + i).toLowerCase();
-      models.put(i + 32, new ModelResourceLocation(name, "inventory"));
-    }
-    for (i = 0; i < 16; ++i) {
-      name = (getFullName() + "SuperDark" + i).toLowerCase();
-      models.put(i + 48, new ModelResourceLocation(name, "inventory"));
-    }
+    String fullName = getFullName().toLowerCase(Locale.US);
+
+    for (i = 0; i < 16; ++i)
+      models.put(i, new ModelResourceLocation(fullName + i, "inventory"));
+    for (i = 0; i < 16; ++i)
+      models.put(i + 16, new ModelResourceLocation(fullName + "dark" + i, "inventory"));
+    for (i = 0; i < 16; ++i)
+      models.put(i + 32, new ModelResourceLocation(fullName + "light" + i, "inventory"));
   }
 }
