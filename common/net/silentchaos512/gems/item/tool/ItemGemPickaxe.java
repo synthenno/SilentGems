@@ -1,11 +1,9 @@
 package net.silentchaos512.gems.item.tool;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
@@ -25,20 +23,15 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.api.tool.part.ToolPart;
-import net.silentchaos512.gems.api.tool.part.ToolPartRegistry;
 import net.silentchaos512.gems.config.ConfigOptionToolClass;
 import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.init.ModItems;
@@ -66,16 +59,11 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
     setNoRepair();
   }
 
-  public ItemStack constructTool(boolean supercharged, ItemStack material) {
-
-    return constructTool(supercharged, material, material, material);
-  }
-
-  public ItemStack constructTool(boolean supercharged, ItemStack... materials) {
+  public ItemStack constructTool(boolean supercharged, ItemStack head) {
 
     ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold
         : new ItemStack(Items.STICK);
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   // ===============
@@ -88,33 +76,27 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
-  public float getMeleeDamage(ItemStack tool) {
-
-    return getBaseMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
-  }
-
-  @Override
-  public float getMagicDamage(ItemStack tool) {
-
-    return 0.0f;
-  }
-
-  @Override
-  public float getBaseMeleeDamageModifier() {
+  public float getMeleeDamageModifier() {
 
     return 1.0f;
   }
 
   @Override
-  public float getBaseMeleeSpeedModifier() {
+  public float getMagicDamageModifier() {
+
+    return 0.0f;
+  }
+
+  @Override
+  public float getMeleeSpeedModifier() {
 
     return -2.8f;
   }
@@ -128,7 +110,7 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
   @Override
   public Material[] getExtraEffectiveMaterials(ItemStack tool) {
 
-    return ToolHelper.isBroken(tool) ? new Material[] {} : EXTRA_EFFECTIVE_MATERIALS;
+    return EXTRA_EFFECTIVE_MATERIALS;
   }
 
   // ==============
@@ -157,12 +139,6 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
 
     return ToolHelper.getMaxDamage(stack);
   }
-
-  // @Override
-  // public int getColorFromItemStack(ItemStack stack, int pass) {
-  //
-  // return ToolRenderHelper.getInstance().getColorFromItemStack(stack, pass);
-  // }
 
   @Override
   public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack,
@@ -217,15 +193,9 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
   public int getHarvestLevel(ItemStack stack, String toolClass, EntityPlayer player,
       IBlockState state) {
 
-    if (super.getHarvestLevel(stack, toolClass, player, state) < 0 || ToolHelper.isBroken(stack))
+    if (super.getHarvestLevel(stack, toolClass, player, state) < 0)
       return 0;
     return ToolHelper.getHarvestLevel(stack);
-  }
-
-  @Override
-  public Set<String> getToolClasses(ItemStack stack) {
-
-    return ToolHelper.isBroken(stack) ? ImmutableSet.of() : super.getToolClasses(stack);
   }
 
   @Override
@@ -282,11 +252,14 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
   // IRegistryObject
   // ===============
 
+  public IRecipe recipe;
+
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "ggg", " s ", " s ");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, "ggg", " s ", " s ");
+    }
   }
 
   @Override

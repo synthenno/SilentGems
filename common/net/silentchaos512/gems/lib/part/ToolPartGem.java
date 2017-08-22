@@ -9,10 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IArmor;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.api.lib.EnumPartPosition;
 import net.silentchaos512.gems.api.tool.part.ToolPartMain;
-import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.gems.item.tool.ItemGemBow;
 import net.silentchaos512.gems.item.tool.ItemGemShield;
@@ -23,15 +20,15 @@ import net.silentchaos512.lib.registry.IRegistryObject;
 public class ToolPartGem extends ToolPartMain {
 
   EnumGem gem;
+  boolean supercharged;
   Map<String, ModelResourceLocation> modelMap = Maps.newHashMap();
 
   public ToolPartGem(EnumGem gem, boolean supercharged) {
 
-    super(SilentGems.RESOURCE_PREFIX + gem.name().toLowerCase() + (supercharged ? "_super" : ""),
-        supercharged ? gem.getItemSuper() : gem.getItem());
+    super(SilentGems.RESOURCE_PREFIX + gem.name().toLowerCase() + (supercharged ? "_super" : ""), supercharged ? gem.getItemSuper() : gem.getItem());
     this.craftingOreDictName = supercharged ? gem.getItemSuperOreName() : gem.getItemOreName();
     this.gem = gem;
-    this.tier = supercharged ? EnumMaterialTier.SUPER : EnumMaterialTier.REGULAR;
+    this.supercharged = supercharged;
   }
 
   public EnumGem getGem() {
@@ -52,44 +49,16 @@ public class ToolPartGem extends ToolPartMain {
   @Override
   public String getDisplayName(ItemStack stack) {
 
-    if (stack.hasDisplayName() || stack.getItem() != ModItems.gem)
-      return stack.getDisplayName();
-
-    return SilentGems.localizationHelper.getLocalizedString("item",
-        Names.GEM + (stack.getItemDamage() & 0x1F) + ".name");
+    String itemName = supercharged ? Names.GEM_SUPER : Names.GEM;
+    return SilentGems.localizationHelper.getLocalizedString("item", itemName + (stack.getItemDamage()) + ".name");
   }
 
   @Override
-  public String getDisplayNamePrefix(ItemStack stack) {
-
-    return tier == EnumMaterialTier.SUPER
-        ? SilentGems.instance.localizationHelper.getItemSubText(Names.GEM, "superPrefix") : "";
-  }
-
-  @Override
-  public ModelResourceLocation getModel(ItemStack tool, EnumPartPosition pos, int frame) {
+  public ModelResourceLocation getModel(ItemStack tool, int frame) {
 
     String name = ((IRegistryObject) tool.getItem()).getName();
-    name = SilentGems.RESOURCE_PREFIX + name + "/" + name;
-    String gemNum = tool.getItem() instanceof ItemGemBow ? "" : "" + gem.ordinal();
+    name = SilentGems.RESOURCE_PREFIX + name + "/" + name + "_head";
     String frameNum = frame == 3 ? "_3" : "";
-
-    switch (pos) {
-      case HEAD_LEFT:
-        name += gemNum + "l" + frameNum;
-        break;
-      case HEAD_MIDDLE:
-        name += gemNum + frameNum;
-        break;
-      case HEAD_RIGHT:
-        name += gemNum + "r" + frameNum;
-        break;
-      case ROD_DECO:
-        name += "deco" + gemNum;
-        break;
-      default:
-        return null;
-    }
 
     if (modelMap.containsKey(name)) {
       return modelMap.get(name);
@@ -104,61 +73,49 @@ public class ToolPartGem extends ToolPartMain {
   @Override
   public int getDurability() {
 
-    return gem.getDurability(tier);
+    return gem.getDurability(supercharged);
   }
 
   @Override
   public float getHarvestSpeed() {
 
-    return gem.getMiningSpeed(tier);
+    return gem.getMiningSpeed(supercharged);
   }
 
   @Override
   public int getHarvestLevel() {
 
     // TODO: Configs!
-    return tier == EnumMaterialTier.SUPER ? 4 : 2;
+    return supercharged ? 4 : 2;
   }
 
   @Override
   public float getMeleeDamage() {
 
-    return gem.getMeleeDamage(tier);
+    return gem.getMeleeDamage(supercharged);
   }
 
   @Override
   public float getMagicDamage() {
 
-    return gem.getMagicDamage(tier);
+    return gem.getMagicDamage(supercharged);
   }
 
   @Override
   public int getEnchantability() {
 
-    return gem.getEnchantability(tier);
+    return gem.getEnchantability(supercharged);
   }
 
   @Override
   public float getMeleeSpeed() {
 
-    return gem.getMeleeSpeed(tier);
-  }
-
-  @Override
-  public float getChargeSpeed() {
-
-    return gem.getChargeSpeed(tier);
+    return gem.getMeleeSpeed(supercharged);
   }
 
   @Override
   public float getProtection() {
 
-    return gem.getProtection(tier);
-  }
-
-  @Override
-  public EnumMaterialTier getTier() {
-
-    return tier;
+    return gem.getProtection(supercharged);
   }
 }

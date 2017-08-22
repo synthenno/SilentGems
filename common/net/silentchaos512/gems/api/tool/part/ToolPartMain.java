@@ -1,16 +1,17 @@
 package net.silentchaos512.gems.api.tool.part;
 
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Items;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.api.IArmor;
-import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.api.lib.EnumPartPosition;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.silentchaos512.gems.api.tool.ToolStats;
-import net.silentchaos512.gems.util.ArmorHelper;
-import net.silentchaos512.gems.util.ToolHelper;
+import net.silentchaos512.gems.init.ModItems;
 
 public class ToolPartMain extends ToolPart {
 
+  @Deprecated
   static final float[][] REPAIR_VALUES = {//
       { 0.500f, 1.000f, 1.000f, 1.000f }, // mundane
       { 0.000f, 0.500f, 1.000f, 1.000f }, // regular
@@ -29,30 +30,16 @@ public class ToolPartMain extends ToolPart {
   }
 
   @Override
-  public int getRepairAmount(ItemStack toolOrArmor, ItemStack partRep) {
-
-    int max = toolOrArmor.getMaxDamage();
-    float scale = 0.0f;
-
-    EnumMaterialTier partTier = getTier();
-    EnumMaterialTier stackTier = toolOrArmor.getItem() instanceof ITool
-        ? ToolHelper.getToolTier(toolOrArmor)
-        : (toolOrArmor.getItem() instanceof IArmor ? ArmorHelper.getArmorTier(toolOrArmor) : null);
-
-    if (stackTier == null)
-      return 0;
-
-    int toolTierIndex = ToolHelper.getToolTier(toolOrArmor).ordinal();
-    int partTierIndex = partTier.ordinal();
-    scale = REPAIR_VALUES[toolTierIndex][partTierIndex];
-
-    return (int) (scale * max);
-  }
-
-  @Override
   public final void applyStats(ToolStats stats) {
 
-    // Custom logic not allowed.
+    stats.durability += getDurability();
+    stats.harvestSpeed += getHarvestSpeed();
+    stats.meleeDamage += getMeleeDamage();
+    stats.magicDamage += getMagicDamage();
+    stats.meleeSpeed += getMeleeSpeed();
+    stats.enchantability += getEnchantability();
+    stats.blockingPower += getProtection() / 16f;
+    stats.harvestLevel = Math.max(getHarvestLevel(), stats.harvestLevel);
   }
 
   @Override
@@ -98,34 +85,17 @@ public class ToolPartMain extends ToolPart {
   }
 
   @Override
-  public float getChargeSpeed() {
-
-    return 0;
-  }
-
-  @Override
   public float getProtection() {
 
     return 0;
   }
 
-  @Override
-  public boolean validForPosition(EnumPartPosition pos) {
+  public ItemStack getPreferredRod() {
 
-    switch (pos) {
-      case HEAD_LEFT:
-      case HEAD_MIDDLE:
-      case HEAD_RIGHT:
-      case ROD_DECO:
-        return true;
-      default:
-        return false;
+    if (getRarity().ordinal() >= EnumRarity.RARE.ordinal()) {
+      return ModItems.craftingMaterial.toolRodGold;
+    } else {
+      return new ItemStack(Items.STICK);
     }
-  }
-
-  @Override
-  public boolean validForToolOfTier(EnumMaterialTier toolTier) {
-
-    return getTier() == toolTier;
   }
 }

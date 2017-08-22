@@ -64,7 +64,7 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
   @Override
   public float getMeleeDamage(ItemStack tool) {
 
-    return (getBaseMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool)) / 2;
+    return (getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool)) / 2;
   }
 
   @Override
@@ -74,13 +74,13 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
   }
 
   @Override
-  public float getBaseMeleeDamageModifier() {
+  public float getMeleeDamageModifier() {
 
     return 1.0f;
   }
 
   @Override
-  public float getBaseMeleeSpeedModifier() {
+  public float getMeleeSpeedModifier() {
 
     return -1.8f;
   }

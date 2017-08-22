@@ -1,25 +1,29 @@
 package net.silentchaos512.gems.api;
 
-import java.util.Set;
-
-import com.google.common.collect.ImmutableSet;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.config.ConfigOptionToolClass;
+import net.silentchaos512.gems.util.ToolHelper;
 
 public interface ITool {
 
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials);
+  public ItemStack constructTool(ItemStack rod, ItemStack head);
 
-  public float getMeleeDamage(ItemStack tool);
+  public default float getMeleeDamage(ItemStack tool) {
 
-  public float getMagicDamage(ItemStack tool);
+    return getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
+  }
 
-  public float getBaseMeleeDamageModifier();
+  public default float getMagicDamage(ItemStack tool) {
 
-  public float getBaseMeleeSpeedModifier();
+    return getMagicDamageModifier() + ToolHelper.getMagicDamage(tool);
+  }
+
+  public float getMeleeDamageModifier();
+
+  public float getMagicDamageModifier();
+
+  public float getMeleeSpeedModifier();
 
   public default float getHarvestSpeedMultiplier() {
 
@@ -42,17 +46,6 @@ public interface ITool {
   }
 
   public ConfigOptionToolClass getConfig();
-
-  @Deprecated
-  public default boolean isSuperTool() {
-
-    return false;
-  }
-
-  public default Set<EnumMaterialTier> getValidTiers() {
-
-    return getConfig().validTiers;
-  }
 
   @Deprecated
   public default Material[] getExtraEffectiveMaterials() {

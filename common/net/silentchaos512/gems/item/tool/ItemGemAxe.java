@@ -88,7 +88,7 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
   @Override
   public float getMeleeDamage(ItemStack tool) {
 
-    return getBaseMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
+    return getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
   }
 
   @Override
@@ -98,13 +98,13 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
   }
 
   @Override
-  public float getBaseMeleeSpeedModifier() {
+  public float getMeleeSpeedModifier() {
 
     return -3.0f;
   }
 
   @Override
-  public float getBaseMeleeDamageModifier() {
+  public float getMeleeDamageModifier() {
 
     return 5.0f;
   }

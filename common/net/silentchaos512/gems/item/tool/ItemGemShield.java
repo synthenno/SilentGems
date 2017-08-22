@@ -136,7 +136,7 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
   @Override
   public float getMeleeDamage(ItemStack tool) {
 
-    return Math.max(0, (getBaseMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool)) / 2);
+    return Math.max(0, (getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool)) / 2);
   }
 
   @Override
@@ -146,13 +146,13 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
   }
 
   @Override
-  public float getBaseMeleeDamageModifier() {
+  public float getMeleeDamageModifier() {
 
     return -4.0f;
   }
 
   @Override
-  public float getBaseMeleeSpeedModifier() {
+  public float getMeleeSpeedModifier() {
 
     return -3.2f;
   }

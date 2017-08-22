@@ -6,12 +6,10 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.api.lib.EnumDecoPos;
 import net.silentchaos512.gems.client.handler.ClientTickHandler;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ItemHoldingGem;
 import net.silentchaos512.gems.item.ItemSoulGem.Soul;
-import net.silentchaos512.gems.util.ArmorHelper;
 import net.silentchaos512.gems.util.ToolHelper;
 
 public class ColorHandlers {
@@ -50,8 +48,8 @@ public class ColorHandlers {
       @Override
       public int getColorFromItemstack(ItemStack stack, int tintIndex) {
 
+        return 0xFFFFFF; // FIXME
         // return ArmorHelper.getRenderPart(stack, EnumDecoPos.NORTH).getColor(stack);
-        return ArmorHelper.getRenderColor(stack, EnumDecoPos.NORTH); // FIXME: Multiple passes needed?
       }
     }, ModItems.gemHelmet, ModItems.gemChestplate, ModItems.gemLeggings, ModItems.gemBoots);
 

@@ -104,13 +104,13 @@ public class ItemGemBow extends ItemBow implements IRegistryObject, ITool {
   }
 
   @Override
-  public float getBaseMeleeDamageModifier() {
+  public float getMeleeDamageModifier() {
 
     return 0;
   }
 
   @Override
-  public float getBaseMeleeSpeedModifier() {
+  public float getMeleeSpeedModifier() {
 
     return 0;
   }

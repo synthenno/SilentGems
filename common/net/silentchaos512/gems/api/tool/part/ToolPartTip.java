@@ -1,8 +1,6 @@
 package net.silentchaos512.gems.api.tool.part;
 
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.api.lib.EnumPartPosition;
 import net.silentchaos512.gems.api.tool.ToolStats;
 
 public class ToolPartTip extends ToolPart {
@@ -32,7 +30,6 @@ public class ToolPartTip extends ToolPart {
     stats.meleeDamage += getMeleeDamage();
     stats.magicDamage += getMagicDamage();
     stats.meleeSpeed += getMeleeSpeed() - 1.0f;
-    stats.chargeSpeed += getChargeSpeed();
     stats.enchantability += getEnchantability();
     stats.harvestLevel = Math.max(stats.harvestLevel, getHarvestLevel());
   }
@@ -80,26 +77,8 @@ public class ToolPartTip extends ToolPart {
   }
 
   @Override
-  public float getChargeSpeed() {
-
-    return 0;
-  }
-
-  @Override
   public final float getProtection() {
 
     return 0;
-  }
-
-  @Override
-  public boolean validForPosition(EnumPartPosition pos) {
-
-    return pos == EnumPartPosition.TIP;
-  }
-
-  @Override
-  public boolean validForToolOfTier(EnumMaterialTier toolTier) {
-
-    return true;
   }
 }

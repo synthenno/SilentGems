@@ -36,14 +36,11 @@ public class ToolRenderHelperBase extends ItemSL {
   public static final int BOW_STAGE_COUNT = 4;
 
   // Render pass IDs and count
-  public static final int PASS_ROD = 0;
-  public static final int PASS_HEAD_M = 1;
-  public static final int PASS_HEAD_L = 2;
-  public static final int PASS_HEAD_R = 3;
-  public static final int PASS_ROD_DECO = 4;
-  public static final int PASS_ROD_WOOL = 5;
-  public static final int PASS_TIP = 6;
-  public static final int RENDER_PASS_COUNT = 7;
+  public static final int LAYER_ROD = 0;
+  public static final int LAYER_HEAD = 1;
+  public static final int LAYER_TIP = 2;
+  public static final int LAYER_ROD_DECO = 3;
+  public static final int RENDER_PASS_COUNT = 4;
 
   public boolean hasEffect(ItemStack tool) {
 
@@ -53,18 +50,7 @@ public class ToolRenderHelperBase extends ItemSL {
   
   public EnumRarity getRarity(ItemStack tool) {
 
-    EnumMaterialTier tier = ToolHelper.getToolTier(tool);
-    boolean enchanted = tool.isItemEnchanted();
-
-    switch (tier) {
-      case SUPER:
-        return EnumRarity.EPIC;
-      case REGULAR:
-        return enchanted ? EnumRarity.RARE : EnumRarity.UNCOMMON;
-      case MUNDANE:
-      default:
-        return enchanted ? EnumRarity.RARE : EnumRarity.COMMON;
-    }
+    return ToolHelper.getPartHead(tool).getRarity();
   }
 
   public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack,

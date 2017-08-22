@@ -95,7 +95,7 @@ public class ItemGemSickle extends ItemTool implements IRegistryObject, ITool {
   @Override
   public float getMeleeDamage(ItemStack tool) {
 
-    return getBaseMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
+    return getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
   }
 
   @Override
@@ -105,13 +105,13 @@ public class ItemGemSickle extends ItemTool implements IRegistryObject, ITool {
   }
 
   @Override
-  public float getBaseMeleeDamageModifier() {
+  public float getMeleeDamageModifier() {
 
     return 1.0f;
   }
 
   @Override
-  public float getBaseMeleeSpeedModifier() {
+  public float getMeleeSpeedModifier() {
 
     return -1.8f;
   }

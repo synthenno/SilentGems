@@ -1,7 +1,6 @@
 package net.silentchaos512.gems.api.tool.part;
 
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 
 public interface IPartProperties {
 
@@ -10,8 +9,6 @@ public interface IPartProperties {
   public String getNamePrefix();
 
   public int getColor();
-
-  public EnumMaterialTier getTier();
 
   public int getDurability();
 
@@ -26,8 +23,6 @@ public interface IPartProperties {
   public float getMeleeSpeed();
 
   public int getEnchantability();
-
-  public float getChargeSpeed();
 
   public float getProtection();
 

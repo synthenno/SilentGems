@@ -1,17 +1,13 @@
 package net.silentchaos512.gems.api.tool.part;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.api.lib.EnumPartPosition;
+import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.tool.ToolStats;
 import net.silentchaos512.gems.config.GemsConfig;
 
@@ -30,12 +26,6 @@ import net.silentchaos512.gems.config.GemsConfig;
 public abstract class ToolPart {
 
   /**
-   * Generally not used, since parts have different models for different tools, or even for different positions.
-   */
-  @SideOnly(Side.CLIENT)
-  @Deprecated
-  protected ModelResourceLocation model; // Use getter instead.
-  /**
    * The unique ID for the part. I recommend prefixing it with your mod ID. Example: SilentGems:RodGold.
    */
   protected @Nonnull String key;
@@ -52,16 +42,6 @@ public abstract class ToolPart {
    * dictionary.
    */
   protected @Nonnull String craftingOreDictName;
-  /**
-   * The tier of the part. Part tiers determine what parts can be crafted together to make a tool, as well as the tier
-   * of the resulting tool.
-   */
-  protected EnumMaterialTier tier;
-  /**
-   * The color apply to the layer when rendering.
-   */
-  @Deprecated // Use getter instead.
-  protected int color = 0xFFFFFF;
 
   public ToolPart(String key, ItemStack craftingStack) {
 
@@ -73,7 +53,6 @@ public abstract class ToolPart {
     this.key = key.toLowerCase();
     this.craftingStack = craftingStack;
     this.craftingOreDictName = craftingOreDictName;
-    this.tier = EnumMaterialTier.REGULAR;
   }
 
   public @Nonnull String getKey() {
@@ -91,11 +70,6 @@ public abstract class ToolPart {
     return craftingOreDictName;
   }
 
-  public EnumMaterialTier getTier() {
-
-    return tier;
-  }
-
   /**
    * Gets the color applied when rendering the part.
    * 
@@ -105,7 +79,13 @@ public abstract class ToolPart {
    */
   public int getColor(ItemStack toolOrArmor) {
 
-    return color;
+    return 0xFFFFFF;
+  }
+
+  // TODO
+  public int getHighlightColor(ItemStack tool) {
+
+    return 0xFFFFFF;
   }
 
   /**
@@ -122,18 +102,6 @@ public abstract class ToolPart {
   }
 
   /**
-   * Returns a prefix used in tool name generation (ie, "Supercharged")
-   * 
-   * @param partRep
-   *          The ItemStack, typically the representative that is being used in crafting.
-   * @return
-   */
-  public String getDisplayNamePrefix(ItemStack partRep) {
-
-    return "";
-  }
-
-  /**
    * Gets the amount of durability to repair when decorating with this part.
    * 
    * @param toolOrArmor
@@ -142,34 +110,16 @@ public abstract class ToolPart {
    *          The stack that represents the tool part.
    * @return The amount of durability to restore, usually a fraction of the tool's max.
    */
+  @Deprecated
   public int getRepairAmount(ItemStack toolOrArmor, ItemStack partRep) {
 
     return 0;
   }
 
-  /**
-   * Gets the model for the part on the specified tool and position. Some parts can exist in multiple positions
-   * (ToolPartMain), plus the models are usually different for different tool types.
-   * 
-   * @deprecated Use frame-sensitive version instead!
-   * 
-   * @param tool
-   *          The tool being rendered.
-   * @param pos
-   *          The position of the part.
-   * @return
-   */
-  @Deprecated
   @SideOnly(Side.CLIENT)
-  public ModelResourceLocation getModel(ItemStack toolOrArmor, EnumPartPosition pos) {
+  public ModelResourceLocation getModel(ItemStack toolOrArmor, int frame) {
 
-    return getModel(toolOrArmor, pos, 0);
-  }
-
-  @SideOnly(Side.CLIENT)
-  public ModelResourceLocation getModel(ItemStack toolOrArmor, EnumPartPosition pos, int frame) {
-
-    return model;
+    return null;
   }
 
   public String getUnlocalizedName() {
@@ -177,25 +127,9 @@ public abstract class ToolPart {
     return key;
   }
 
-  public List<EnumMaterialTier> getCompatibleTiers() {
-
-    List<EnumMaterialTier> list = Lists.newArrayList();
-    for (EnumMaterialTier tier : EnumMaterialTier.values())
-      if (validForToolOfTier(tier))
-        list.add(tier);
-    return list;
-  }
-
   public boolean isBlacklisted(ItemStack partStack) {
 
-    if (tier == EnumMaterialTier.MUNDANE && GemsConfig.PART_DISABLE_ALL_MUNDANE)
-      return true;
-    else if (tier == EnumMaterialTier.REGULAR && GemsConfig.PART_DISABLE_ALL_REGULAR)
-      return true;
-    else if (tier == EnumMaterialTier.SUPER && GemsConfig.PART_DISABLE_ALL_SUPER)
-      return true;
-    else
-      return GemsConfig.PART_BLACKLIST.contains(key);
+    return GemsConfig.PART_BLACKLIST.contains(key);
   }
 
   public void applyStats(ToolStats stats) {
@@ -216,27 +150,13 @@ public abstract class ToolPart {
 
   public abstract float getMeleeSpeed();
 
-  public abstract float getChargeSpeed();
-
   // Only needed for armor.
   public abstract float getProtection();
 
-  /**
-   * Determines if the part is valid for tools of the given tier. Generally, this is true if the part and tool tier is
-   * the same, but that's not always the case.
-   * 
-   * @param toolTier
-   * @return
-   */
-  public abstract boolean validForToolOfTier(EnumMaterialTier toolTier);
+  public EnumRarity getRarity() {
 
-  /**
-   * Determines if the part is valid for the given position. I believe this is unused at the moment.
-   * 
-   * @param pos
-   * @return
-   */
-  public abstract boolean validForPosition(EnumPartPosition pos);
+    return EnumRarity.COMMON;
+  }
   
   @Override
   public String toString() {
@@ -245,7 +165,6 @@ public abstract class ToolPart {
     str += "Key: " + getKey() + ", ";
     str += "CraftingStack: " + getCraftingStack() + ", ";
     str += "CraftingOreDictName: '" + getCraftingOreDictName() + "', ";
-    str += "Tier: " + getTier();
     str += "}";
     return str;
   }

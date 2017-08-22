@@ -101,7 +101,7 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   @Override
   public float getMeleeDamage(ItemStack tool) {
 
-    return getBaseMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
+    return getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
   }
 
   @Override
@@ -111,13 +111,13 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   }
 
   @Override
-  public float getBaseMeleeDamageModifier() {
+  public float getMeleeDamageModifier() {
 
     return 3.0f;
   }
 
   @Override
-  public float getBaseMeleeSpeedModifier() {
+  public float getMeleeSpeedModifier() {
 
     return -2.4f;
   }

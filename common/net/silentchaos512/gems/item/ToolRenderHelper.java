@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.MapMaker;
 import com.google.common.collect.Sets;
 
 import net.minecraft.client.Minecraft;
@@ -21,9 +20,6 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.api.lib.EnumMaterialGrade;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.api.lib.EnumPartPosition;
 import net.silentchaos512.gems.api.tool.part.ToolPart;
 import net.silentchaos512.gems.api.tool.part.ToolPartRegistry;
 import net.silentchaos512.gems.api.tool.part.ToolPartTip;
@@ -75,7 +71,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     String line;
 
     // Tipped upgrade
-    ToolPartTip partTip = (ToolPartTip) ToolHelper.getConstructionTip(tool);
+    ToolPartTip partTip = (ToolPartTip) ToolHelper.getPartTip(tool);
     if (partTip != null) {
       String tipName = partTip.getUnlocalizedName().replaceFirst("[^:]+:", "");
       tipName = loc.getMiscText("Tooltip." + tipName);
@@ -97,25 +93,19 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
 
     // Example tool?
     if (tool.hasTagCompound() && tool.getTagCompound().hasKey(ToolHelper.NBT_EXAMPLE_TOOL_TIER)) {
-      EnumMaterialTier tier = EnumMaterialTier.values()[tool.getTagCompound().getInteger(ToolHelper.NBT_EXAMPLE_TOOL_TIER)];
-      list.add(loc.getMiscText("Tooltip.ExampleTool", tier));
+      list.add(loc.getMiscText("Tooltip.ExampleTool", "N/A"));
     }
     // Missing data?
     else if (ToolHelper.hasNoConstruction(tool)) {
       list.add(loc.getMiscText("Tooltip.NoData1"));
       list.add(loc.getMiscText("Tooltip.NoData2"));
     }
-    // Broken?
-    else if (ToolHelper.isBroken(tool)) {
-      line = loc.getMiscText("Tooltip.Broken");
-      list.add(line);
-    }
 
     final Item item = tool.getItem();
     final boolean isSword = item instanceof ItemGemSword;
     final boolean isAxe = item instanceof ItemGemAxe;
     final boolean isWeapon = isSword || isAxe;
-    final boolean isCaster = isSword && ToolHelper.getToolTier(tool).ordinal() >= EnumMaterialTier.SUPER.ordinal();
+    final boolean isCaster = isSword && true; // TODO
     final boolean isBow = item instanceof ItemGemBow;
     final boolean isDigger = item instanceof ItemTool;
     final boolean isShield = item instanceof ItemGemShield;
@@ -128,11 +118,6 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       list.add(line);
 
       TextFormatting color = TextFormatting.YELLOW;
-
-      // Tier
-      EnumMaterialTier tier = ToolHelper.getToolTier(tool);
-      line = TextFormatting.RESET + loc.getMiscText("ToolTier." + tier);
-      list.add("  " + color + loc.getMiscText("ToolTier", line));
 
       int durabilityMax = ToolHelper.getMaxDamage(tool);
       int durability = durabilityMax - tool.getItemDamage();
@@ -165,8 +150,6 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
         list.add(color + getTooltipLine("DrawDelay", ModItems.bow.getDrawDelay(tool)));
         list.add(color + getTooltipLine("ArrowDamage", 2f + ModItems.bow.getArrowDamage(tool)));
       }
-
-      list.add(color + getTooltipLine("ChargeSpeed", ToolHelper.getChargeSpeed(tool)));
     } else {
       list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.CtrlForProp"));
     }
@@ -208,59 +191,34 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       line = loc.getMiscText("Tooltip.Construction");
       list.add(line);
 
-      ToolPart[] parts = ToolHelper.getConstructionParts(tool);
-      EnumMaterialGrade[] grades = ToolHelper.getConstructionGrades(tool);
-
-      for (int i = 0; i < parts.length; ++i) {
-        ToolPart part = parts[i];
-        EnumMaterialGrade grade = grades[i];
-
-        line = "  " + TextFormatting.YELLOW + part.getKey() + TextFormatting.GOLD + " (" + grade + ")";
-        list.add(line);
-      }
+      list.add("    (TODO)"); // FIXME
       list.add(sep);
     } else {
       list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.AltForStat"));
     }
 
     // Debug render layers
-    if (controlDown && shiftDown && tool.hasTagCompound()) {
-      if (!altDown)
-        list.add(sep);
-      for (EnumPartPosition pos : EnumPartPosition.values()) {
-        NBTTagCompound tags = tool.getTagCompound().getCompoundTag(NBT_MODEL_INDEX);
-        if (tags != null) {
-          String key = "Layer" + pos.ordinal();
-          String str = "%s: %d, %X";
-          str = String.format(str, key, tags.getInteger(key), tags.getInteger(key + "Color"));
-          list.add(str);
-        }
-      }
-    }
+    // if (controlDown && shiftDown && tool.hasTagCompound()) {
+    // if (!altDown)
+    // list.add(sep);
+    // for (EnumPartPosition pos : EnumPartPosition.values()) {
+    // NBTTagCompound tags = tool.getTagCompound().getCompoundTag(NBT_MODEL_INDEX);
+    // if (tags != null) {
+    // String key = "Layer" + pos.ordinal();
+    // String str = "%s: %d, %X";
+    // str = String.format(str, key, tags.getInteger(key), tags.getInteger(key + "Color"));
+    // list.add(str);
+    // }
+    // }
+    // }
   }
 
   public String getTooltipLine(String key, int value) {
-
-    // String number;
-    // if (value > 9999)
-    // number = "%,d";
-    // else
-    // number = "%d";
-    //
-    // number = String.format(number, value);
-    // String line = SilentGems.instance.localizationHelper.getMiscText("Tooltip." + key, number);
-    // return " " + line;
 
     return TooltipHelper.get(key, value, true);
   }
 
   public String getTooltipLine(String key, float value) {
-
-    // String number = "%.2f";
-    //
-    // number = String.format(number, value);
-    // String line = SilentGems.instance.localizationHelper.getMiscText("Tooltip." + key, number);
-    // return " " + line;
 
     return TooltipHelper.get(key, value, true);
   }
@@ -268,7 +226,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
   @SubscribeEvent
   public void onModelBake(ModelBakeEvent event) {
 
-    //log.info("ToolRenderHelper.onModelBake");
+    // log.info("ToolRenderHelper.onModelBake");
     Object object = event.getModelRegistry().getObject(SMART_MODEL);
     if (object instanceof IBakedModel) {
       IBakedModel existingModel = (IBakedModel) object;
@@ -290,13 +248,11 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     Set<ModelResourceLocation> set = Sets.newConcurrentHashSet();
 
     for (ToolPart part : ToolPartRegistry.getValues()) {
-      for (EnumPartPosition pos : EnumPartPosition.values()) {
-        for (Item itemTool : ModItems.tools) {
-          for (int frame = 0; frame < (itemTool instanceof ItemGemBow ? 4 : 1); ++frame) {
-            ModelResourceLocation model = part.getModel(new ItemStack(itemTool), pos, frame);
-            if (model != null) {
-              set.add(model);
-            }
+      for (Item itemTool : ModItems.tools) {
+        for (int frame = 0; frame < (itemTool instanceof ItemGemBow ? 4 : 1); ++frame) {
+          ModelResourceLocation model = part.getModel(new ItemStack(itemTool), frame);
+          if (model != null) {
+            set.add(model);
           }
         }
       }
@@ -341,7 +297,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
    * Gets the model for the specified tool and position. Gets the animation frame on its own. Stores model index in tool
    * NBT for fast acess.
    */
-  public ModelResourceLocation getModel(ItemStack tool, EnumPartPosition pos) {
+  public ModelResourceLocation getModel(ItemStack tool, int layer) {
 
     if (tool == null || !tool.hasTagCompound()) {
       return modelError;
@@ -349,19 +305,19 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
 
     NBTTagCompound tags = tool.getTagCompound().getCompoundTag(NBT_MODEL_INDEX);
     int frame = getAnimationFrame(tool);
-    String key = "Layer" + pos.ordinal() + (frame > 0 ? "_" + frame : "");
+    String key = "Layer" + layer + (frame > 0 ? "_" + frame : "");
     boolean isBow = tool.getItem() instanceof ItemGemBow;
 
     if (!tags.hasKey(key)) {
       // Model is currently not indexed! We'll need to figure out what it should be.
 
       // Bow "arrow" models
-      if (pos == EnumPartPosition.ROD_GRIP && isBow) {
+      if (layer == 3 && isBow) {
         return getArrowModel(tool, frame);
       }
 
       // Get the render part for this position.
-      ToolPart part = ToolHelper.getRenderPart(tool, pos);
+      ToolPart part = getPartForLayer(tool, layer);
       if (part == null) {
         tags.setInteger(key, -1);
         tool.getTagCompound().setTag(NBT_MODEL_INDEX, tags);
@@ -369,7 +325,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       }
 
       // Get the desired model for the current position and animation frame.
-      ModelResourceLocation target = part.getModel(tool, pos, frame);
+      ModelResourceLocation target = part.getModel(tool, frame);
       // Find the model in the list. Store the index in NBT for fast access.
       for (int i = 0; i < models.length; ++i) {
         if (models[i].equals(target)) {
@@ -383,6 +339,22 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
 
     // Grab the indexed model.
     return getModel(tags.getInteger(key));
+  }
+
+  protected ToolPart getPartForLayer(ItemStack tool, int layer) {
+
+    switch (layer) {
+      case LAYER_ROD:
+        return ToolHelper.getPartRod(tool);
+      case LAYER_HEAD:
+        return ToolHelper.getPartHead(tool);
+      case LAYER_TIP:
+        return ToolHelper.getPartTip(tool);
+      case LAYER_ROD_DECO:
+        return ToolHelper.getPartDeco(tool);
+      default:
+        return null;
+    }
   }
 
   /**
@@ -407,9 +379,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
 
     if (frame < 0 || frame > 3)
       return null;
-    if (ToolHelper.isBroken(tool))
-      return modelBlank;
-    boolean superTier = ToolHelper.getToolTier(tool).ordinal() >= EnumMaterialTier.SUPER.ordinal();
+    boolean superTier = false; // FIXME: Gilded string?
     return arrowModels[superTier ? frame + 4 : frame];
   }
 

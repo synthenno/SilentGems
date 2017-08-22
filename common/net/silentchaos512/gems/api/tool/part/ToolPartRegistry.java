@@ -30,6 +30,9 @@ public class ToolPartRegistry {
    */
   public static ToolPart getPart(String key) {
 
+    if (key == null || key.isEmpty()) {
+      return null;
+    }
     return map.get(key.toLowerCase());
   }
 
