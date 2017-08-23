@@ -3,19 +3,13 @@ package net.silentchaos512.gems.init;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.oredict.RecipeSorter.Category;
 import net.silentchaos512.gems.api.SilentGemsAPI;
 import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.recipe.RecipeApplyEnchantmentToken;
 import net.silentchaos512.gems.recipe.RecipeChaosGemUpgrade;
-import net.silentchaos512.gems.recipe.RecipeDecorateArmor;
-import net.silentchaos512.gems.recipe.RecipeDecorateTool;
+import net.silentchaos512.gems.recipe.RecipeCraftTool;
 import net.silentchaos512.gems.recipe.RecipeHoldingGemSetBlock;
-import net.silentchaos512.gems.recipe.RecipeMultiGemArmor;
-import net.silentchaos512.gems.recipe.RecipeMultiGemBow;
-import net.silentchaos512.gems.recipe.RecipeMultiGemShield;
-import net.silentchaos512.gems.recipe.RecipeMultiGemTool;
 import net.silentchaos512.gems.recipe.RecipeNamePlate;
 import net.silentchaos512.lib.registry.IRegistrationHandler;
 import net.silentchaos512.lib.registry.RecipeMaker;
@@ -46,12 +40,13 @@ public class ModRecipes implements IRegistrationHandler<IRecipe> {
     }
 
     // Recipe handlers.
-    recipes.addCustomRecipe("multipart_tool", new RecipeMultiGemTool());
-    recipes.addCustomRecipe("multipart_shield", new RecipeMultiGemShield());
-    recipes.addCustomRecipe("multipart_bow", new RecipeMultiGemBow());
-    recipes.addCustomRecipe("multipart_armor", new RecipeMultiGemArmor());
-    recipes.addCustomRecipe("decorate_tool", new RecipeDecorateTool());
-    recipes.addCustomRecipe("decorate_armor", new RecipeDecorateArmor());
+    recipes.addCustomRecipe("craft_tool", new RecipeCraftTool());
+//    recipes.addCustomRecipe("multipart_tool", new RecipeMultiGemTool());
+//    recipes.addCustomRecipe("multipart_shield", new RecipeMultiGemShield());
+//    recipes.addCustomRecipe("multipart_bow", new RecipeMultiGemBow());
+//    recipes.addCustomRecipe("multipart_armor", new RecipeMultiGemArmor());
+//    recipes.addCustomRecipe("decorate_tool", new RecipeDecorateTool());
+//    recipes.addCustomRecipe("decorate_armor", new RecipeDecorateArmor());
     recipes.addCustomRecipe("apply_enchantment_token", new RecipeApplyEnchantmentToken());
     recipes.addCustomRecipe("chaos_gem_upgrade", new RecipeChaosGemUpgrade());
     recipes.addCustomRecipe("name_plate_use", new RecipeNamePlate());

@@ -25,8 +25,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IAmmoTool;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialGrade;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.api.tool.part.ToolPart;
 import net.silentchaos512.gems.api.tool.part.ToolPartMain;
 import net.silentchaos512.gems.api.tool.part.ToolPartRegistry;
@@ -94,16 +92,6 @@ public class GemsClientEvents {
     event.getToolTip().add(index++, loc.getMiscText("ToolPart.Rod"));
 
     if (ctrlDown) {
-      // Compatible tiers
-      String line = "";
-      for (EnumMaterialTier tier : part.getCompatibleTiers()) {
-        if (!line.isEmpty())
-          line += ", ";
-        line += tier.getLocalizedName();
-      }
-      event.getToolTip().add(index++, loc.getMiscText("ToolPart.ValidTiers"));
-      event.getToolTip().add(index++, "  " + line);
-
       // Debug info
       if (shiftDown) {
         event.getToolTip().add(index++, TextFormatting.DARK_GRAY + "* Part key: " + part.getKey());
@@ -119,40 +107,27 @@ public class GemsClientEvents {
     final String sep = loc.getMiscText("Tooltip.Separator");
     List<String> list = event.getToolTip();
 
-    // Material grade
-    EnumMaterialGrade grade = EnumMaterialGrade.fromStack(stack);
-    if (grade != EnumMaterialGrade.NONE) {
-      list.add(index++, loc.getMiscText("ToolPart.Grade", grade.getLocalizedName()));
-    }
-
-    // Material tier
-    EnumMaterialTier tier = part.getTier();
-    list.add(index++, loc.getMiscText("ToolPart.Tier", tier.getLocalizedName()));
-
     // Show stats?
     if (ctrlDown) {
-      int multi = 100 + EnumMaterialGrade.fromStack(stack).bonusPercent;
-
       //@formatter:off
 
       list.add(index++, sep);
       TextFormatting color = TextFormatting.GOLD;
-      list.add(index++, color + TooltipHelper.get("HarvestSpeed", part.getHarvestSpeed() * multi / 100));
-      list.add(index++, color + TooltipHelper.get("HarvestLevel", part.getHarvestLevel() * multi / 100));
+      list.add(index++, color + TooltipHelper.get("HarvestSpeed", part.getHarvestSpeed()));
+      list.add(index++, color + TooltipHelper.get("HarvestLevel", part.getHarvestLevel()));
       list.add(index++, sep);
       
       color = TextFormatting.DARK_GREEN;
-      list.add(index++, color + TooltipHelper.get("MeleeSpeed", (int) (part.getMeleeSpeed() * multi)));
-      list.add(index++, color + TooltipHelper.get("MeleeDamage", part.getMeleeDamage() * multi / 100));
-      list.add(index++, color + TooltipHelper.get("MagicDamage", part.getMagicDamage() * multi / 100));
+      list.add(index++, color + TooltipHelper.get("MeleeSpeed", (int) (part.getMeleeSpeed() * 100)));
+      list.add(index++, color + TooltipHelper.get("MeleeDamage", part.getMeleeDamage()));
+      list.add(index++, color + TooltipHelper.get("MagicDamage", part.getMagicDamage()));
       
-      list.add(index++, color + TooltipHelper.get("Protection", part.getProtection() * multi / 100));
+      list.add(index++, color + TooltipHelper.get("Protection", part.getProtection()));
       list.add(index++, sep);
       
       color = TextFormatting.BLUE;
-      list.add(index++, color + TooltipHelper.get("Durability", part.getDurability() * multi / 100));
-      list.add(index++, color + TooltipHelper.get("ChargeSpeed", part.getChargeSpeed() * multi / 100));
-      list.add(index++, color + TooltipHelper.get("Enchantability", part.getEnchantability() * multi / 100));
+      list.add(index++, color + TooltipHelper.get("Durability", part.getDurability()));
+      list.add(index++, color + TooltipHelper.get("Enchantability", part.getEnchantability()));
       list.add(index++, sep);
 
    // Debug info

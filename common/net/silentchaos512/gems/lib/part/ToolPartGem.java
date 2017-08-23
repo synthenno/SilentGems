@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.common.collect.Maps;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
@@ -39,11 +40,13 @@ public class ToolPartGem extends ToolPartMain {
   @Override
   public int getColor(ItemStack toolOrArmor) {
 
-    Item item = toolOrArmor.getItem();
-    if (item instanceof IArmor || item instanceof ItemGemShield || item instanceof ItemGemBow)
-      return gem.getColor();
-    else
-      return gem.ordinal() > 15 ? ToolRenderHelper.DARK_GEM_SHADE : 0xFFFFFF;
+    return gem.getColor();
+  }
+
+  @Override
+  public EnumRarity getRarity() {
+
+    return supercharged ? EnumRarity.RARE : EnumRarity.UNCOMMON;
   }
 
   @Override

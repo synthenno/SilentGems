@@ -7,7 +7,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.network.Message;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.StackHelper;
@@ -22,9 +21,7 @@ public class MessageToggleSpecial extends Message {
       ItemStack mainHand = player.getHeldItem(EnumHand.MAIN_HAND);
 
       if (StackHelper.isValid(mainHand) && mainHand.getItem() instanceof ITool) {
-        if (ToolHelper.getToolTier(mainHand) == EnumMaterialTier.SUPER) {
-          ToolHelper.toggleSpecialAbility(mainHand);
-        }
+        ToolHelper.toggleSpecialAbility(mainHand);
       }
     }
     return null;

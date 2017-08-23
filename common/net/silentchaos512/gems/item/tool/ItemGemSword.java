@@ -22,16 +22,15 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.client.gui.GuiChaosBar;
 import net.silentchaos512.gems.config.ConfigOptionToolClass;
 import net.silentchaos512.gems.config.GemsConfig;
@@ -43,7 +42,6 @@ import net.silentchaos512.gems.handler.PlayerDataHandler.PlayerData;
 import net.silentchaos512.gems.init.ModEnchantments;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
-import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.item.IItemSL;
@@ -62,52 +60,36 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
     setNoRepair();
   }
 
-  public ItemStack constructTool(boolean supercharged, ItemStack material) {
-
-    return constructTool(supercharged, material, material, material);
-  }
-
-  public ItemStack constructTool(boolean supercharged, ItemStack... materials) {
+  public ItemStack constructTool(boolean supercharged, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold
-        : new ItemStack(Items.STICK);
-    return ToolHelper.constructTool(this, rod, materials);
+    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold : new ItemStack(Items.STICK);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   // ===============
   // ITool overrides
   // ===============
-  
+
   public ConfigOptionToolClass getConfig() {
 
     return GemsConfig.sword;
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    if (materials.length == 2) {
-      ItemStack temp = materials[0];
-      materials[0] = materials[1];
-      materials[1] = temp;
-    }
-    return ToolHelper.constructTool(this, rod, materials);
+
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
-  public float getMeleeDamage(ItemStack tool) {
+  public float getMagicDamageModifier() {
 
-    return getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
-  }
-
-  @Override
-  public float getMagicDamage(ItemStack tool) {
-
-    return 2.0f + ToolHelper.getMagicDamage(tool);
+    return 2.0f;
   }
 
   @Override
@@ -131,7 +113,7 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
 
     ItemStack stack = player.getHeldItem(hand);
 
-    if (!player.isSneaking() || ToolHelper.getToolTier(stack).ordinal() < EnumMaterialTier.SUPER.ordinal()) {
+    if (!player.isSneaking()) {
       return new ActionResult<ItemStack>(EnumActionResult.PASS, stack);
     }
 
@@ -166,10 +148,6 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   private List<EntityChaosProjectile> getShots(EntityPlayer player, ItemStack stack) {
 
     List<EntityChaosProjectile> list = Lists.newArrayList();
-
-    if (ToolHelper.getToolTier(stack).ordinal() < EnumMaterialTier.SUPER.ordinal()) {
-      return list;
-    }
 
     // Calculate magic damage.
     // Includes player "magic strength" (currently just a constant 1, might do something with it later).
@@ -246,8 +224,7 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   }
 
   @Override
-  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack,
-      boolean slotChanged) {
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 
     return ToolRenderHelper.instance.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
   }
@@ -257,7 +234,7 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
 
     return ToolRenderHelper.instance.hasEffect(stack);
   }
-  
+
   @Override
   public EnumRarity getRarity(ItemStack stack) {
 
@@ -271,8 +248,7 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   }
 
   @Override
-  public void onUpdate(ItemStack tool, World world, Entity entity, int itemSlot,
-      boolean isSelected) {
+  public void onUpdate(ItemStack tool, World world, Entity entity, int itemSlot, boolean isSelected) {
 
     ToolHelper.onUpdate(tool, world, entity, itemSlot, isSelected);
   }
@@ -282,15 +258,13 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   // ==================
 
   @Override
-  public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot,
-      ItemStack stack) {
+  public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
 
     return ToolHelper.getAttributeModifiers(slot, stack);
   }
 
   @Override
-  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos,
-      EntityLivingBase entityLiving) {
+  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
 
     return ToolHelper.onBlockDestroyed(stack, world, state, pos, entityLiving);
   }
@@ -311,11 +285,14 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   // IRegistryObject
   // ===============
 
+  public IRecipe recipe;
+
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "g", "g", "s");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, "g", "g", "s");
+    }
   }
 
   @Override
@@ -394,11 +371,4 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
 
     list.addAll(ToolHelper.getSubItems(item, 3));
   }
-
-  // onItemUse
-//  public EnumActionResult func_180614_a(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-//      EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-//
-//    return onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
-//  }
 }

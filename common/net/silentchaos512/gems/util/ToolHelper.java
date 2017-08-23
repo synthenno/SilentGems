@@ -45,7 +45,6 @@ import net.silentchaos512.gems.api.tool.ToolStats;
 import net.silentchaos512.gems.api.tool.part.ToolPart;
 import net.silentchaos512.gems.api.tool.part.ToolPartMain;
 import net.silentchaos512.gems.api.tool.part.ToolPartRegistry;
-import net.silentchaos512.gems.api.tool.part.ToolPartTip;
 import net.silentchaos512.gems.config.ConfigOptionToolClass;
 import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.guide.GuideBookGems;
@@ -155,10 +154,10 @@ public class ToolHelper {
     }
 
     // Set color for parts
-    setTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + ToolRenderHelper.LAYER_HEAD + "Color", partHead.getColor(tool));
-    setTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + ToolRenderHelper.LAYER_ROD + "Color", partRod.getColor(tool));
-    setTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + ToolRenderHelper.LAYER_TIP + "Color", partTip.getColor(tool));
-    setTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + ToolRenderHelper.LAYER_ROD_DECO + "Color", partDeco.getColor(tool));
+    colorCache(tool, ToolRenderHelper.LAYER_HEAD, partHead);
+    colorCache(tool, ToolRenderHelper.LAYER_ROD, partRod);
+    colorCache(tool, ToolRenderHelper.LAYER_TIP, partTip);
+    colorCache(tool, ToolRenderHelper.LAYER_ROD_DECO, partDeco);
 
     setTagInt(tool, NBT_ROOT_PROPERTIES, NBT_PROP_DURABILITY, (int) stats.durability);
     setTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_HARVEST_SPEED, stats.harvestSpeed);
@@ -168,6 +167,16 @@ public class ToolHelper {
     setTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_BLOCKING_POWER, stats.blockingPower);
     setTagInt(tool, NBT_ROOT_PROPERTIES, NBT_PROP_ENCHANTABILITY, (int) stats.enchantability);
     setTagInt(tool, NBT_ROOT_PROPERTIES, NBT_PROP_HARVEST_LEVEL, stats.harvestLevel);
+  }
+
+  private static void colorCache(ItemStack tool, int layer, ToolPart part) {
+
+    if (tool == null)
+      return;
+
+    String key = "Layer" + layer + "_Color";
+    int color = part == null ? 0xFFFFFF : part.getColor(tool);
+    setTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, key, color);
   }
 
   // ==========================================================================
@@ -624,8 +633,24 @@ public class ToolHelper {
     NBTTagCompound tags = new NBTTagCompound();
     result.setTagCompound(tags);
 
-    GameRegistry.addShapedRecipe(recipeName, new ResourceLocation(SilentGems.MODID), result, line1, line2, line3, 'g', headIngredient, 's', rodIngredient);
-    return SilentGems.registry.recipes.makeShaped(result, line1, line2, line3, 'g', headIngredient, 's', rodIngredient);
+    if (line3 == null) {
+      GameRegistry.addShapedRecipe(recipeName, new ResourceLocation(SilentGems.MODID), result, line1, line2, 'g', headIngredient, 's', rodIngredient);
+      return SilentGems.registry.recipes.makeShaped(result, line1, line2, 'g', headIngredient, 's', rodIngredient);
+    } else {
+      GameRegistry.addShapedRecipe(recipeName, new ResourceLocation(SilentGems.MODID), result, line1, line2, line3, 'g', headIngredient, 's', rodIngredient);
+      return SilentGems.registry.recipes.makeShaped(result, line1, line2, line3, 'g', headIngredient, 's', rodIngredient);
+    }
+  }
+
+  public static String getDisplayName(ItemStack tool, String toolClass) {
+
+    ToolPart head = getPartHead(tool);
+    if (head == null) {
+      return SilentGems.localizationHelper.getLocalizedString("item", toolClass + ".name");
+    }
+
+    String material = head.getDisplayName(head.getCraftingStack());
+    return SilentGems.localizationHelper.getLocalizedString("tool", toolClass, material); 
   }
 
   // ==========================================================================
@@ -753,7 +778,7 @@ public class ToolHelper {
     return ToolPartRegistry.getPart(getPartId(tool, NBT_PART_ROD_DECO));
   }
 
-  public static void setPartTip(ItemStack tool, ToolPartTip part) {
+  public static void setPartTip(ItemStack tool, ToolPart part) {
 
     setTagPart(tool, NBT_PART_HEAD_TIP, part);
   }
@@ -894,7 +919,7 @@ public class ToolHelper {
 
   public static int getColorForPass(ItemStack tool, int pass) {
 
-    return getTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + pass + "Color", 0xFFFFFF);
+    return getTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + pass + "_Color", 0xFFFFFF);
   }
 
   // public static int getAnimationFrame(ItemStack tool) {

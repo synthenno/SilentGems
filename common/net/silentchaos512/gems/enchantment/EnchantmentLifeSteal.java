@@ -8,8 +8,6 @@ import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.util.math.MathHelper;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.util.ToolHelper;
 
 public class EnchantmentLifeSteal extends Enchantment {
 

@@ -41,17 +41,18 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
     super();
     setUnlocalizedName(SilentGems.RESOURCE_PREFIX + Names.TOMAHAWK);
   }
-  
+
   public ConfigOptionToolClass getConfig() {
 
     return GemsConfig.tomahawk;
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
-    if (getConfig().isDisabled) return StackHelper.empty();
-    return ToolHelper.constructTool(this, rod, materials);
+    if (getConfig().isDisabled)
+      return StackHelper.empty();
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   public float getThrownDamage(ItemStack tomahawk) {
@@ -68,13 +69,13 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
   }
 
   @Override
-  public float getMagicDamage(ItemStack tool) {
+  public float getMeleeDamageModifier() {
 
-    return 1.0f + ToolHelper.getMagicDamage(tool);
+    return 1.0f;
   }
 
   @Override
-  public float getMeleeDamageModifier() {
+  public float getMagicDamageModifier() {
 
     return 1.0f;
   }
@@ -136,8 +137,9 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "ggg", "gs ", " s ");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, "ggg", "gs ", " s ");
+    }
   }
 
   @Override
@@ -152,7 +154,7 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
     ItemStack stack = player.getHeldItem(hand);
 
     // Prepare to throw
-    if (!ToolHelper.isBroken(stack) && (getAmmo(stack) > 0 || player.capabilities.isCreativeMode)) {
+    if (getAmmo(stack) > 0 || player.capabilities.isCreativeMode) {
       player.setActiveHand(hand);
       return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
@@ -160,8 +162,7 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
   }
 
   @Override
-  public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving,
-      int timeLeft) {
+  public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
 
     // Throw it!
     if (entityLiving instanceof EntityPlayer) {
@@ -171,8 +172,7 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
       int useDuration = getMaxItemUseDuration(stack) - timeLeft;
       if (useDuration < 4 || !hasAmmo)
         return;
-      float speed = MathHelper.clamp(1.5f * useDuration / 12, 0.1f,
-          EntityThrownTomahawk.MAX_SPEED);
+      float speed = MathHelper.clamp(1.5f * useDuration / 12, 0.1f, EntityThrownTomahawk.MAX_SPEED);
 
       EntityThrownTomahawk projectile = new EntityThrownTomahawk(player, stack, speed);
       projectile.setPosition(player.posX, player.posY + 1.6, player.posZ);
@@ -190,8 +190,7 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
   }
 
   @Override
-  public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos,
-      EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+  public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
     // Cancel right-click-to-place.
     return EnumActionResult.PASS;
@@ -214,8 +213,8 @@ public class ItemGemTomahawk extends ItemGemAxe implements IAmmoTool {
   // =================================
 
   // onItemUse
-  public EnumActionResult func_180614_a(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-      EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+  public EnumActionResult func_180614_a(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY,
+      float hitZ) {
 
     return onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
   }

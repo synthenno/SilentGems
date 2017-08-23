@@ -19,28 +19,27 @@ public class ItemGemDagger extends ItemGemSword {
     super();
     setUnlocalizedName(SilentGems.RESOURCE_PREFIX + Names.DAGGER);
   }
-  
+
   public ConfigOptionToolClass getConfig() {
 
     return GemsConfig.dagger;
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
-  public ItemStack constructTool(boolean supercharged, ItemStack... materials) {
+  public ItemStack constructTool(boolean supercharged, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold
-        : new ItemStack(Items.STICK);
-    return ToolHelper.constructTool(this, rod, materials);
+    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold : new ItemStack(Items.STICK);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
@@ -50,13 +49,13 @@ public class ItemGemDagger extends ItemGemSword {
   }
 
   @Override
-  public float getMagicDamage(ItemStack tool) {
+  public float getMeleeDamageModifier() {
 
-    return 1.0f + ToolHelper.getMagicDamage(tool);
+    return 1.0f;
   }
 
   @Override
-  public float getMeleeDamageModifier() {
+  public float getMagicDamageModifier() {
 
     return 1.0f;
   }
@@ -86,35 +85,36 @@ public class ItemGemDagger extends ItemGemSword {
     return super.hitEntity(stack, target, attacker);
   }
 
-//  // onItemRightClick 1.10.2
-//  public ActionResult<ItemStack> func_77659_a(ItemStack stack, World world, EntityPlayer player,
-//      EnumHand hand) {
-//
-//    return compatOnItemRightClick(world, player, hand);
-//  }
-//
-//  @Override
-//  public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-//
-//    return compatOnItemRightClick(world, player, hand);
-//  }
-//
-//  protected ActionResult<ItemStack> compatOnItemRightClick(World world, EntityPlayer player,
-//      EnumHand hand) {
-//
-//    EnumHand handOther = hand == EnumHand.MAIN_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
-//    ItemStack stackOther = player.getHeldItem(handOther);
-//    if (StackHelper.isValid(stackOther)) {
-//      player.swingArm(hand);
-//    }
-//    return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(hand));
-//  }
+  // // onItemRightClick 1.10.2
+  // public ActionResult<ItemStack> func_77659_a(ItemStack stack, World world, EntityPlayer player,
+  // EnumHand hand) {
+  //
+  // return compatOnItemRightClick(world, player, hand);
+  // }
+  //
+  // @Override
+  // public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
+  //
+  // return compatOnItemRightClick(world, player, hand);
+  // }
+  //
+  // protected ActionResult<ItemStack> compatOnItemRightClick(World world, EntityPlayer player,
+  // EnumHand hand) {
+  //
+  // EnumHand handOther = hand == EnumHand.MAIN_HAND ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND;
+  // ItemStack stackOther = player.getHeldItem(handOther);
+  // if (StackHelper.isValid(stackOther)) {
+  // player.swingArm(hand);
+  // }
+  // return new ActionResult<ItemStack>(EnumActionResult.PASS, player.getHeldItem(hand));
+  // }
 
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "g", "s", "f");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, "g", "s", null);
+    }
   }
 
   @Override

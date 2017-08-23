@@ -18,7 +18,6 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.handler.PlayerDataHandler;
 import net.silentchaos512.gems.handler.PlayerDataHandler.PlayerData;
 import net.silentchaos512.gems.util.ToolHelper;
@@ -59,8 +58,7 @@ public class SkillAreaMiner extends ToolSkillDigger {
     }
 
     // Must be super tool with special enabled.
-    if (ToolHelper.getToolTier(tool).ordinal() < EnumMaterialTier.SUPER.ordinal()
-        || !ToolHelper.isSpecialAbilityEnabled(tool)) {
+    if (!ToolHelper.isSpecialAbilityEnabled(tool)) {
       return false;
     }
 

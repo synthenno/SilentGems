@@ -1,9 +1,7 @@
 package net.silentchaos512.gems.compat.tconstruct;
 
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.lib.EnumGem;
-import slimeknights.tconstruct.TinkerIntegration;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.materials.ArrowShaftMaterialStats;
 import slimeknights.tconstruct.library.materials.BowMaterialStats;
@@ -20,9 +18,9 @@ public class TConstructGemsCompat {
 
     try {
       for (EnumGem gem : EnumGem.values())
-        register(gem, EnumMaterialTier.REGULAR);
+        register(gem, false);
       for (EnumGem gem : EnumGem.values())
-        register(gem, EnumMaterialTier.SUPER);
+        register(gem, true);
     } catch (NoSuchMethodError ex) {
       SilentGems.logHelper.info("Failed to load TConstruct module. Are Tinkers tools disabled?");
       ex.printStackTrace();
@@ -32,15 +30,13 @@ public class TConstructGemsCompat {
     }
   }
 
-  private static Material register(EnumGem gem, EnumMaterialTier tier) {
+  private static Material register(EnumGem gem, boolean supercharged) {
 
-    Material material = new TConstructMaterialGem(gem, tier);
+    Material material = new TConstructMaterialGem(gem, supercharged);
 
-    String oreRequirement = tier == EnumMaterialTier.SUPER ? gem.getItemSuperOreName()
-        : gem.getItemOreName();
-    String oreSuffix = gem.getGemName() + (tier == EnumMaterialTier.SUPER ? "Super" : "");
-    MaterialIntegrationGems integration = new MaterialIntegrationGems(material, oreSuffix,
-        oreRequirement);
+    String oreRequirement = supercharged ? gem.getItemSuperOreName() : gem.getItemOreName();
+    String oreSuffix = gem.getGemName() + (supercharged ? "Super" : "");
+    MaterialIntegrationGems integration = new MaterialIntegrationGems(material, oreSuffix, oreRequirement);
 
     integration.setRepresentativeItem(oreRequirement);
     integration.integrate();
@@ -54,18 +50,16 @@ public class TConstructGemsCompat {
     // TinkerRegistry.integrate(mat,
     // tier == EnumMaterialTier.SUPER ? gem.getItemSuperOreName() : gem.getItemOreName());
 
-    int durability = gem.getDurability(tier);
-    float miningSpeed = gem.getMiningSpeed(tier);
-    float meleeDamage = gem.getMeleeDamage(tier);
-    float meleeSpeed = gem.getMeleeSpeed(tier);
-    int harvestLevel = gem.getHarvestLevel(tier);
+    int durability = gem.getDurability(supercharged);
+    float miningSpeed = gem.getMiningSpeed(supercharged);
+    float meleeDamage = gem.getMeleeDamage(supercharged);
+    float meleeSpeed = gem.getMeleeSpeed(supercharged);
+    int harvestLevel = gem.getHarvestLevel(supercharged);
     float drawDelay = Math.max(38.4f - 1.4f * meleeSpeed * miningSpeed, 10);
 
-    TinkerRegistry.addMaterialStats(material,
-        new HeadMaterialStats(durability, miningSpeed, meleeDamage, harvestLevel),
+    TinkerRegistry.addMaterialStats(material, new HeadMaterialStats(durability, miningSpeed, meleeDamage, harvestLevel),
         new HandleMaterialStats(0.875f, durability / 8), new ExtraMaterialStats(durability / 8),
-        new BowMaterialStats(20f / drawDelay, 1f, 0.4f * meleeDamage - 1),
-        new ArrowShaftMaterialStats(1.0f, 0));
+        new BowMaterialStats(20f / drawDelay, 1f, 0.4f * meleeDamage - 1), new ArrowShaftMaterialStats(1.0f, 0));
     // TinkerRegistry.addMaterialStats(mat, new BowStringMaterialStats(1f));
     // TinkerRegistry.addMaterialStats(mat, new FletchingMaterialStats(1f, 1f));
     // TinkerRegistry.addMaterialStats(mat, new ProjectileMaterialStats());

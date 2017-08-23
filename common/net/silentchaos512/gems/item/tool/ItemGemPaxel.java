@@ -11,8 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.config.ConfigOptionToolClass;
 import net.silentchaos512.gems.config.GemsConfig;
-import net.silentchaos512.gems.init.ModItems;
-import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.registry.RecipeMaker;
@@ -40,24 +38,18 @@ public class ItemGemPaxel extends ItemGemPickaxe {
       set.add(mat);
     return set.toArray(new Material[set.size()]);
   }
-  
+
   public ConfigOptionToolClass getConfig() {
 
     return GemsConfig.paxel;
   }
 
   @Override
-  public ItemStack constructTool(boolean supercharged, ItemStack material) {
-
-    return constructTool(supercharged, material, material, material, material, material);
-  }
-
-  @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
@@ -90,17 +82,10 @@ public class ItemGemPaxel extends ItemGemPickaxe {
     return 0.70f;
   }
 
-  @SuppressWarnings("deprecation")
-  @Override
-  public boolean isSuperTool() {
-
-    return true;
-  }
-
   @Override
   public Material[] getExtraEffectiveMaterials(ItemStack tool) {
 
-    return ToolHelper.isBroken(tool) ? new Material[] {} : EFFECTIVE_MATERIALS;
+    return EFFECTIVE_MATERIALS;
   }
 
   @Override
@@ -126,15 +111,15 @@ public class ItemGemPaxel extends ItemGemPickaxe {
   @Override
   public Set<String> getToolClasses(ItemStack stack) {
 
-    return ToolHelper.isBroken(stack) ? ImmutableSet.of()
-        : ImmutableSet.of("pickaxe", "shovel", "axe");
+    return ImmutableSet.of("pickaxe", "shovel", "axe");
   }
 
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "ggg", "gsg", "gs ");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, "ggg", "gsg", "gs ");
+    }
   }
 
   @Override

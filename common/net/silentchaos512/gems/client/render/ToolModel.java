@@ -2,16 +2,13 @@ package net.silentchaos512.gems.client.render;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -28,12 +25,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.PerspectiveMapWrapper;
-import net.minecraftforge.client.model.SimpleModelState;
-import net.minecraftforge.common.model.IModelState;
-import net.minecraftforge.common.model.TRSRTransformation;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.api.lib.EnumPartPosition;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.gems.item.tool.ItemGemScepter;
@@ -75,8 +67,7 @@ public class ToolModel extends MultiLayerModelSL {
     }
 
     if (modelManager == null) {
-      modelManager = Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-          .getModelManager();
+      modelManager = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
     }
 
     List<BakedQuad> quads = Lists.newArrayList();
@@ -84,51 +75,34 @@ public class ToolModel extends MultiLayerModelSL {
     IBakedModel model;
     IBakedModel rodModel = null;
 
-    boolean isBroken = ToolHelper.isBroken(tool);
     Item item = tool.getItem();
 
     // Invalid tools models.
     if (ToolHelper.getMaxDamage(tool) <= 0 && tool.getItem() instanceof IRegistryObject) {
       String name = ((IRegistryObject) tool.getItem()).getName();
-      location = new ModelResourceLocation(SilentGems.MODID + ":" + name.toLowerCase() + "/_error",
-          "inventory");
+      location = new ModelResourceLocation(SilentGems.MODID + ":" + name.toLowerCase() + "/_error", "inventory");
       model = modelManager.getModel(location);
       if (model != null) {
         quads.addAll(model.getQuads(state, side, rand));
       }
 
-//      if (isGui) {
-//        quads.addAll(modelManager.getModel(ToolRenderHelper.getInstance().modelError)
-//            .getQuads(state, side, rand));
-//      }
-
       return quads;
     }
 
-    for (EnumPartPosition partPos : EnumPartPosition.values()) {
-      if (isBroken) {
-        if ((partPos == EnumPartPosition.HEAD_LEFT && item != ModItems.sword
-            && item != ModItems.bow)
-            || (partPos == EnumPartPosition.HEAD_MIDDLE && item != ModItems.bow)
-            || (partPos == EnumPartPosition.HEAD_RIGHT && item != ModItems.bow)
-            || partPos == EnumPartPosition.TIP) {
-          continue;
-        }
-      }
-
+    for (int layer = 0; layer < ToolRenderHelper.RENDER_PASS_COUNT; ++layer) {
       // Scepter rods on top of head.
       if (tool.getItem() instanceof ItemGemScepter) {
-        if (partPos == EnumPartPosition.ROD) {
-          location = ToolRenderHelper.getInstance().getModel(tool, partPos);
+        if (layer == ToolRenderHelper.LAYER_ROD) {
+          location = ToolRenderHelper.getInstance().getModel(tool, layer);
           rodModel = modelManager.getModel(location);
           continue;
-        } else if (partPos == EnumPartPosition.ROD_DECO) {
+        } else if (layer == ToolRenderHelper.LAYER_ROD_DECO) {
           quads.addAll(rodModel.getQuads(state, side, rand));
         }
       }
 
       // Normal logic.
-      location = ToolRenderHelper.getInstance().getModel(tool, partPos);
+      location = ToolRenderHelper.getInstance().getModel(tool, layer);
       if (location != null) {
         model = modelManager.getModel(location);
         if (model != null) {
@@ -207,9 +181,8 @@ public class ToolModel extends MultiLayerModelSL {
     firstPersonLeft = new ItemTransformVec3f(rotation, translation, scale);
 
     // Head and GUI are default.
-    return new ItemCameraTransforms(thirdPersonLeft, thirdPersonRight, firstPersonLeft,
-        firstPersonRight, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT,
-        ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
+    return new ItemCameraTransforms(thirdPersonLeft, thirdPersonRight, firstPersonLeft, firstPersonRight, ItemTransformVec3f.DEFAULT,
+        ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT, ItemTransformVec3f.DEFAULT);
   }
 
   // @Override
@@ -219,8 +192,7 @@ public class ToolModel extends MultiLayerModelSL {
   // }
 
   @Override
-  public Pair<? extends IBakedModel, Matrix4f> handlePerspective(
-      TransformType cameraTransformType) {
+  public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
 
     Matrix4f matrix = new Matrix4f();
     switch (cameraTransformType) {

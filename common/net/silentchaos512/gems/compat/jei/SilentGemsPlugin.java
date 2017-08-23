@@ -90,7 +90,6 @@ public class SilentGemsPlugin implements IModPlugin {
     reg.addDescription(new ItemStack(ModBlocks.chaosNode), prefix + Names.CHAOS_NODE);
     reg.addDescription(new ItemStack(ModBlocks.chaosPylon, 1, 0), prefix + Names.CHAOS_PYLON + "0");
     reg.addDescription(new ItemStack(ModBlocks.chaosPylon, 1, 1), prefix + Names.CHAOS_PYLON + "1");
-    reg.addDescription(new ItemStack(ModBlocks.materialGrader), prefix + Names.MATERIAL_GRADER);
 
     reg.addDescription(new ItemStack(ModItems.gem, 1, OreDictionary.WILDCARD_VALUE),
         prefix + Names.GEM);

@@ -3,7 +3,7 @@ package net.silentchaos512.gems.item;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
+import net.silentchaos512.gems.api.tool.part.ToolPart;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.util.ToolHelper;
@@ -47,17 +47,19 @@ public class ToolRenderHelperBase extends ItemSL {
     // return tool.isItemEnchanted();
     return false; // TODO: If anyone can fix this, please do so!
   }
-  
+
   public EnumRarity getRarity(ItemStack tool) {
 
+    ToolPart head = ToolHelper.getPartHead(tool);
+    if (head == null) {
+      return EnumRarity.COMMON;
+    }
     return ToolHelper.getPartHead(tool).getRarity();
   }
 
-  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack,
-      boolean slotChanged) {
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 
     return slotChanged || !oldStack.isItemEqual(newStack)
-        || (oldStack.hasTagCompound() && newStack.hasTagCompound()
-            && !oldStack.getTagCompound().equals(newStack.getTagCompound()));
+        || (oldStack.hasTagCompound() && newStack.hasTagCompound() && !oldStack.getTagCompound().equals(newStack.getTagCompound()));
   }
 }

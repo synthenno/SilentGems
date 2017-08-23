@@ -33,16 +33,10 @@ public class ModuleEntityRandomEquipment {
 
   public static final String MODULE_NAME = "mob_equipment";
 
-  public static final ItemStack SILENT_KATANA = ModItems.katana.constructTool(
-      ModItems.craftingMaterial.toolRodSilver, EnumGem.RUBY.getItemSuper(),
-      EnumGem.ONYX.getItemSuper()); // Deliberately using 2 parts because I can :)
-
   public static boolean MODULE_ENABLED = true;
   public static float SWORD_CHANCE = 0.075f;
   public static float KATANA_CHANCE = 0.5f;
   public static float SUPER_CHANCE = 0.25f;
-  public static float SWORD_EXTRA_GEM_CHANCE = 0.33f;
-  public static float SELECT_EXTRA_GEM_CHANCE = 0.6f;
   public static float EQUIPMENT_DROP_CHANCE = 0.11f; // Vanilla 8.5%
   public static float SWORD_MULTI_HUMAN = 2.0f;
   public static float SWORD_MULTI_SKELETON = 0.5f;
@@ -62,11 +56,6 @@ public class ModuleEntityRandomEquipment {
         "Chance that a super-tier sword will be a katana.");
     SUPER_CHANCE = c.getFloat("SuperChance", cat, SUPER_CHANCE, 0, 1,
         "Chance that equipment will be super-tier if given.");
-    SWORD_EXTRA_GEM_CHANCE = c.getFloat("SwordExtraGemChance", cat, SWORD_EXTRA_GEM_CHANCE, 0, 1,
-        "Chance that a sword (not katanas) will get a third gem. The cheaters!");
-    SELECT_EXTRA_GEM_CHANCE = c.getFloat("SelectExtraGemChance", cat, SELECT_EXTRA_GEM_CHANCE, 0, 1,
-        "Chance that another gem will be selected after the previous one (for example, after one is\n"
-            + "selected this is the chance of getting a second.)");
     EQUIPMENT_DROP_CHANCE = c.getFloat("EquipmentDropChance", cat, EQUIPMENT_DROP_CHANCE, 0, 1,
         "Chance the item will be dropped on death (vanilla is 0.085)");
 
@@ -129,25 +118,18 @@ public class ModuleEntityRandomEquipment {
     boolean genKatana = superTier && rand.nextFloat() < KATANA_CHANCE;
 
     ItemGemSword item;
-    int maxGemCount;
 
     if (genKatana) {
       item = ModItems.katana;
-      maxGemCount = 3;
     } else {
       item = ModItems.sword;
-      maxGemCount = rand.nextFloat() < SWORD_EXTRA_GEM_CHANCE ? 3 : 2;
     }
 
-    Set<EnumGem> gemSet = selectRandomGems(maxGemCount, rand);
-    List<EnumGem> gemList = expandGemsSet(gemSet, maxGemCount, rand);
-
-    List<ItemStack> mats = Lists.newArrayList();
-    for (EnumGem gem : gemList)
-      mats.add(superTier ? gem.getItemSuper() : gem.getItem());
+    EnumGem gem = EnumGem.getRandom();
+    ItemStack gemItem = superTier ? gem.getItemSuper() : gem.getItem();
 
     // SilentGems.logHelper.debug(superTier, gemList);
-    return item.constructTool(superTier, mats.toArray(new ItemStack[mats.size()]));
+    return item.constructTool(superTier, gemItem);
   }
 
   public static void equipEntityWithItem(EntityLivingBase entity, ItemStack stack,
@@ -170,26 +152,6 @@ public class ModuleEntityRandomEquipment {
 
     // Set it.
     entity.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, copy);
-  }
-
-  public static Set<EnumGem> selectRandomGems(int maxCount, Random rand) {
-
-    Set<EnumGem> gems = Sets.newHashSet();
-    for (int i = 0; i < maxCount; ++i) {
-      int index = rand.nextInt(EnumGem.values().length);
-      gems.add(EnumGem.values()[index]);
-      if (rand.nextFloat() > SELECT_EXTRA_GEM_CHANCE)
-        return gems;
-    }
-    return gems;
-  }
-
-  public static List<EnumGem> expandGemsSet(Set<EnumGem> gems, int targetCount, Random rand) {
-
-    List<EnumGem> list = Lists.newArrayList(gems.iterator());
-    for (int i = list.size(); i < targetCount; ++i)
-      list.add(list.get(rand.nextInt(gems.size())));
-    return list;
   }
 
   public static boolean selectBasedOnDifficulty(float baseChance, EnumDifficulty worldDifficulty,

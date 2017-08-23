@@ -17,7 +17,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemShield;
@@ -103,7 +102,7 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
     if (!player.isActiveItemStackBlocking() || player.getActiveItemStack().getItem() != this)
       return false;
 
-    return !ToolHelper.isBroken(player.getActiveItemStack());
+    return true;
   }
 
   @Override
@@ -123,14 +122,12 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
 
-    if (materials.length == 1)
-      return constructTool(rod, materials[0], materials[0], materials[0]);
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
@@ -140,15 +137,15 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
   }
 
   @Override
-  public float getMagicDamage(ItemStack tool) {
-
-    return 0.0f;
-  }
-
-  @Override
   public float getMeleeDamageModifier() {
 
     return -4.0f;
+  }
+
+  @Override
+  public float getMagicDamageModifier() {
+    
+    return 0.0f;
   }
 
   @Override
@@ -181,6 +178,7 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
 
   private void addRecipe(ItemStack result, ItemStack head, Object rod) {
 
+    // FIXME
     ToolPart part = ToolPartRegistry.fromStack(head);
     if (part != null && !part.isBlacklisted(head))
       SilentGems.registry.recipes.addShapedOre("shield_example" + (++lastIndex), result, "gwg",
@@ -190,15 +188,6 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
   @Override
   public void addOreDict() {
 
-  }
-
-  // ========================
-  // = ItemShield overrides =
-  // ========================
-
-  public EnumAction getItemUseAction(ItemStack stack) {
-
-    return ToolHelper.isBroken(stack) ? EnumAction.NONE : EnumAction.BLOCK;
   }
 
   // ==================

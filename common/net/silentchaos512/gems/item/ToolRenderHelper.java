@@ -191,26 +191,32 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       line = loc.getMiscText("Tooltip.Construction");
       list.add(line);
 
-      list.add("    (TODO)"); // FIXME
+      ToolPart partHead = ToolHelper.getPartHead(tool);
+      ToolPart partRod = ToolHelper.getPartRod(tool);
+      // TODO: Localizations
+      list.add("Head: " + partHead.getKey());
+      list.add("Rod: " + partRod.getKey());
       list.add(sep);
     } else {
       list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.AltForStat"));
     }
 
     // Debug render layers
-    // if (controlDown && shiftDown && tool.hasTagCompound()) {
-    // if (!altDown)
-    // list.add(sep);
-    // for (EnumPartPosition pos : EnumPartPosition.values()) {
-    // NBTTagCompound tags = tool.getTagCompound().getCompoundTag(NBT_MODEL_INDEX);
-    // if (tags != null) {
-    // String key = "Layer" + pos.ordinal();
-    // String str = "%s: %d, %X";
-    // str = String.format(str, key, tags.getInteger(key), tags.getInteger(key + "Color"));
-    // list.add(str);
-    // }
-    // }
-    // }
+    if (controlDown && shiftDown && tool.hasTagCompound()) {
+      if (!altDown)
+        list.add(sep);
+      for (int layer = 0; layer < RENDER_PASS_COUNT; ++layer) {
+        NBTTagCompound tags = tool.getTagCompound().getCompoundTag(NBT_MODEL_INDEX);
+        if (tags != null) {
+          String key = "Layer" + layer;
+          String str = "%s: %d %s, %X";
+          int index = tags.getInteger(key);
+          ModelResourceLocation modelRes = index >= 0 && index < models.length ? models[index] : null;
+          str = String.format(str, key, index, modelRes, tags.getInteger(key + "_Color"));
+          list.add(str);
+        }
+      }
+    }
   }
 
   public String getTooltipLine(String key, int value) {

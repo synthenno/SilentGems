@@ -19,10 +19,29 @@ public class RecipeCraftTool extends RecipeBaseSL {
 
     Item item = null;
 
-    if (ModItems.pickaxe.recipe.matches(inv, null)) {
+    if (ModItems.paxel.recipe.matches(inv, null)) {
+      item = ModItems.paxel;
+    } else if (ModItems.scepter.recipe.matches(inv, null)) {
+      item = ModItems.scepter;
+    } else if (ModItems.tomahawk.recipe.matches(inv, null)) {
+      item = ModItems.tomahawk;
+    } else if (ModItems.katana.recipe.matches(inv, null)) {
+      item = ModItems.katana;
+    } else if (ModItems.pickaxe.recipe.matches(inv, null)) {
       item = ModItems.pickaxe;
+    } else if (ModItems.sickle.recipe.matches(inv, null)) {
+      item = ModItems.sickle;
+    } else if (ModItems.axe.recipe.matches(inv, null)) {
+      item = ModItems.axe;
+    } else if (ModItems.sword.recipe.matches(inv, null)) {
+      item = ModItems.sword;
+    } else if (ModItems.hoe.recipe.matches(inv, null)) {
+      item = ModItems.hoe;
+    } else if (ModItems.dagger.recipe.matches(inv, null)) {
+      item = ModItems.dagger;
+    } else if (ModItems.shovel.recipe.matches(inv, null)) {
+      item = ModItems.shovel;
     }
-    // TODO: All classes
 
     if (item != null) {
       ItemStack head = getHead(inv);

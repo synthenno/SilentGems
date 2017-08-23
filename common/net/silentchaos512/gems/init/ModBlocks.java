@@ -1,7 +1,6 @@
 package net.silentchaos512.gems.init;
 
 import net.minecraft.block.Block;
-import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.block.BlockChaosAltar;
 import net.silentchaos512.gems.block.BlockChaosFlowerPot;
 import net.silentchaos512.gems.block.BlockChaosNode;
@@ -15,7 +14,6 @@ import net.silentchaos512.gems.block.BlockGemGlass;
 import net.silentchaos512.gems.block.BlockGemLamp;
 import net.silentchaos512.gems.block.BlockGemOre;
 import net.silentchaos512.gems.block.BlockGlowRose;
-import net.silentchaos512.gems.block.BlockMaterialGrader;
 import net.silentchaos512.gems.block.BlockMisc;
 import net.silentchaos512.gems.block.BlockPhantomLight;
 import net.silentchaos512.gems.block.BlockTeleporter;
@@ -27,7 +25,6 @@ import net.silentchaos512.gems.tile.TileChaosAltar;
 import net.silentchaos512.gems.tile.TileChaosFlowerPot;
 import net.silentchaos512.gems.tile.TileChaosNode;
 import net.silentchaos512.gems.tile.TileChaosPylon;
-import net.silentchaos512.gems.tile.TileMaterialGrader;
 import net.silentchaos512.gems.tile.TilePhantomLight;
 import net.silentchaos512.gems.tile.TileTeleporter;
 import net.silentchaos512.lib.registry.IRegistrationHandler;
@@ -66,7 +63,6 @@ public class ModBlocks implements IRegistrationHandler<Block> {
   public static final BlockFluffyBlock fluffyBlock = new BlockFluffyBlock();
   public static final BlockFluffyPuffPlant fluffyPuffPlant = new BlockFluffyPuffPlant();
   public static final BlockChaosFlowerPot chaosFlowerPot = new BlockChaosFlowerPot();
-  public static final BlockMaterialGrader materialGrader = new BlockMaterialGrader();
   public static final BlockChaosNode chaosNode = new BlockChaosNode();
   public static final BlockChaosAltar chaosAltar = new BlockChaosAltar();
   public static final BlockChaosPylon chaosPylon = new BlockChaosPylon();
@@ -106,7 +102,6 @@ public class ModBlocks implements IRegistrationHandler<Block> {
     reg.registerBlock(fluffyBlock);
     reg.registerBlock(fluffyPuffPlant, Names.FLUFFY_PUFF_PLANT).setCreativeTab(null);
     reg.registerBlock(chaosFlowerPot, Names.CHAOS_FLOWER_POT);
-    reg.registerBlock(materialGrader);
     reg.registerBlock(chaosNode);
     reg.registerBlock(chaosAltar);
     reg.registerBlock(chaosPylon, Names.CHAOS_PYLON);
@@ -114,7 +109,6 @@ public class ModBlocks implements IRegistrationHandler<Block> {
 
     reg.registerTileEntity(TileTeleporter.class, Names.TELEPORTER);
     reg.registerTileEntity(TileChaosFlowerPot.class, Names.CHAOS_FLOWER_POT);
-    reg.registerTileEntity(TileMaterialGrader.class, Names.MATERIAL_GRADER);
     reg.registerTileEntity(TileChaosNode.class, Names.CHAOS_NODE);
     reg.registerTileEntity(TileChaosAltar.class, Names.CHAOS_ALTAR);
     reg.registerTileEntity(TileChaosPylon.class, Names.CHAOS_PYLON);

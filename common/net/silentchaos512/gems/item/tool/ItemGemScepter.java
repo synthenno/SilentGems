@@ -8,8 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.config.ConfigOptionToolClass;
 import net.silentchaos512.gems.config.GemsConfig;
-import net.silentchaos512.gems.init.ModItems;
-import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.registry.RecipeMaker;
@@ -23,23 +21,19 @@ public class ItemGemScepter extends ItemGemSword {
     super();
     setUnlocalizedName(SilentGems.RESOURCE_PREFIX + Names.SCEPTER);
   }
-  
+
   public ConfigOptionToolClass getConfig() {
 
     return GemsConfig.scepter;
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
-    if (getConfig().isDisabled) return StackHelper.empty();
+    if (getConfig().isDisabled)
+      return StackHelper.empty();
 
-    if (materials.length >= 2) {
-      ItemStack temp = materials[0];
-      materials[0] = materials[1];
-      materials[1] = temp;
-    }
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
@@ -66,13 +60,6 @@ public class ItemGemScepter extends ItemGemSword {
     return 0.75f;
   }
 
-  @SuppressWarnings("deprecation")
-  @Override
-  public boolean isSuperTool() {
-
-    return true;
-  }
-
   @Override
   protected void clGetSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
 
@@ -85,8 +72,9 @@ public class ItemGemScepter extends ItemGemSword {
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, " g ", "gsg", "gsg");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, " g ", "gsg", "gsg");
+    }
   }
 
   @Override

@@ -1,22 +1,20 @@
 package net.silentchaos512.gems.compat.tconstruct;
 
-import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.lib.EnumGem;
-import slimeknights.mantle.util.RecipeMatch.Match;
+import net.silentchaos512.gems.lib.Names;
 import slimeknights.tconstruct.library.materials.Material;
 
 public class TConstructMaterialGem extends Material {
 
   EnumGem gem;
-  EnumMaterialTier tier;
+  boolean supercharged;
 
-  public TConstructMaterialGem(EnumGem gem, EnumMaterialTier tier) {
+  public TConstructMaterialGem(EnumGem gem, boolean supercharged) {
 
-    super("silentgems:" + gem.name().toLowerCase() + (tier == EnumMaterialTier.SUPER ? "_super" : ""), gem.getColor());
+    super("silentgems:" + gem.name().toLowerCase() + (supercharged ? "_super" : ""), gem.getColor());
     this.gem = gem;
-    this.tier = tier;
+    this.supercharged = supercharged;
 
 //    setCraftable(true);
 //    addCommonItems(tier == EnumMaterialTier.SUPER ? gem.getItemSuperOreName() : gem.getItemOreName());
@@ -27,7 +25,8 @@ public class TConstructMaterialGem extends Material {
   @Override
   public String getLocalizedName() {
 
-    int meta = gem.ordinal() + (tier == EnumMaterialTier.SUPER ? 32 : 0); 
-    return SilentGems.localizationHelper.getLocalizedString("item", "Gem" + meta + ".name");
+    int meta = gem.ordinal();
+    String itemName = supercharged ? Names.GEM_SUPER : Names.GEM;
+    return SilentGems.localizationHelper.getLocalizedString("item", itemName + meta + ".name");
   }
 }

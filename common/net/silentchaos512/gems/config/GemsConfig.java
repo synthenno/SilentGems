@@ -235,8 +235,8 @@ public class GemsConfig extends AdaptiveConfig {
       SPAWN_PLAYER_WITH_GUIDE_BOOK = loadBoolean("Spawn with Guide Book", CAT_ITEM,
           SPAWN_PLAYER_WITH_GUIDE_BOOK,
           "Should players be given a copy of the guide book when they first spawn?");
-      if (ModItems.guideBook != null)
-        ModItems.guideBook.giveBookOnFirstLogin = SPAWN_PLAYER_WITH_GUIDE_BOOK;
+//      if (ModItems.guideBook != null)
+//        ModItems.guideBook.giveBookOnFirstLogin = SPAWN_PLAYER_WITH_GUIDE_BOOK;
 
       // Food
       final String catFood = CAT_ITEM + split + "Food";

@@ -23,6 +23,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -56,16 +57,11 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
     setNoRepair();
   }
 
-  public ItemStack constructTool(boolean supercharged, ItemStack material) {
-
-    return constructTool(supercharged, material, material, material);
-  }
-
-  public ItemStack constructTool(boolean supercharged, ItemStack... materials) {
+  public ItemStack constructTool(boolean supercharged, ItemStack head) {
 
     ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold
         : new ItemStack(Items.STICK);
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   // ===============
@@ -78,23 +74,11 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    return ToolHelper.constructTool(this, rod, materials);
-  }
-
-  @Override
-  public float getMeleeDamage(ItemStack tool) {
-
-    return getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
-  }
-
-  @Override
-  public float getMagicDamage(ItemStack tool) {
-
-    return 0.0f;
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
@@ -107,6 +91,12 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
   public float getMeleeDamageModifier() {
 
     return 5.0f;
+  }
+
+  @Override
+  public float getMagicDamageModifier() {
+    
+    return 0.0f;
   }
 
   @Override
@@ -148,12 +138,6 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
     return ToolHelper.getMaxDamage(stack);
   }
 
-  // @Override
-  // public int getColorFromItemStack(ItemStack stack, int pass) {
-  //
-  // return ToolRenderHelper.getInstance().getColorFromItemStack(stack, pass);
-  // }
-
   @Override
   public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack,
       boolean slotChanged) {
@@ -184,6 +168,12 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
       boolean isSelected) {
 
     ToolHelper.onUpdate(tool, world, entity, itemSlot, isSelected);
+  }
+
+  @Override
+  public String getItemStackDisplayName(ItemStack tool) {
+
+    return ToolHelper.getDisplayName(tool, getName());
   }
 
   // ==================
@@ -267,11 +257,15 @@ public class ItemGemAxe extends ItemAxe implements IRegistryObject, ITool {
   // IRegistryObject
   // ===============
 
+  public IRecipe recipe;
+
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "gg", "gs", " s");
+    if (!getConfig().isDisabled) {
+      // TODO: Modify recipe when Better With Mods is installed?
+      recipe = ToolHelper.addExampleRecipe(this, "gg", "gs", " s");
+    }
   }
 
   @Override

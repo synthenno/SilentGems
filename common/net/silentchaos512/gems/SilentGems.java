@@ -147,10 +147,10 @@ public class SilentGems {
 
     GemsConfig.INSTANCE.save();
 
-    // Scaling Health compat
-    if (Loader.isModLoaded("scalinghealth")) {
-      ScalingHealthCompat.init();
-    }
+    // Scaling Health compat FIXME
+//    if (Loader.isModLoaded("scalinghealth")) {
+//      ScalingHealthCompat.init();
+//    }
 
     proxy.init(registry);
   }

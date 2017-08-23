@@ -4,16 +4,12 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.entity.EntityList;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.init.ModItems;
-import net.silentchaos512.gems.item.tool.ItemGemKatana;
 import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.lib.util.EntityHelper;
 
@@ -63,37 +59,12 @@ public class ToolRandomizer {
     ITool itool = (ITool) tool.getItem();
 
     // Regular or super?
-    boolean superTier = !itool.getValidTiers().contains(EnumMaterialTier.REGULAR)
-        || (SilentGems.random.nextFloat() < superChance && itool.getValidTiers().contains(EnumMaterialTier.SUPER));
+    boolean superTier = SilentGems.random.nextFloat() < superChance;
 
-    // How many gems?
-    boolean gem2 = SilentGems.random.nextFloat() < SECOND_GEM_CHANCE;
-    boolean gem3 = gem2 && SilentGems.random.nextFloat() < THIRD_GEM_CHANCE;
 
-    // Gem array
-    EnumGem[] gems;
-    if (gem3) {
-      // 3 gems
-      gems = new EnumGem[] { EnumGem.getRandom(), EnumGem.getRandom(), EnumGem.getRandom() };
-    } else if (gem2) {
-      // 2 gems (3rd = 1st)
-      EnumGem g1 = EnumGem.getRandom();
-      EnumGem g2 = EnumGem.getRandom();
-      if (tool.getItem() == ModItems.sword)
-        gems = new EnumGem[] { g1, g2 };
-      else
-        gems = new EnumGem[] { g1, g2, g1 };
-    } else {
-      // 1 gem
-      EnumGem g1 = EnumGem.getRandom();
-      gems = new EnumGem[] { g1, g1, g1 };
-    }
-
-    // Crafting stack array
-    ItemStack[] craftingStacks = new ItemStack[gems.length];
-    for (int i = 0; i < craftingStacks.length; ++i) {
-      craftingStacks[i] = superTier ? gems[i].getItemSuper() : gems[i].getItem();
-    }
+    // Select head
+    EnumGem gem = EnumGem.getRandom();
+    ItemStack head = superTier ? gem.getItemSuper() : gem.getItem();
 
     // Select rod
     ItemStack rod;
@@ -107,9 +78,7 @@ public class ToolRandomizer {
       rod = choices[SilentGems.random.nextInt(choices.length)];
     }
 
-    ItemStack temp = ToolHelper.constructTool(tool.getItem(), rod, craftingStacks);
-    if (temp.getItem() instanceof ItemGemKatana)
-      temp = ((ItemGemKatana) temp.getItem()).addDefaultGrip(temp);
+    ItemStack temp = ToolHelper.constructTool(tool.getItem(), rod, head);
 
     // Set name
     String ownerName = nameAdjectives.get(SilentGems.random.nextInt(nameAdjectives.size())) + " "

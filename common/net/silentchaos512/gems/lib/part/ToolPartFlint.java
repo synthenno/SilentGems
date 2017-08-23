@@ -6,8 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IArmor;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.api.lib.EnumPartPosition;
 import net.silentchaos512.gems.api.tool.part.ToolPartMain;
 import net.silentchaos512.gems.item.tool.ItemGemBow;
 import net.silentchaos512.gems.item.tool.ItemGemShield;
@@ -23,29 +21,11 @@ public class ToolPartFlint extends ToolPartMain {
   }
 
   @Override
-  public ModelResourceLocation getModel(ItemStack tool, EnumPartPosition pos, int frame) {
+  public ModelResourceLocation getModel(ItemStack tool, int frame) {
 
     String name = ((IRegistryObject) tool.getItem()).getName();
-    name = SilentGems.RESOURCE_PREFIX + name + "/" + name;
-    String mat = tool.getItem() instanceof ItemGemBow ? "" : "flint";
+    name = SilentGems.RESOURCE_PREFIX + name + "/" + name + "_head";
     String frameNum = frame == 3 ? "_3" : "";
-
-    switch (pos) {
-      case HEAD_LEFT:
-        name += mat + "l" + frameNum;
-        break;
-      case HEAD_MIDDLE:
-        name += mat + frameNum;
-        break;
-      case HEAD_RIGHT:
-        name += mat + "r" + frameNum;
-        break;
-      case ROD_DECO:
-        name += "deco" + mat;
-        break;
-      default:
-        return null;
-    }
 
     name = name.toLowerCase();
     return new ModelResourceLocation(name, "inventory");
@@ -54,9 +34,7 @@ public class ToolPartFlint extends ToolPartMain {
   @Override
   public int getColor(ItemStack toolOrArmor) {
 
-    Item item = toolOrArmor.getItem();
-    return item instanceof IArmor || item instanceof ItemGemBow || item instanceof ItemGemShield
-        ? COLOR : 0xFFFFFF;
+    return COLOR;
   }
 
   @Override
@@ -102,20 +80,8 @@ public class ToolPartFlint extends ToolPartMain {
   }
 
   @Override
-  public float getChargeSpeed() {
-
-    return 0.5f;
-  }
-
-  @Override
   public float getProtection() {
 
     return 3;
-  }
-
-  @Override
-  public EnumMaterialTier getTier() {
-
-    return EnumMaterialTier.MUNDANE;
   }
 }

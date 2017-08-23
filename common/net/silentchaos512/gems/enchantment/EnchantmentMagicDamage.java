@@ -5,9 +5,7 @@ import net.minecraft.enchantment.EnchantmentDamage;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.item.tool.ItemGemSword;
-import net.silentchaos512.gems.util.ToolHelper;
 
 public class EnchantmentMagicDamage extends Enchantment {
 
@@ -15,8 +13,7 @@ public class EnchantmentMagicDamage extends Enchantment {
 
   public EnchantmentMagicDamage() {
 
-    super(Rarity.UNCOMMON, EnumEnchantmentType.WEAPON,
-        new EntityEquipmentSlot[] { EntityEquipmentSlot.MAINHAND });
+    super(Rarity.UNCOMMON, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] { EntityEquipmentSlot.MAINHAND });
     setName(NAME);
   }
 
@@ -28,9 +25,7 @@ public class EnchantmentMagicDamage extends Enchantment {
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
 
-    return stack.getItem() instanceof ItemGemSword
-        && ToolHelper.getToolTier(stack).ordinal() >= EnumMaterialTier.SUPER.ordinal()
-        && super.canApplyAtEnchantingTable(stack);
+    return stack.getItem() instanceof ItemGemSword && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override

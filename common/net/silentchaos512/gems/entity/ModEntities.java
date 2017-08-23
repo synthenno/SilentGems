@@ -24,7 +24,8 @@ public class ModEntities {
     reg.registerEntity(EntityChaosProjectileHoming.class, "ChaosProjectileHoming");
     reg.registerEntity(EntityChaosProjectileSweep.class, "ChaosProjectileSweep");
 
-    reg.registerEntity(EntityThrownTomahawk.class, "ThrownTomahawk");
+    // FIXME
+    //reg.registerEntity(EntityThrownTomahawk.class, "ThrownTomahawk");
 
     registerNodePacket(EntityPacketChaos.class, "Chaos");
     registerNodePacket(EntityPacketRepair.class, "Repair");

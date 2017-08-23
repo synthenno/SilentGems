@@ -65,11 +65,9 @@ public enum EnumGem implements IStringSerializable {
   PEARL           ("Pearl",           128,  7.0f, 3.0f, 4.0f, 20, 1.2f, 14, 0xFFFFFF);
   // @formatter:on
 
-  public static final PropertyEnum VARIANT_GEM = PropertyEnum.create("gem", EnumGem.class, RUBY, GARNET, TOPAZ, AMBER, HELIODOR, PERIDOT, BERYL, INDICOLITE,
-      AQUAMARINE, SAPPHIRE, IOLITE, AMETHYST, AGATE, MORGANITE, ONYX, OPAL);
-  // public static final PropertyEnum VARIANT_GEM_DARK = PropertyEnum.create("variant", EnumGem.class,
-  // CARNELIAN, SPINEL, CITRINE, JASPER, GOLDEN_BERYL, MOLDAVITE, MALACHITE, TURQUOISE, MOONSTONE,
-  // BLUE_TOPAZ, TANZANITE, VIOLET_SAPPHIRE, LEPIDOLITE, AMETRINE, BLACK_DIAMOND, ALEXANDRITE);
+  public static final PropertyEnum VARIANT_GEM = PropertyEnum.create("gem", EnumGem.class, RUBY,
+      GARNET, TOPAZ, AMBER, HELIODOR, PERIDOT, BERYL, INDICOLITE, AQUAMARINE, SAPPHIRE, IOLITE,
+      AMETHYST, AGATE, MORGANITE, ONYX, OPAL);
 
   public static final int REGULAR_HARVEST_LEVEL = 2;
   public static final int SUPER_HARVEST_LEVEL = 4;
@@ -93,8 +91,8 @@ public enum EnumGem implements IStringSerializable {
   protected final int protection;
   protected final int color;
 
-  private EnumGem(String name, int durability, float miningSpeed, float meleeDamage, float magicDamage, int enchantability, float meleeSpeed, int protection,
-      int color) {
+  private EnumGem(String name, int durability, float miningSpeed, float meleeDamage,
+      float magicDamage, int enchantability, float meleeSpeed, int protection, int color) {
 
     this.name = name;
     this.durability = durability;
@@ -196,7 +194,8 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getBlock() {
 
-    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlock : ModBlocks.gemBlockDark, 1, ordinal() & 0xF);
+    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlock : ModBlocks.gemBlockDark, 1,
+        ordinal() & 0xF);
   }
 
   /**
@@ -212,7 +211,8 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getBlockSuper() {
 
-    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlockSuper : ModBlocks.gemBlockSuperDark, 1, ordinal() & 0xF);
+    return new ItemStack(ordinal() < 16 ? ModBlocks.gemBlockSuper : ModBlocks.gemBlockSuperDark, 1,
+        ordinal() & 0xF);
   }
 
   /**
@@ -228,7 +228,8 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getOre() {
 
-    return new ItemStack(ordinal() < 16 ? ModBlocks.gemOre : ModBlocks.gemOreDark, 1, ordinal() & 0xF);
+    return new ItemStack(ordinal() < 16 ? ModBlocks.gemOre : ModBlocks.gemOreDark, 1,
+        ordinal() & 0xF);
   }
 
   /**
@@ -260,7 +261,7 @@ public enum EnumGem implements IStringSerializable {
    */
   public ItemStack getItemSuper() {
 
-    return new ItemStack(ModItems.gem, 1, ordinal() + 32);
+    return new ItemStack(ModItems.gemSuper, 1, ordinal());
   }
 
   /**

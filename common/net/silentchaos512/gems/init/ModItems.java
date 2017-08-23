@@ -6,14 +6,11 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.oredict.OreDictionary;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.guide.GuideBookGems;
 import net.silentchaos512.gems.item.ItemChaosGem;
 import net.silentchaos512.gems.item.ItemChaosOrb;
 import net.silentchaos512.gems.item.ItemChaosRune;
@@ -27,6 +24,7 @@ import net.silentchaos512.gems.item.ItemFluffyPuffSeeds;
 import net.silentchaos512.gems.item.ItemFoodSG;
 import net.silentchaos512.gems.item.ItemGem;
 import net.silentchaos512.gems.item.ItemGemShard;
+import net.silentchaos512.gems.item.ItemGemSuper;
 import net.silentchaos512.gems.item.ItemGlowRoseFertilizer;
 import net.silentchaos512.gems.item.ItemHoldingGem;
 import net.silentchaos512.gems.item.ItemNodeMover;
@@ -38,8 +36,6 @@ import net.silentchaos512.gems.item.ItemTipUpgrade;
 import net.silentchaos512.gems.item.ItemTorchBandolier;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.gems.item.ToolRenderHelperBase;
-import net.silentchaos512.gems.item.armor.ItemArmorFrame;
-import net.silentchaos512.gems.item.armor.ItemGemArmor;
 import net.silentchaos512.gems.item.tool.ItemGemAxe;
 import net.silentchaos512.gems.item.tool.ItemGemBow;
 import net.silentchaos512.gems.item.tool.ItemGemDagger;
@@ -55,7 +51,6 @@ import net.silentchaos512.gems.item.tool.ItemGemSword;
 import net.silentchaos512.gems.item.tool.ItemGemTomahawk;
 import net.silentchaos512.gems.lib.GemsCreativeTabs;
 import net.silentchaos512.gems.lib.Names;
-import net.silentchaos512.lib.item.ItemGuideBookSL;
 import net.silentchaos512.lib.registry.IRegistrationHandler;
 import net.silentchaos512.lib.registry.RecipeMaker;
 import net.silentchaos512.lib.registry.SRegistry;
@@ -63,6 +58,7 @@ import net.silentchaos512.lib.registry.SRegistry;
 public class ModItems implements IRegistrationHandler<Item> {
 
   public static final ItemGem gem = new ItemGem();
+  public static final ItemGemSuper gemSuper = new ItemGemSuper();
   public static final ItemGemShard gemShard = new ItemGemShard();
   public static final ItemSoulGem soulGem = new ItemSoulGem();
   public static final ItemCrafting craftingMaterial = new ItemCrafting();
@@ -70,7 +66,7 @@ public class ModItems implements IRegistrationHandler<Item> {
   public static final ItemEnchantmentToken enchantmentToken = new ItemEnchantmentToken();
   public static final ItemChaosGem chaosGem = new ItemChaosGem();
   public static final ItemChaosRune chaosRune = new ItemChaosRune();
-  public static final ItemArmorFrame armorFrame = new ItemArmorFrame();
+//  public static final ItemArmorFrame armorFrame = new ItemArmorFrame();
   public static final ItemFluffyPuffSeeds fluffyPuffSeeds = new ItemFluffyPuffSeeds();
   public static final ItemFluffyPuff fluffyPuff = new ItemFluffyPuff();
   public static final ItemGlowRoseFertilizer glowRoseFertilizier = new ItemGlowRoseFertilizer();
@@ -102,20 +98,20 @@ public class ModItems implements IRegistrationHandler<Item> {
   public static final ItemGemSickle sickle = new ItemGemSickle();
 
   // Armor
-  public static final ItemGemArmor gemHelmet = new ItemGemArmor(0, EntityEquipmentSlot.HEAD,
-      Names.HELMET);
-  public static final ItemGemArmor gemChestplate = new ItemGemArmor(1, EntityEquipmentSlot.CHEST,
-      Names.CHESTPLATE);
-  public static final ItemGemArmor gemLeggings = new ItemGemArmor(2, EntityEquipmentSlot.LEGS,
-      Names.LEGGINGS);
-  public static final ItemGemArmor gemBoots = new ItemGemArmor(3, EntityEquipmentSlot.FEET,
-      Names.BOOTS);
+//  public static final ItemGemArmor gemHelmet = new ItemGemArmor(0, EntityEquipmentSlot.HEAD,
+//      Names.HELMET);
+//  public static final ItemGemArmor gemChestplate = new ItemGemArmor(1, EntityEquipmentSlot.CHEST,
+//      Names.CHESTPLATE);
+//  public static final ItemGemArmor gemLeggings = new ItemGemArmor(2, EntityEquipmentSlot.LEGS,
+//      Names.LEGGINGS);
+//  public static final ItemGemArmor gemBoots = new ItemGemArmor(3, EntityEquipmentSlot.FEET,
+//      Names.BOOTS);
 
   public static final ToolRenderHelperBase toolRenderHelper = FMLCommonHandler.instance()
       .getSide() == Side.CLIENT ? new ToolRenderHelper() : new ToolRenderHelperBase();
 
   // Guide Book
-  public static final ItemGuideBookSL guideBook = new ItemGuideBookSL(new GuideBookGems());
+  //public static final ItemGuideBookSL guideBook = new ItemGuideBookSL(new GuideBookGems());
 
   public static final List<Item> tools = Lists.newArrayList(); // Filled by SRegistry override
 
@@ -123,6 +119,7 @@ public class ModItems implements IRegistrationHandler<Item> {
   public void registerAll(SRegistry reg) {
 
     reg.registerItem(gem).setCreativeTab(GemsCreativeTabs.materials);
+    reg.registerItem(gemSuper).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(gemShard).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(soulGem).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(craftingMaterial).setCreativeTab(GemsCreativeTabs.materials);
@@ -130,7 +127,7 @@ public class ModItems implements IRegistrationHandler<Item> {
     reg.registerItem(enchantmentToken).setCreativeTab(GemsCreativeTabs.utility);
     reg.registerItem(chaosGem).setCreativeTab(GemsCreativeTabs.utility);
     reg.registerItem(chaosRune).setCreativeTab(GemsCreativeTabs.utility);
-    reg.registerItem(armorFrame).setCreativeTab(GemsCreativeTabs.materials);
+//    reg.registerItem(armorFrame).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(fluffyPuffSeeds, Names.FLUFFY_PUFF_SEEDS);
     reg.registerItem(fluffyPuff).setCreativeTab(GemsCreativeTabs.materials);
     reg.registerItem(glowRoseFertilizier).setCreativeTab(GemsCreativeTabs.materials);
@@ -162,16 +159,17 @@ public class ModItems implements IRegistrationHandler<Item> {
     reg.registerItem(sickle, Names.SICKLE);
 
     // Armor
-    reg.registerItem(gemHelmet, Names.HELMET);
-    reg.registerItem(gemChestplate, Names.CHESTPLATE);
-    reg.registerItem(gemLeggings, Names.LEGGINGS);
-    reg.registerItem(gemBoots, Names.BOOTS);
+//    reg.registerItem(gemHelmet, Names.HELMET);
+//    reg.registerItem(gemChestplate, Names.CHESTPLATE);
+//    reg.registerItem(gemLeggings, Names.LEGGINGS);
+//    reg.registerItem(gemBoots, Names.BOOTS);
 
     // ToolRenderHelper
     reg.registerItem(toolRenderHelper).setCreativeTab(null);
     toolRenderHelper.init();
 
-    reg.registerItem(guideBook);
+    // TODO: Uncomment
+    //reg.registerItem(guideBook);
 
     initExtraRecipes();
   }
@@ -180,7 +178,8 @@ public class ModItems implements IRegistrationHandler<Item> {
 
     RecipeMaker recipes = SilentGems.registry.recipes;
     recipes.addShapeless("flint", new ItemStack(Items.FLINT), Blocks.GRAVEL, Blocks.GRAVEL);
-    recipes.addShapeless("guide_book", new ItemStack(guideBook), Items.BOOK,
-        new ItemStack(gem, 1, OreDictionary.WILDCARD_VALUE));
+    // TODO: Uncomment
+//    recipes.addShapeless("guide_book", new ItemStack(guideBook), Items.BOOK,
+//        new ItemStack(gem, 1, OreDictionary.WILDCARD_VALUE));
   }
 }

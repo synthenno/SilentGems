@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
@@ -24,6 +23,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -36,7 +36,6 @@ import net.silentchaos512.gems.config.ConfigOptionToolClass;
 import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
-import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.registry.IRegistryObject;
@@ -46,8 +45,8 @@ import net.silentchaos512.lib.util.StackHelper;
 
 public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
 
-  public static final Set<Material> BASE_EFFECTIVE_MATERIALS = Sets.newHashSet(Material.CLAY,
-      Material.CRAFTED_SNOW, Material.GRASS, Material.GROUND, Material.SAND, Material.SNOW);
+  public static final Set<Material> BASE_EFFECTIVE_MATERIALS = Sets.newHashSet(Material.CLAY, Material.CRAFTED_SNOW, Material.GRASS, Material.GROUND,
+      Material.SAND, Material.SNOW);
 
   public ItemGemShovel() {
 
@@ -56,38 +55,29 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
     setNoRepair();
   }
 
-  public ItemStack constructTool(boolean supercharged, ItemStack material) {
-
-    return constructTool(supercharged, material, material, material);
-  }
-
-  public ItemStack constructTool(boolean supercharged, ItemStack... materials) {
+  public ItemStack constructTool(boolean supercharged, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold
-        : new ItemStack(Items.STICK);
-    return ToolHelper.constructTool(this, rod, materials);
+    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold : new ItemStack(Items.STICK);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   // ===============
   // ITool overrides
   // ===============
-  
+
   public ConfigOptionToolClass getConfig() {
 
     return GemsConfig.shovel;
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    if (materials.length == 1) {
-      return ToolHelper.constructTool(this, rod, materials[0], materials[0], materials[0]);
-    }
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
@@ -97,15 +87,15 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   }
 
   @Override
-  public float getMagicDamage(ItemStack tool) {
-
-    return 0.0f;
-  }
-
-  @Override
   public float getMeleeDamageModifier() {
 
     return 1.5f;
+  }
+
+  @Override
+  public float getMagicDamageModifier() {
+
+    return 0.0f;
   }
 
   @Override
@@ -131,24 +121,19 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   // ==============
 
   @Override
-  public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand,
-      EnumFacing side, float hitX, float hitY, float hitZ) {
+  public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
     ItemStack stack = player.getHeldItem(hand);
-    boolean broken = ToolHelper.isBroken(stack);
     // Check for normal shovel use first if not broken, to allow path blocks to be made (1.11+).
     // Use ItemHelper for xcompat, diamond shovel to "simulate" a super.onItemUse call.
-    if (!broken && ItemHelper.onItemUse(Items.DIAMOND_SHOVEL, player, world, pos, hand, side, hitX,
-        hitY, hitZ) != EnumActionResult.SUCCESS) {
+    if (ItemHelper.onItemUse(Items.DIAMOND_SHOVEL, player, world, pos, hand, side, hitX, hitY, hitZ) != EnumActionResult.SUCCESS) {
       // Place block.
       return ToolHelper.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
-    } else if (!broken) {
+    } else {
       // Made path block.
       ToolHelper.incrementStatPathsMade(stack, 1);
       return EnumActionResult.SUCCESS;
     }
-    // Broken.
-    return EnumActionResult.PASS;
   }
 
   @Override
@@ -174,8 +159,7 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   // }
 
   @Override
-  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack,
-      boolean slotChanged) {
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
 
     return ToolRenderHelper.instance.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
   }
@@ -185,7 +169,7 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
 
     return ToolRenderHelper.instance.hasEffect(stack);
   }
-  
+
   @Override
   public EnumRarity getRarity(ItemStack stack) {
 
@@ -199,8 +183,7 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   }
 
   @Override
-  public void onUpdate(ItemStack tool, World world, Entity entity, int itemSlot,
-      boolean isSelected) {
+  public void onUpdate(ItemStack tool, World world, Entity entity, int itemSlot, boolean isSelected) {
 
     ToolHelper.onUpdate(tool, world, entity, itemSlot, isSelected);
   }
@@ -216,15 +199,13 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   }
 
   @Override
-  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos,
-      EntityLivingBase entityLiving) {
+  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
 
     return ToolHelper.onBlockDestroyed(stack, world, state, pos, entityLiving);
   }
 
   @Override
-  public int getHarvestLevel(ItemStack stack, String toolClass, EntityPlayer player,
-      IBlockState state) {
+  public int getHarvestLevel(ItemStack stack, String toolClass, EntityPlayer player, IBlockState state) {
 
     if (super.getHarvestLevel(stack, toolClass, player, state) < 0) {
       return 0;
@@ -233,8 +214,7 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   }
 
   @Override
-  public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot,
-      ItemStack stack) {
+  public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
 
     return ToolHelper.getAttributeModifiers(slot, stack);
   }
@@ -282,11 +262,14 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   // IRegistryObject
   // ===============
 
+  public IRecipe recipe;
+
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "g", "s", "s");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, "g", "s", "s");
+    }
   }
 
   @Override
@@ -367,8 +350,8 @@ public class ItemGemShovel extends ItemSpade implements IRegistryObject, ITool {
   }
 
   // onItemUse
-  public EnumActionResult func_180614_a(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-      EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+  public EnumActionResult func_180614_a(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY,
+      float hitZ) {
 
     return onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
   }

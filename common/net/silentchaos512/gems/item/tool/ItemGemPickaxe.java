@@ -172,6 +172,12 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
     ToolHelper.onUpdate(tool, world, entity, itemSlot, isSelected);
   }
 
+  @Override
+  public String getItemStackDisplayName(ItemStack tool) {
+
+    return ToolHelper.getDisplayName(tool, getName());
+  }
+
   // ==================
   // ItemTool overrides
   // ==================

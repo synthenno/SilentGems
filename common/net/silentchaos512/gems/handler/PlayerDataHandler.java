@@ -249,16 +249,7 @@ public class PlayerDataHandler {
       ItemStack mainHand = player.getHeldItem(EnumHand.MAIN_HAND);
       ItemStack offHand = player.getHeldItem(EnumHand.OFF_HAND);
 
-      float multi = 0.0f;
-      if (mainHand != null && mainHand.getItem() instanceof ITool) {
-        multi += ToolHelper.getChargeSpeed(mainHand);
-      }
-      if (offHand != null && offHand.getItem() instanceof ITool) {
-        multi += ToolHelper.getChargeSpeed(offHand);
-      }
-      if (multi == 0.0f) {
-        multi = 1.0f;
-      }
+      float multi = 1.0f; // TODO: chaos charge speed multi?
 
 //      SilentGems.instance.logHelper.debug(multi);
       return (int) (multi * CHAOS_MAX_TRANSFER);

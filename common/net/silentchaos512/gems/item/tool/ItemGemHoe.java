@@ -3,7 +3,6 @@ package net.silentchaos512.gems.item.tool;
 import java.util.List;
 import java.util.Map;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -20,6 +19,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -28,12 +28,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.config.ConfigOptionToolClass;
 import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
-import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.registry.IRegistryObject;
@@ -50,16 +48,11 @@ public class ItemGemHoe extends ItemHoe implements IRegistryObject, ITool {
     setNoRepair();
   }
 
-  public ItemStack constructTool(boolean supercharged, ItemStack material) {
-
-    return constructTool(supercharged, material, material, material);
-  }
-
-  public ItemStack constructTool(boolean supercharged, ItemStack... materials) {
+  public ItemStack constructTool(boolean supercharged, ItemStack head) {
 
     ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold
         : new ItemStack(Items.STICK);
-    return ToolHelper.constructTool(this, rod, materials);
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
@@ -67,16 +60,13 @@ public class ItemGemHoe extends ItemHoe implements IRegistryObject, ITool {
       EnumFacing side, float hitX, float hitY, float hitZ) {
 
     ItemStack stack = player.getHeldItem(hand);
-    if (ToolHelper.isBroken(stack)) {
-      return EnumActionResult.PASS;
-    }
 
     EnumActionResult result = ItemHelper.onItemUse(Items.DIAMOND_HOE, player, world, pos, hand,
         side, hitX, hitY, hitZ); // Use diamond hoe so we don't get stack overflow.
     int tilledCount = result == EnumActionResult.SUCCESS ? 1 : 0;
 
     // Super hoe area till?
-    boolean isSuper = ToolHelper.getToolTier(stack).ordinal() >= EnumMaterialTier.SUPER.ordinal();
+    boolean isSuper = ToolHelper.getPartHead(stack).getRarity().ordinal() >= EnumRarity.RARE.ordinal();
     if (result == EnumActionResult.SUCCESS && player.isSneaking() && isSuper) {
       BlockPos[] array = new BlockPos[] { new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ() - 1),
           new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ() + 0),
@@ -109,29 +99,23 @@ public class ItemGemHoe extends ItemHoe implements IRegistryObject, ITool {
   }
 
   @Override
-  public ItemStack constructTool(ItemStack rod, ItemStack... materials) {
+  public ItemStack constructTool(ItemStack rod, ItemStack head) {
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    return ToolHelper.constructTool(this, rod, materials);
-  }
-
-  @Override
-  public float getMeleeDamage(ItemStack tool) {
-
-    return getMeleeDamageModifier() + ToolHelper.getMeleeDamage(tool);
-  }
-
-  @Override
-  public float getMagicDamage(ItemStack tool) {
-
-    return 0.0f;
+    return ToolHelper.constructTool(this, rod, head);
   }
 
   @Override
   public float getMeleeDamageModifier() {
 
     return -4.0f;
+  }
+
+  @Override
+  public float getMagicDamageModifier() {
+    
+    return 0.0f;
   }
 
   @Override
@@ -221,11 +205,14 @@ public class ItemGemHoe extends ItemHoe implements IRegistryObject, ITool {
   // IRegistryObject
   // ===============
 
+  public IRecipe recipe;
+
   @Override
   public void addRecipes(RecipeMaker recipes) {
 
-    if (!getConfig().isDisabled)
-      ToolHelper.addExampleRecipe(this, "gg", " s", " s");
+    if (!getConfig().isDisabled) {
+      recipe = ToolHelper.addExampleRecipe(this, "gg", " s", " s");
+    }
   }
 
   @Override

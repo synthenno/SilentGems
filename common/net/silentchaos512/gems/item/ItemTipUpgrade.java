@@ -25,8 +25,7 @@ import net.silentchaos512.lib.util.StackHelper;
 
 public class ItemTipUpgrade extends ItemSL {
 
-  public static final String[] NAMES = new String[] { "UpgradeIronTip", "UpgradeGoldTip",
-      "UpgradeDiamondTip", "UpgradeEmeraldTip" };
+  public static final String[] NAMES = new String[] { "UpgradeIronTip", "UpgradeGoldTip", "UpgradeDiamondTip", "UpgradeEmeraldTip" };
 
   // For guide book...
   public static List<IRecipe> RECIPES = Lists.newArrayList();
@@ -62,8 +61,7 @@ public class ItemTipUpgrade extends ItemSL {
       return;
     }
 
-    String numberString = (value.floatValue() < 0 ? "-" : "+")
-        + String.format(value instanceof Integer ? "%d" : "%.1f", value);
+    String numberString = (value.floatValue() < 0 ? "-" : "+") + String.format(value instanceof Integer ? "%d" : "%.1f", value);
     String line = loc.getItemSubText(itemName, key, numberString);
     list.add(String.format(line, numberString));
   }
@@ -76,7 +74,7 @@ public class ItemTipUpgrade extends ItemSL {
     }
 
     ItemStack result = StackHelper.safeCopy(tool);
-    ToolHelper.setConstructionTip(result, part);
+    ToolHelper.setPartTip(result, part);
     ToolHelper.recalculateStats(result);
     return result;
   }
