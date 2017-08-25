@@ -22,18 +22,20 @@ public class ToolPartRod extends ToolPart {
   }
 
   public ToolPartRod(String key, ItemStack craftingStack, float durabilityMulti,
-      float harvestSpeedMutli, float meleeDamageMulti, float magicDamageMulti, float enchantabilityMulti) {
+      float harvestSpeedMulti, float meleeDamageMulti, float magicDamageMulti,
+      float enchantabilityMulti) {
 
     this(key, craftingStack);
     this.durabilityMulti = durabilityMulti;
-    this.harvestSpeedMulti = harvestSpeedMutli;
+    this.harvestSpeedMulti = harvestSpeedMulti;
     this.meleeDamageMulti = meleeDamageMulti;
     this.magicDamageMulti = magicDamageMulti;
     this.enchantabilityMulti = enchantabilityMulti;
   }
 
   public ToolPartRod(String key, ItemStack craftingStack, String oreName, float durabilityMulti,
-      float harvestSpeedMutli, float meleeDamageMulti, float magicDamageMulti, float enchantabilityMulti) {
+      float harvestSpeedMutli, float meleeDamageMulti, float magicDamageMulti,
+      float enchantabilityMulti) {
 
     this(key, craftingStack, oreName);
     this.durabilityMulti = durabilityMulti;
@@ -105,5 +107,38 @@ public class ToolPartRod extends ToolPart {
   public boolean supportsDecoration() {
 
     return false;
+  }
+
+  public Stats getStats() {
+
+    return new Stats(this);
+  }
+
+  public static class Stats {
+
+    public final float durabilityMulti;
+    public final float harvestSpeedMulti;
+    public final float meleeDamageMulti;
+    public final float magicDamageMulti;
+    public final float enchantabilityMulti;
+
+    protected Stats(ToolPartRod part) {
+
+      this.durabilityMulti = part.durabilityMulti;
+      this.harvestSpeedMulti = part.harvestSpeedMulti;
+      this.meleeDamageMulti = part.meleeDamageMulti;
+      this.magicDamageMulti = part.magicDamageMulti;
+      this.enchantabilityMulti = part.enchantabilityMulti;
+    }
+
+    public Stats(float durabilityMulti, float harvestSpeedMulti, float meleeDamageMulti,
+        float magicDamageMulti, float enchantabilityMulti) {
+
+      this.durabilityMulti = durabilityMulti;
+      this.harvestSpeedMulti = harvestSpeedMulti;
+      this.meleeDamageMulti = meleeDamageMulti;
+      this.magicDamageMulti = magicDamageMulti;
+      this.enchantabilityMulti = enchantabilityMulti;
+    }
   }
 }

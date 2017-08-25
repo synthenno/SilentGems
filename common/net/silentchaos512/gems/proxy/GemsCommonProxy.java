@@ -29,7 +29,7 @@ public class GemsCommonProxy extends net.silentchaos512.lib.proxy.CommonProxy {
 
     ToolHelper.FAKE_MATERIAL.setRepairItem(ModItems.craftingMaterial.chaosEssenceEnriched);
 
-    //ModItems.guideBook.book.preInit(); // FIXME
+    ModItems.guideBook.book.preInit();
 
     NetworkHandler.init();
 
@@ -52,7 +52,7 @@ public class GemsCommonProxy extends net.silentchaos512.lib.proxy.CommonProxy {
 
     super.postInit(registry);
     ModItems.enchantmentToken.addModRecipes();
-    //ModItems.guideBook.book.postInit(); // FIXME
+    ModItems.guideBook.book.postInit();
 
     if (Loader.isModLoaded(BaublesCompat.MOD_ID))
       BaublesCompat.MOD_LOADED = true;

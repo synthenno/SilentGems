@@ -84,28 +84,51 @@ public class GemsClientEvents {
     }
   }
 
-  private void onTooltipForToolRod(ItemTooltipEvent event, ItemStack stack, ToolPart part, boolean ctrlDown, boolean shiftDown) {
-
-    int index = 1;
-
-    // Tool Rod indicator
-    event.getToolTip().add(index++, loc.getMiscText("ToolPart.Rod"));
-
-    if (ctrlDown) {
-      // Debug info
-      if (shiftDown) {
-        event.getToolTip().add(index++, TextFormatting.DARK_GRAY + "* Part key: " + part.getKey());
-      }
-    } else {
-      event.getToolTip().add(index++, loc.getMiscText("PressCtrl"));
-    }
-  }
-
-  private void onTooltipForToolMaterial(ItemTooltipEvent event, ItemStack stack, ToolPart part, boolean ctrlDown, boolean shiftDown) {
+  private void onTooltipForToolRod(ItemTooltipEvent event, ItemStack stack, ToolPart part,
+      boolean ctrlDown, boolean shiftDown) {
 
     int index = 1;
     final String sep = loc.getMiscText("Tooltip.Separator");
     List<String> list = event.getToolTip();
+    ToolPartRod.Stats stats = ((ToolPartRod) part).getStats();
+
+    // Tool Rod indicator
+    list.add(index++, loc.getMiscText("ToolPart.Rod"));
+
+    if (ctrlDown) {
+      list.add(index++, sep);
+      TextFormatting color = TextFormatting.GOLD;
+      list.add(index++, color + TooltipHelper.get("HarvestSpeed", "x" + (int) (stats.harvestSpeedMulti * 100) + "%"));
+      //list.add(index++, color + TooltipHelper.get("HarvestLevel", part.getHarvestLevel()));
+      
+      color = TextFormatting.DARK_GREEN;
+//      list.add(index++, color + TooltipHelper.get("MeleeSpeed", (int) (part.getMeleeSpeed() * 100)));
+      list.add(index++, color + TooltipHelper.get("MeleeDamage", "x" + (int) (stats.meleeDamageMulti * 100) + "%"));
+      list.add(index++, color + TooltipHelper.get("MagicDamage", "x" + (int) (stats.magicDamageMulti * 100) + "%"));
+      
+      color = TextFormatting.BLUE;
+      list.add(index++, color + TooltipHelper.get("Durability", "x" + (int) (stats.durabilityMulti * 100) + "%"));
+      list.add(index++, color + TooltipHelper.get("Enchantability", "x" + (int) (stats.enchantabilityMulti * 100) + "%"));
+      list.add(index++, sep);
+
+      // Debug info
+      if (shiftDown) {
+        list.add(index++, TextFormatting.DARK_GRAY + "* Part key: " + part.getKey());
+      }
+    } else {
+      list.add(index++, TextFormatting.GOLD + loc.getMiscText("PressCtrl"));
+    }
+  }
+
+  private void onTooltipForToolMaterial(ItemTooltipEvent event, ItemStack stack, ToolPart part,
+      boolean ctrlDown, boolean shiftDown) {
+
+    int index = 1;
+    final String sep = loc.getMiscText("Tooltip.Separator");
+    List<String> list = event.getToolTip();
+
+    // Tool Part indicator
+    event.getToolTip().add(index++, loc.getMiscText("ToolPart.Main"));
 
     // Show stats?
     if (ctrlDown) {
@@ -130,7 +153,7 @@ public class GemsClientEvents {
       list.add(index++, color + TooltipHelper.get("Enchantability", part.getEnchantability()));
       list.add(index++, sep);
 
-   // Debug info
+      // Debug info
       if (shiftDown) {
         event.getToolTip().add(index++, TextFormatting.DARK_GRAY + "* Part key: " + part.getKey());
       }
@@ -173,7 +196,8 @@ public class GemsClientEvents {
    */
   private void renderArmorExtra(RenderGameOverlayEvent event) {
 
-    if (!GemsConfig.SHOW_BONUS_ARMOR_BAR || !event.isCancelable() || event.getType() != ElementType.ARMOR)
+    if (!GemsConfig.SHOW_BONUS_ARMOR_BAR || !event.isCancelable()
+        || event.getType() != ElementType.ARMOR)
       return;
 
     int width = event.getResolution().getScaledWidth();
@@ -215,7 +239,8 @@ public class GemsClientEvents {
     doAmmoCountWithOffset(right, width, height, 5, 3);
   }
 
-  private void doAmmoCountWithOffset(ItemStack tool, int width, int height, int xOffset, int yOffset) {
+  private void doAmmoCountWithOffset(ItemStack tool, int width, int height, int xOffset,
+      int yOffset) {
 
     if (tool != null && tool.getItem() instanceof IAmmoTool) {
       FontRenderer fontRender = Minecraft.getMinecraft().fontRenderer;
@@ -236,16 +261,20 @@ public class GemsClientEvents {
     }
   }
 
-  public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+  public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width,
+      int height) {
 
     float f = 0.00390625F;
     float f1 = 0.00390625F;
     Tessellator tessellator = Tessellator.getInstance();
     BufferBuilderSL vertexbuffer = BufferBuilderSL.INSTANCE.acquireBuffer(tessellator);
     vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-    vertexbuffer.pos(x + 0, y + height, 0).tex((textureX + 0) * f, (textureY + height) * f1).endVertex();
-    vertexbuffer.pos(x + width, y + height, 0).tex((textureX + width) * f, (textureY + height) * f1).endVertex();
-    vertexbuffer.pos(x + width, y + 0, 0).tex((textureX + width) * f, (textureY + 0) * f1).endVertex();
+    vertexbuffer.pos(x + 0, y + height, 0).tex((textureX + 0) * f, (textureY + height) * f1)
+        .endVertex();
+    vertexbuffer.pos(x + width, y + height, 0).tex((textureX + width) * f, (textureY + height) * f1)
+        .endVertex();
+    vertexbuffer.pos(x + width, y + 0, 0).tex((textureX + width) * f, (textureY + 0) * f1)
+        .endVertex();
     vertexbuffer.pos(x + 0, y + 0, 0).tex((textureX + 0) * f, (textureY + 0) * f1).endVertex();
     tessellator.draw();
   }

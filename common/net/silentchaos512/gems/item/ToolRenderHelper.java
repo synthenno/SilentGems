@@ -194,8 +194,10 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       ToolPart partHead = ToolHelper.getPartHead(tool);
       ToolPart partRod = ToolHelper.getPartRod(tool);
       // TODO: Localizations
-      list.add("Head: " + partHead.getKey());
-      list.add("Rod: " + partRod.getKey());
+      String strHead = partHead == null ? "null" : partHead.getKey();
+      String strRod = partRod == null ? "null" : partRod.getKey();
+      list.add("Head: " + strHead);
+      list.add("Rod: " + strRod);
       list.add(sep);
     } else {
       list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.AltForStat"));

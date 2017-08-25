@@ -26,7 +26,8 @@ public class ToolPartGem extends ToolPartMain {
 
   public ToolPartGem(EnumGem gem, boolean supercharged) {
 
-    super(SilentGems.RESOURCE_PREFIX + gem.name().toLowerCase() + (supercharged ? "_super" : ""), supercharged ? gem.getItemSuper() : gem.getItem());
+    super(SilentGems.RESOURCE_PREFIX + gem.name().toLowerCase() + (supercharged ? "_super" : ""),
+        supercharged ? gem.getItemSuper() : gem.getItem());
     this.craftingOreDictName = supercharged ? gem.getItemSuperOreName() : gem.getItemOreName();
     this.gem = gem;
     this.supercharged = supercharged;
@@ -40,7 +41,13 @@ public class ToolPartGem extends ToolPartMain {
   @Override
   public int getColor(ItemStack toolOrArmor) {
 
-    return gem.getColor();
+//    if (gem.ordinal() < EnumGem.CARNELIAN.ordinal()) {
+//      return 0xFFFFFF;
+//    } else if (gem.ordinal() < EnumGem.PYROPE.ordinal()) {
+//      return 0x999999;
+//    }
+//    return gem.getColor();
+    return 0xFFFFFF;
   }
 
   @Override
@@ -53,14 +60,23 @@ public class ToolPartGem extends ToolPartMain {
   public String getDisplayName(ItemStack stack) {
 
     String itemName = supercharged ? Names.GEM_SUPER : Names.GEM;
-    return SilentGems.localizationHelper.getLocalizedString("item", itemName + (stack.getItemDamage()) + ".name");
+    return SilentGems.localizationHelper.getLocalizedString("item",
+        itemName + (stack.getItemDamage()) + ".name");
   }
 
   @Override
   public ModelResourceLocation getModel(ItemStack tool, int frame) {
 
     String name = ((IRegistryObject) tool.getItem()).getName();
-    name = SilentGems.RESOURCE_PREFIX + name + "/" + name + "_head";
+    name = SilentGems.RESOURCE_PREFIX + name + "/" + name;
+
+    // Gem number
+    name += gem.ordinal();
+//    if (gem.ordinal() < EnumGem.PYROPE.ordinal()) {
+//      name += gem.ordinal() & 0xF;
+//    } else {
+//      name += "15";
+//    }
     String frameNum = frame == 3 ? "_3" : "";
 
     if (modelMap.containsKey(name)) {

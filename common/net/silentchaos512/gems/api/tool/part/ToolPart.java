@@ -82,12 +82,6 @@ public abstract class ToolPart {
     return 0xFFFFFF;
   }
 
-  // TODO
-  public int getHighlightColor(ItemStack tool) {
-
-    return 0xFFFFFF;
-  }
-
   /**
    * Returns a display name for the part and given ItemStack. For ToolPartMain, this is used in constructing the tool's
    * name. Defaults to the stack's display name, which the player can set in an anvil.

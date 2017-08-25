@@ -310,6 +310,12 @@ public class ItemGemSickle extends ItemTool implements IRegistryObject, ITool {
     ToolHelper.onUpdate(tool, world, entity, itemSlot, isSelected);
   }
 
+  @Override
+  public String getItemStackDisplayName(ItemStack tool) {
+
+    return ToolHelper.getDisplayName(tool, getName());
+  }
+
   // ==================
   // ItemTool overrides
   // ==================

@@ -192,7 +192,8 @@ public class ItemGemPickaxe extends ItemPickaxe implements IRegistryObject, IToo
   public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos,
       EntityLivingBase entityLiving) {
 
-    return ToolHelper.onBlockDestroyed(stack, world, state, pos, entityLiving);
+    //return ToolHelper.onBlockDestroyed(stack, world, state, pos, entityLiving);
+    return super.onBlockDestroyed(stack, world, state, pos, entityLiving);
   }
 
   @Override

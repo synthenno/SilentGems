@@ -257,9 +257,6 @@ public class GuideBookGems extends GuideBook {
     // Glow Rose
     new GuideChapter(this, "glowRose", entryBlocks, new ItemStack(ModBlocks.glowRose),
         new PageTextOnly(this, 1));
-    // Material Grader
-    new GuideChapter(this, "materialGrader", entryBlocks, new ItemStack(ModBlocks.materialGrader),
-        new PageTextOnly(this, 1));
     // Decorative Gem Blocks
     new GuideChapter(this, "gemDecoBlocks", entryBlocks, new ItemStack(ModBlocks.gemBrickCoated, 1, SilentGems.random.nextInt(16)), -10,
         new PageTextOnly(this, 1));

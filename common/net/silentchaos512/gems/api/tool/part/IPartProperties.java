@@ -24,6 +24,8 @@ public interface IPartProperties {
 
   public int getEnchantability();
 
+  public float getChargeSpeed();
+
   public float getProtection();
 
   public ItemStack getCraftingStack();

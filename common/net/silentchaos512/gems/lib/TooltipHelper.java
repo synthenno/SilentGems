@@ -8,6 +8,11 @@ public class TooltipHelper {
   public static final String FORMAT_INT_LARGE = "%,d";
   public static final String FORMAT_FLOAT = "%.2f";
 
+  public static String get(String key, String value) {
+
+    return SilentGems.localizationHelper.getMiscText("Tooltip." + key, value);
+  }
+
   public static String get(String key, int value) {
 
     return get(key, value, false);

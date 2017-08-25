@@ -852,6 +852,7 @@ misc.silentgems:state.off=Off
 # Tool and Armor Information
 
 misc.silentgems:ToolPart.Rod=&3Tool Rod
+misc.silentgems:ToolPart.Main=&3Tool Material
 misc.silentgems:ToolPart.Grade=&3Grade: %s
 misc.silentgems:ToolPart.Tier=&3Tier: %s
 misc.silentgems:ToolPart.ValidTiers=Valid tool tiers:

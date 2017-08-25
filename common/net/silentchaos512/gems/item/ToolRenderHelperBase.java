@@ -38,9 +38,10 @@ public class ToolRenderHelperBase extends ItemSL {
   // Render pass IDs and count
   public static final int LAYER_ROD = 0;
   public static final int LAYER_HEAD = 1;
-  public static final int LAYER_TIP = 2;
-  public static final int LAYER_ROD_DECO = 3;
-  public static final int RENDER_PASS_COUNT = 4;
+  public static final int LAYER_HEAD_HIGHLIGHT = 2;
+  public static final int LAYER_TIP = 3;
+  public static final int LAYER_ROD_DECO = 4;
+  public static final int RENDER_PASS_COUNT = 5;
 
   public boolean hasEffect(ItemStack tool) {
 

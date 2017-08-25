@@ -238,6 +238,12 @@ public class ItemGemShield extends ItemShield implements IRegistryObject, ITool 
     return true;
   }
 
+  @Override
+  public String getItemStackDisplayName(ItemStack tool) {
+
+    return ToolHelper.getDisplayName(tool, getName());
+  }
+
   // =============================
   // = IRegistryObject overrides =
   // =============================

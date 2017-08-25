@@ -253,6 +253,12 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
     ToolHelper.onUpdate(tool, world, entity, itemSlot, isSelected);
   }
 
+  @Override
+  public String getItemStackDisplayName(ItemStack tool) {
+
+    return ToolHelper.getDisplayName(tool, getName());
+  }
+
   // ==================
   // ItemSword overrides
   // ==================
