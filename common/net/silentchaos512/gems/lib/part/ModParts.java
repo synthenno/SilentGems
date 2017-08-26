@@ -37,9 +37,9 @@ public class ModParts {
         1.0f, 1.15f, 1.0f, 1.15f, 1.0f)); //@formatter:on
 
     // Tips
-    ToolPartRegistry.putPart(new ToolPartTipGems("TipIron", EnumTipUpgrade.IRON));
-    ToolPartRegistry.putPart(new ToolPartTipGems("TipGold", EnumTipUpgrade.GOLD));
-    ToolPartRegistry.putPart(new ToolPartTipGems("TipDiamond", EnumTipUpgrade.DIAMOND));
-    ToolPartRegistry.putPart(new ToolPartTipGems("TipEmerald", EnumTipUpgrade.EMERALD));
+    ToolPartRegistry.putPart(new ToolPartTipGems("tip_iron", EnumTipUpgrade.IRON));
+    ToolPartRegistry.putPart(new ToolPartTipGems("tip_gold", EnumTipUpgrade.GOLD));
+    ToolPartRegistry.putPart(new ToolPartTipGems("tip_diamond", EnumTipUpgrade.DIAMOND));
+    ToolPartRegistry.putPart(new ToolPartTipGems("tip_emerald", EnumTipUpgrade.EMERALD));
   }
 }

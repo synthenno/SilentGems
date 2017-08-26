@@ -804,6 +804,7 @@ public class ToolHelper {
 
   public static void setPartTip(ItemStack tool, ToolPart part) {
 
+    // FIXME: Tips are not being saved!
     setTagPart(tool, NBT_PART_HEAD_TIP, part);
   }
 

@@ -865,10 +865,10 @@ misc.silentgems:ToolTier.HYPER=Hyper
 misc.silentgems:Grade.none=None
 
 misc.silentgems:Tooltip.Tipped=%s-Tipped
-misc.silentgems:Tooltip.tipiron=&fIron
-misc.silentgems:Tooltip.tipdiamond=&bDiamond
-misc.silentgems:Tooltip.tipemerald=&2Emerald
-misc.silentgems:Tooltip.tipgold=&eGold
+misc.silentgems:Tooltip.tip_iron=&fIron
+misc.silentgems:Tooltip.tip_diamond=&bDiamond
+misc.silentgems:Tooltip.tip_emerald=&2Emerald
+misc.silentgems:Tooltip.tip_gold=&eGold
 
 misc.silentgems:Tooltip.level0=Stone
 misc.silentgems:Tooltip.level1=Iron

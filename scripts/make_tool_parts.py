@@ -1,8 +1,7 @@
 import re
 from subprocess import call
 
-NAME = 'sword'
-SUPER_TOOL = False
+NAME = 'tomahawk'
 
 TEXTURE = NAME + '/' + NAME
 MODE = 'item'
@@ -13,10 +12,7 @@ commands = [];
 # Rod
 for rod in ['wood', 'bone', 'iron', 'gold', 'silver']:
     name = NAME + '_rod_' + rod
-    if SUPER_TOOL and (rod == 'wood' or rod == 'bone'):
-        texture = 'blank'
-    else:
-        texture = TEXTURE + '_rod_' + rod
+    texture = TEXTURE + '_rod_' + rod
     commands.append(line % (MODE, name, texture, 0))
 
 for i in (range(48) + ['flint']):
@@ -29,8 +25,8 @@ for i in (range(48) + ['flint']):
     commands.append(line % (MODE, name, texture, 1))
 
 for tip in ['iron', 'diamond', 'emerald', 'gold']:
-    name = NAME + 'tip' + tip
-    texture = TEXTURE + 'tip' + tip
+    name = NAME + '_tip_' + tip
+    texture = TEXTURE + '_tip_' + tip
     commands.append(line % (MODE, name, texture, 3))
 
 for command in commands:

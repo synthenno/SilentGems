@@ -31,7 +31,7 @@ public class ToolPartTipGems extends ToolPartTip {
   public ModelResourceLocation getModel(ItemStack tool, int frame) {
 
     String name = ((IRegistryObject) tool.getItem()).getName();
-    name = SilentGems.MODID + ":" + name.toLowerCase() + "/" + name + "_tip"
+    name = SilentGems.MODID + ":" + name.toLowerCase() + "/" + name + "_" + tipName
         + (frame == 3 ? "_3" : "");
 
     if (modelMap.containsKey(name)) {

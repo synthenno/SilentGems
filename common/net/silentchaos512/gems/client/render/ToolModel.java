@@ -24,6 +24,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.init.ModItems;
@@ -221,6 +222,7 @@ public class ToolModel extends MultiLayerModelSL {
         break;
       case FIXED:
         matrix = ForgeHooksClient.getMatrix(getItemCameraTransforms().fixed);
+        matrix.rotY((float) Math.PI);
         break;
       default:
         break;

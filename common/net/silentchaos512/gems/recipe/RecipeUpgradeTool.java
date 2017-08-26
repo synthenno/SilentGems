@@ -5,8 +5,10 @@ import java.util.List;
 
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
 import net.silentchaos512.gems.item.ItemTipUpgrade;
+import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.recipe.RecipeBaseSL;
 import net.silentchaos512.lib.util.StackHelper;
 
@@ -41,7 +43,8 @@ public class RecipeUpgradeTool extends RecipeBaseSL {
 
     for (ItemStack upgrade : upgrades) {
       // TODO: Upgrade interface?
-      ((ItemTipUpgrade) upgrade.getItem()).applyToTool(result, upgrade);
+      ItemTipUpgrade item = (ItemTipUpgrade) upgrade.getItem();
+      result = item.applyToTool(result, upgrade);
     }
 
     return result;

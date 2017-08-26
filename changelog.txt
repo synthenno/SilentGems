@@ -1,5 +1,12 @@
 Silent's Gems - Changelog
 
+3.0.0
+Added: 16 new gems. These "light" or "pale" gems are found in the End.
+Removed: Multi-gem (mixed material) construction. Tool heads must be a single material now.
+Removed: Tool decorating. You will be able to change the appearance of tool heads later.
+Removed: Tiers and Grades.
+Removed: The Material Grader.
+
 2.4.6
 Added: Scaling Health blights can now receive gem swords
 Fixed: Tinkers Construct support is back. Colors are currently broken, but parts are craftable.

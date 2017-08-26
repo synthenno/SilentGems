@@ -24,7 +24,7 @@ public class ToolPartFlint extends ToolPartMain {
   public ModelResourceLocation getModel(ItemStack tool, int frame) {
 
     String name = ((IRegistryObject) tool.getItem()).getName();
-    name = SilentGems.RESOURCE_PREFIX + name + "/" + name + "_head";
+    name = SilentGems.RESOURCE_PREFIX + name + "/" + name + "flint";
     String frameNum = frame == 3 ? "_3" : "";
 
     name = name.toLowerCase();
@@ -34,7 +34,10 @@ public class ToolPartFlint extends ToolPartMain {
   @Override
   public int getColor(ItemStack toolOrArmor) {
 
-    return COLOR;
+    if (toolOrArmor.getItem() instanceof ItemGemBow) {
+      return COLOR;
+    }
+    return 0xFFFFFF;
   }
 
   @Override
