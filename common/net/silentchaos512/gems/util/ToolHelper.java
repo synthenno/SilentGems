@@ -65,7 +65,7 @@ import net.silentchaos512.gems.item.tool.ItemGemSickle;
 import net.silentchaos512.gems.item.tool.ItemGemSword;
 import net.silentchaos512.gems.lib.Greetings;
 import net.silentchaos512.gems.lib.Names;
-import net.silentchaos512.gems.lib.ToolSoul;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.skills.SkillAreaMiner;
 import net.silentchaos512.gems.skills.SkillLumberjack;
 import net.silentchaos512.gems.skills.ToolSkill;
@@ -96,6 +96,9 @@ public class ToolHelper {
 
   // UUID key
   public static final String NBT_UUID = "SG_UUID";
+
+  // NBT example key
+  public static final String NBT_EXAMPLE_TOOL = "SG_ExampleTool";
 
   // Settings
   public static final String NBT_SETTINGS_SPECIAL = "SpecialEnabled";
@@ -133,9 +136,6 @@ public class ToolHelper {
 
   // Compatibility
   public static final String NBT_COMPAT_SG2 = "SG2_Tool";
-
-  // NBT example key
-  public static final String NBT_EXAMPLE_TOOL_TIER = "ExampleToolTier";
 
   public static void init() {
 
@@ -214,9 +214,13 @@ public class ToolHelper {
     return false;
   }
 
-  public static UUID getUUID(ItemStack tool) {
+  public static @Nullable UUID getUUID(ItemStack tool) {
 
     initRootTag(tool);
+    if (tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL)) {
+      return null;
+    }
+
     if (!tool.getTagCompound().hasKey(NBT_UUID)) {
       UUID uuid = UUID.randomUUID();
       tool.getTagCompound().setString(NBT_UUID, uuid.toString());
@@ -238,7 +242,15 @@ public class ToolHelper {
   public static void attemptDamageTool(ItemStack tool, int amount, EntityLivingBase entityLiving) {
 
     boolean willBreak = tool.getItemDamage() + amount > tool.getMaxDamage();
-    // TODO: Return tool soul if broken.
+    // Return the broken tool's soul to the player.
+    if (willBreak && entityLiving instanceof EntityPlayer && !entityLiving.world.isRemote) {
+      ToolSoul soul = getSoul(tool);
+      if (soul != null) {
+        ItemStack toGive = new ItemStack(ModItems.toolSoul);
+        ModItems.toolSoul.setSoul(toGive, soul);
+        PlayerHelper.giveItem((EntityPlayer) entityLiving, toGive);
+      }
+    }
     tool.damageItem(amount, entityLiving);
   }
 
@@ -528,8 +540,8 @@ public class ToolHelper {
       IBlockState stateMined = player.world.getBlockState(pos);
       float hardness = stateMined.getBlockHardness(player.world, pos);
       if (hardness >= 0.5f) {
-        int xp = MathHelper.clamp(Math.round(hardness / 3f), 1, 10);
-        addSoulXp(stack, xp);
+        int xp = MathHelper.clamp(Math.round(ToolSoul.XP_FACTOR_BLOCK_MINED * hardness), 1, 20);
+        addSoulXp(xp, stack, player);
       }
     }
 
@@ -590,10 +602,16 @@ public class ToolHelper {
       boolean isSelected) {
 
     if (!world.isRemote) {
+      // Randomize tools with no data.
       if (hasNoConstruction(tool)) {
         ItemStack newTool = ToolRandomizer.INSTANCE.randomize(tool);
       }
-      return;
+
+      // If the player gave him/herself a tool via JEI or creative, remove the example tag.
+      // This will allow the tool to receive a UUID.
+      if (tool.hasTagCompound() && tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL)) {
+        tool.getTagCompound().removeTag(NBT_EXAMPLE_TOOL);
+      }
     }
   }
 
@@ -662,7 +680,11 @@ public class ToolHelper {
         }
       } else {
         if (!part.isBlacklisted(part.getCraftingStack())) {
-          list.add(constructTool(item, part.getPreferredRod(), part.getCraftingStack()));
+          ItemStack stack = constructTool(item, part.getPreferredRod(), part.getCraftingStack());
+          initRootTag(stack);
+          stack.getTagCompound().setBoolean(NBT_EXAMPLE_TOOL, true);
+          stack.getTagCompound().removeTag(NBT_UUID);
+          list.add(stack);
         }
       }
     }
@@ -733,6 +755,10 @@ public class ToolHelper {
 
   public static ToolSoul getSoul(ItemStack tool) {
 
+    if (tool.hasTagCompound() && tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL)) {
+      return null;
+    }
+
     ToolSoul soul = toolSoulMap.get(getUUID(tool));
     if (soul != null) {
       return soul;
@@ -773,13 +799,17 @@ public class ToolHelper {
     SilentGems.logHelper.debug("Saved " + count + " tool(s) for " + player.getName());
   }
 
-  public static void addSoulXp(ItemStack tool, int amount) {
+  public static void clearToolSoulMap() {
+
+    toolSoulMap.clear();
+  }
+
+  public static void addSoulXp(int amount, ItemStack tool, EntityPlayer player) {
 
     ToolSoul soul = getSoul(tool);
     if (soul != null) {
       int current = soul.getXp();
-      soul.addXp(amount);
-      SilentGems.logHelper.debug(current, soul.getXp());
+      soul.addXp(amount, tool, player);
     }
   }
 

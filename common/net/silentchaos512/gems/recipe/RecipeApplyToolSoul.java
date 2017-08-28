@@ -6,7 +6,7 @@ import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ItemToolSoul;
-import net.silentchaos512.gems.lib.ToolSoul;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.recipe.RecipeBaseSL;
 import net.silentchaos512.lib.util.StackHelper;

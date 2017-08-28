@@ -8,15 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
-import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.api.lib.EnumDecoPos;
-import net.silentchaos512.gems.api.lib.EnumMaterialGrade;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
 import net.silentchaos512.gems.api.tool.part.ToolPart;
-import net.silentchaos512.gems.api.tool.part.ToolPartMain;
 import net.silentchaos512.gems.api.tool.part.ToolPartRegistry;
-import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.lib.util.StackHelper;
 
@@ -33,20 +26,6 @@ public class ArmorHelper {
   public static final String NBT_ROOT_PROPERTIES = "SGProperties";
   public static final String NBT_ROOT_STATISTICS = "SGStatistics";
 
-  // Construction
-  public static final String NBT_PART_WEST = "Part0";
-  public static final String NBT_PART_NORTH = "Part1";
-  public static final String NBT_PART_EAST = "Part2";
-  public static final String NBT_PART_SOUTH = "Part3";
-
-  public static final String NBT_ARMOR_TIER = "ArmorTier";
-
-  // Decoration
-  public static final String NBT_DECO_WEST = "DecoWest";
-  public static final String NBT_DECO_NORTH = "DecoNorth";
-  public static final String NBT_DECO_EAST = "DecoEast";
-  public static final String NBT_DECO_SOUTH = "DecoSouth";
-
   // Stats
   public static final String NBT_PROP_DURABILITY = "Durability";
   public static final String NBT_PROP_PROTECTION = "Protection";
@@ -54,18 +33,15 @@ public class ArmorHelper {
 
   // Statistics
   public static final String NBT_STATS_ORIGINAL_OWNER = "OriginalOwner";
-  public static final String NBT_STATS_REDECORATED = "Redecorated";
   public static final String NBT_STATS_DAMAGE_TAKEN = "DamageTaken";
 
   public static void recalculateStats(ItemStack armor) {
 
-    ToolPart[] parts = getConstructionParts(armor);
-    EnumMaterialGrade[] grades = getConstructionGrades(armor);
+    ToolPart part = getMaterial(armor);
 
-    if (parts.length == 0)
+    if (part == null) {
       return;
-
-    // TODO: Reset render cache? Will that even be a thing for armor?
+    }
 
     float sumDurability = 0f;
     float sumProtection = 0f;
@@ -74,41 +50,24 @@ public class ArmorHelper {
 
     Set<ToolPart> uniqueParts = Sets.newConcurrentHashSet();
 
-    // Get sum stats for parts.
-    for (int i = 0; i < parts.length; ++i) {
-      ToolPart part = parts[i];
-      EnumMaterialGrade grade = grades[i];
-      float multi = (100 + grade.bonusPercent) / 100f;
-
-      sumDurability += part.getDurability() * multi;
-      sumProtection += part.getProtection() * multi;
-      sumEnchantability += part.getEnchantability() * multi;
-      uniqueParts.add(part);
-    }
-
     // Set render colors
-    ToolPart[] renderParts = getRenderParts(armor);
-    for (int i = 0; i < renderParts.length; ++i) {
-      if (renderParts[i] != null) {
-        setTagInt(armor, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + i + "Color",
-            renderParts[i].getColor(armor));
-      }
-    }
+//    ToolPart[] renderParts = getRenderParts(armor);
+//    for (int i = 0; i < renderParts.length; ++i) {
+//      if (renderParts[i] != null) {
+//        setTagInt(armor, ToolRenderHelper.NBT_MODEL_INDEX, "Layer" + i + "Color",
+//            renderParts[i].getColor(armor));
+//      }
+//    }
 
-    // Variety bonus
-    int variety = MathHelper.clamp(uniqueParts.size(), 1, 3);
-    float bonus = 1.0f + GemsConfig.VARIETY_BONUS * (variety - 1);
-
-    // Average stats
-    float durability = bonus * sumDurability / parts.length;
-    float protection = bonus * sumProtection / parts.length;
-    float enchantability = bonus * sumEnchantability / parts.length;
+    // Stats
+    float durability = part.getDurability();
+    float protection = part.getProtection();
+    float enchantability = part.getEnchantability();
 
     // Set NBT
     setTagInt(armor, NBT_ROOT_PROPERTIES, NBT_PROP_DURABILITY, (int) durability);
     setTagFloat(armor, NBT_ROOT_PROPERTIES, NBT_PROP_PROTECTION, protection);
     setTagInt(armor, NBT_ROOT_PROPERTIES, NBT_PROP_ENCHANTABILITY, (int) enchantability);
-    setTagInt(armor, NBT_ROOT_PROPERTIES, NBT_ARMOR_TIER, parts[0].getTier().ordinal());
   }
 
   /*
@@ -142,231 +101,54 @@ public class ArmorHelper {
   // Armor construction and decoration
   // ==========================================================================
 
-  public static EnumMaterialTier getArmorTier(ItemStack armor) {
+  public static ToolPart getMaterial(ItemStack armor) {
 
-    int id = getTagInt(armor, NBT_ROOT_PROPERTIES, NBT_ARMOR_TIER);
-    return EnumMaterialTier.values()[MathHelper.clamp(id, 0,
-        EnumMaterialTier.values().length - 1)];
+    return ToolHelper.getPartHead(armor);
   }
 
-  public static ToolPart[] getConstructionParts(ItemStack armor) {
+  public static ToolPart getRenderMaterial(ItemStack armor) {
 
-    return ToolHelper.getConstructionParts(armor);
-  }
-
-  public static ToolPart[] getRenderParts(ItemStack armor) {
-
-    if (StackHelper.isEmpty(armor))
-      return new ToolPart[0];
-
-    return new ToolPart[] {//
-        getRenderPart(armor, EnumDecoPos.WEST), getRenderPart(armor, EnumDecoPos.NORTH),
-        getRenderPart(armor, EnumDecoPos.EAST), getRenderPart(armor, EnumDecoPos.SOUTH) };
-  }
-
-  public static EnumMaterialGrade[] getConstructionGrades(ItemStack armor) {
-
-    return ToolHelper.getConstructionGrades(armor);
-  }
-
-  public static ToolPart getPart(ItemStack armor, EnumDecoPos pos) {
-
-    String key;
-    switch (pos) {
-      case EAST:
-        key = getPartId(armor, NBT_PART_EAST);
-        break;
-      case NORTH:
-        key = getPartId(armor, NBT_PART_NORTH);
-        break;
-      case SOUTH:
-        key = getPartId(armor, NBT_PART_SOUTH);
-        break;
-      case WEST:
-        key = getPartId(armor, NBT_PART_WEST);
-        break;
-      default:
-        SilentGems.logHelper.warning("ArmorHelper.getPart: Unknown EnumDecoPos " + pos);
-        key = "";
-    }
-
-    if (key.isEmpty())
-      return null;
-
-    return ToolPartRegistry.getPart(key);
-  }
-
-  public static ToolPart getRenderPart(ItemStack armor, EnumDecoPos pos) {
-
-    String key;
-    switch (pos) {
-      case EAST:
-        key = getPartId(armor, NBT_DECO_EAST);
-        break;
-      case NORTH:
-        key = getPartId(armor, NBT_DECO_NORTH);
-        break;
-      case SOUTH:
-        key = getPartId(armor, NBT_DECO_SOUTH);
-        break;
-      case WEST:
-        key = getPartId(armor, NBT_DECO_WEST);
-        break;
-      default:
-        SilentGems.logHelper.warning("ArmorHelper.getRenderPart: Unknown EnumDecoPos " + pos);
-        key = "";
-    }
-
-    if (key.isEmpty())
-      return getPart(armor, pos);
-
-    return ToolPartRegistry.getPart(key);
-  }
-
-  public static int getRenderColor(ItemStack armor, EnumDecoPos pos) {
-
-    String key = "Layer" + pos.ordinal() + "Color";
-    return getTagInt(armor, ToolRenderHelper.NBT_MODEL_INDEX, key, 0xFFFFFF);
-  }
-
-  public static int[] getRenderColorList(ItemStack armor)
-  {
-    int[] values = new int[EnumDecoPos.values().length];
-    for (EnumDecoPos pos : EnumDecoPos.values())
-    {
-      values[pos.ordinal()] = getRenderColor(armor, pos);
-    }
-    return values;
-  }
-
-  public static String getRenderColorString(ItemStack stack)
-  {
-    StringBuilder toReturn = new StringBuilder();
-    int[] colors = getRenderColorList(stack);
-    for (int color : colors)
-    {
-      toReturn.append(color);
-    }
-    return toReturn.toString();
-  }
-
-  public static String getPartId(ItemStack tool, String key) {
-
-    if (!tool.hasTagCompound()) {
+    if (StackHelper.isEmpty(armor)) {
       return null;
     }
-
-    return getRootTag(tool, NBT_ROOT_CONSTRUCTION).getString(key).split("#")[0];
+    // TODO
+    return getMaterial(armor);
   }
 
-  public static EnumMaterialGrade getPartGrade(ItemStack tool, String key) {
+  public static int getRenderColor(ItemStack armor) {
 
-    if (!tool.hasTagCompound()) {
-      return null;
-    }
-
-    String[] array = getRootTag(tool, NBT_ROOT_CONSTRUCTION).getString(key).split("#");
-    if (array.length < 2) {
-      return EnumMaterialGrade.NONE;
-    }
-    return EnumMaterialGrade.fromString(array[1]);
+    return getTagInt(armor, ToolRenderHelper.NBT_MODEL_INDEX, "Color", 0xFFFFFF);
   }
 
-  public static ItemStack constructArmor(Item item, ItemStack... materials) {
+  // public static String getRenderColorString(ItemStack stack)
+  // {
+  // StringBuilder toReturn = new StringBuilder();
+  // int[] colors = getRenderColorList(stack);
+  // for (int color : colors)
+  // {
+  // toReturn.append(color);
+  // }
+  // return toReturn.toString();
+  // }
 
-    // Shortcut for JEI recipes.
-    if (materials.length == 1) {
-      ItemStack[] newMats = new ItemStack[4];
-      for (int i = 0; i < newMats.length; ++i)
-        newMats[i] = materials[0];
-      materials = newMats;
+  public static ItemStack constructArmor(Item item, ItemStack material) {
+
+    if (StackHelper.isEmpty(material)) {
+      String str = "ArmorHelper.constructArmor: empty part! " + material;
+      throw new IllegalArgumentException(str);
     }
 
     ItemStack result = new ItemStack(item);
     result.setTagCompound(new NBTTagCompound());
-    result.getTagCompound().setTag(ToolHelper.NBT_TEMP_PARTLIST, new NBTTagCompound());
 
     // Construction
     ToolPart part;
-    EnumMaterialGrade grade;
-    for (int i = 0; i < materials.length; ++i) {
-      if (StackHelper.isEmpty(materials[i])) {
-        String str = "ArmorHelper.constructArmor: empty part! ";
-        for (ItemStack stack : materials)
-          str += stack + ", ";
-        throw new IllegalArgumentException(str);
-      }
 
-      part = ToolPartRegistry.fromStack(materials[i]);
-      grade = EnumMaterialGrade.fromStack(materials[i]);
-      setTagPart(result, "Part" + i, part, grade);
-
-      // Write part list for client-side name generation.
-      result.getTagCompound().getCompoundTag(ToolHelper.NBT_TEMP_PARTLIST).setTag("part" + i,
-          materials[i].writeToNBT(new NBTTagCompound()));
-    }
-
-    // Create name
-    String displayName = ToolHelper.createToolName(item, materials);
-    result.setStackDisplayName(displayName);
+    part = ToolPartRegistry.fromStack(material);
+    setTagPart(result, ToolHelper.NBT_PART_HEAD, part);
 
     recalculateStats(result);
 
-    return result;
-  }
-
-  /*
-   * Decoration Methods
-   */
-
-  public static ItemStack decorateArmor(ItemStack armor, ItemStack west, ItemStack north,
-      ItemStack east, ItemStack south) {
-
-    if (StackHelper.isEmpty(armor)) {
-      return StackHelper.empty();
-    }
-
-    ItemStack result = StackHelper.safeCopy(armor);
-    result = decorate(result, west, EnumDecoPos.WEST);
-    result = decorate(result, north, EnumDecoPos.NORTH);
-    result = decorate(result, east, EnumDecoPos.EAST);
-    result = decorate(result, south, EnumDecoPos.SOUTH);
-    return result;
-  }
-
-  private static ItemStack decorate(ItemStack armor, ItemStack material, EnumDecoPos pos) {
-
-    if (StackHelper.isEmpty(armor))
-      return StackHelper.empty();
-    if (StackHelper.isEmpty(material))
-      return armor;
-
-    ToolPart part = ToolPartRegistry.fromStack(material);
-    if (part == null)
-      return null;
-
-    // Only main parts (like gems) work
-    if (!(part instanceof ToolPartMain))
-      return armor;
-
-    ItemStack result = StackHelper.safeCopy(armor);
-    switch (pos) {
-      case WEST:
-        setTagPart(result, NBT_DECO_WEST, part, EnumMaterialGrade.fromStack(material));
-        break;
-      case NORTH:
-        setTagPart(result, NBT_DECO_NORTH, part, EnumMaterialGrade.fromStack(material));
-        break;
-      case EAST:
-        setTagPart(result, NBT_DECO_EAST, part, EnumMaterialGrade.fromStack(material));
-        break;
-      case SOUTH:
-        setTagPart(result, NBT_DECO_SOUTH, part, EnumMaterialGrade.fromStack(material));
-        break;
-      default:
-        SilentGems.instance.logHelper.warning("ArmorHelper.decorate: invalid deco pos " + pos);
-        break;
-    }
     return result;
   }
 
@@ -450,11 +232,10 @@ public class ArmorHelper {
     getRootTag(tool, root).setString(name, value);
   }
 
-  private static void setTagPart(ItemStack tool, String name, ToolPart part,
-      EnumMaterialGrade grade) {
+  private static void setTagPart(ItemStack tool, String name, ToolPart part) {
 
     initRootTag(tool);
-    getRootTag(tool, NBT_ROOT_CONSTRUCTION).setString(name, part.getKey() + "#" + grade.name());
+    getRootTag(tool, NBT_ROOT_CONSTRUCTION).setString(name, part.getKey());
   }
 
   // --------------
@@ -474,16 +255,6 @@ public class ArmorHelper {
   public static void setOriginalOwner(ItemStack tool, String name) {
 
     ToolHelper.setOriginalOwner(tool, name);
-  }
-
-  public static int getStatRedecorated(ItemStack tool) {
-
-    return getTagInt(tool, NBT_ROOT_STATISTICS, NBT_STATS_REDECORATED);
-  }
-
-  public static void incrementStatRedecorated(ItemStack tool, int amount) {
-
-    setTagInt(tool, NBT_ROOT_STATISTICS, NBT_STATS_REDECORATED, getStatRedecorated(tool) + amount);
   }
 
   public static float getStatDamageTaken(ItemStack tool) {

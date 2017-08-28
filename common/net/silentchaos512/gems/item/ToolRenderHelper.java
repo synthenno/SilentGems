@@ -34,8 +34,8 @@ import net.silentchaos512.gems.item.tool.ItemGemShield;
 import net.silentchaos512.gems.item.tool.ItemGemShovel;
 import net.silentchaos512.gems.item.tool.ItemGemSword;
 import net.silentchaos512.gems.item.tool.ItemGemTomahawk;
-import net.silentchaos512.gems.lib.ToolSoul;
 import net.silentchaos512.gems.lib.TooltipHelper;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.LocalizationHelper;
 
@@ -72,7 +72,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     String line;
 
     // UUID (temporary)
-    list.add(ToolHelper.getUUID(tool).toString());
+    list.add("UUID: " + ToolHelper.getUUID(tool));
 
     // Tipped upgrade
     ToolPartTip partTip = (ToolPartTip) ToolHelper.getPartTip(tool);
@@ -86,9 +86,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     // Tool Soul
     ToolSoul soul = ToolHelper.getSoul(tool);
     if (soul != null) {
-      // TODO
-      list.add("XP: " + soul.getXp());
-      list.add("Level: " + soul.getLevel());
+      soul.addInformation(tool, world, list, advanced);
     }
 
     // Show original owner?
@@ -104,8 +102,8 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     }
 
     // Example tool?
-    if (tool.hasTagCompound() && tool.getTagCompound().hasKey(ToolHelper.NBT_EXAMPLE_TOOL_TIER)) {
-      list.add(loc.getMiscText("Tooltip.ExampleTool", "N/A"));
+    if (tool.hasTagCompound() && tool.getTagCompound().hasKey(ToolHelper.NBT_EXAMPLE_TOOL)) {
+      list.add(loc.getMiscText("Tooltip.ExampleTool"));
     }
     // Missing data?
     else if (ToolHelper.hasNoConstruction(tool)) {

@@ -1,27 +1,44 @@
-package net.silentchaos512.gems.lib;
+package net.silentchaos512.gems.lib.soul;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.world.World;
+import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.item.ItemSoulGem;
+import net.silentchaos512.lib.util.ChatHelper;
+import net.silentchaos512.lib.util.LocalizationHelper;
 
 public class ToolSoul {
 
-  static final int BASE_XP = 10;
+  public static final float XP_FACTOR_KILLS = 0.4f;
+  public static final float XP_FACTOR_BLOCK_MINED = 1.0f;
+
+  static final int BASE_XP = 30;
   static final float XP_CURVE_FACTOR = 2.5f;
 
+  // Experience and levels
   int xp = 0;
   int level = 1;
+
+  // Elements
   EnumSoulElement element1, element2 = EnumSoulElement.NONE;
 
-  public void addXp(int amount) {
+  // Personality
+  // TODO
+
+  public void addXp(int amount, ItemStack tool, EntityPlayer player) {
 
     xp += amount;
     if (xp >= getXpToNextLevel()) {
-      levelUp();
+      levelUp(tool, player);
     }
   }
 
@@ -41,9 +58,13 @@ public class ToolSoul {
     return level;
   }
 
-  protected void levelUp() {
+  protected void levelUp(ItemStack tool, EntityPlayer player) {
 
     ++level;
+    String line = String.format("Your %s is now level %d!", tool.getDisplayName(), level);
+    ChatHelper.sendMessage(player, line);
+    player.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP,
+        SoundCategory.PLAYERS, 1.0f, 1.0f);
   }
 
   public EnumSoulElement getPrimaryElement() {
@@ -54,6 +75,16 @@ public class ToolSoul {
   public EnumSoulElement getSecondaryElement() {
 
     return element2;
+  }
+
+  public void addInformation(ItemStack stack, World world, List<String> list, boolean advanced) {
+
+    LocalizationHelper loc = SilentGems.localizationHelper;
+    list.add(loc.getMiscText("ToolSoul.level", level, xp, getXpToNextLevel()));
+    String e1 = element1.getDisplayName();
+    String e2 = element2.getDisplayName();
+    String elements = e1 + (e2.equalsIgnoreCase("none") ? "" : ", " + e2);
+    list.add(loc.getMiscText("ToolSoul.elements", elements));
   }
 
   public static ToolSoul construct(ItemSoulGem.Soul... souls) {
@@ -132,6 +163,7 @@ public class ToolSoul {
   @Override
   public String toString() {
 
-    return "ToolSoul{" + "Elements: {" + element1.name() + ", " + element2.name() + "}" + "}";
+    return "ToolSoul{" + "Level: " + level + ", XP: " + xp + ", Elements: {" + element1.name()
+        + ", " + element2.name() + "}" + "}";
   }
 }

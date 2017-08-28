@@ -1,6 +1,6 @@
 package net.silentchaos512.gems.item;
 
-import static net.silentchaos512.gems.lib.EnumSoulElement.*;
+import static net.silentchaos512.gems.lib.soul.EnumSoulElement.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,8 +66,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.init.ModItems;
-import net.silentchaos512.gems.lib.EnumSoulElement;
 import net.silentchaos512.gems.lib.Names;
+import net.silentchaos512.gems.lib.soul.EnumSoulElement;
 import net.silentchaos512.lib.item.ItemSL;
 import net.silentchaos512.lib.util.ItemHelper;
 import net.silentchaos512.lib.util.LocalizationHelper;
@@ -88,13 +88,15 @@ public class ItemSoulGem extends ItemSL {
     //@formatter:off
     float blockDropRate = 0.025f;
     registerStackSoul(new Soul("Wheat", new ItemStack(Items.WHEAT),
-        0xD5DA45, 0x404A10, FLORA, WIND).setDropRate(blockDropRate));
+        0xD5DA45, 0x404A10, FLORA, LIGHTNING).setDropRate(blockDropRate));
     registerStackSoul(new Soul("Potato", new ItemStack(Items.POTATO),
         0xE9BA62, 0x8F6830, FLORA, EARTH).setDropRate(blockDropRate));
     registerStackSoul(new Soul("Carrot", new ItemStack(Items.CARROT),
         0xFF911B, 0x2C8A2A, FLORA, FIRE).setDropRate(blockDropRate));
     registerStackSoul(new Soul("Beetroot", new ItemStack(Items.BEETROOT),
         0x812921, 0xA74D54, FLORA, WATER).setDropRate(blockDropRate));
+    registerStackSoul(new Soul("FluffyPuff", new ItemStack(ModItems.fluffyPuff),
+        0xFFFFFF, 0x999999, FLORA, WIND));
 
     float rateHigh = 0.075f;
 

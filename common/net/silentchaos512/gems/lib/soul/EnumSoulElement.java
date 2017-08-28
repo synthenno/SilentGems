@@ -1,4 +1,4 @@
-package net.silentchaos512.gems.lib;
+package net.silentchaos512.gems.lib.soul;
 
 public enum EnumSoulElement {
 

@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -39,6 +40,7 @@ import net.silentchaos512.gems.item.ItemToolSoul;
 import net.silentchaos512.gems.item.ItemTorchBandolier;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.gems.item.ToolRenderHelperBase;
+import net.silentchaos512.gems.item.armor.ItemGemArmor;
 import net.silentchaos512.gems.item.tool.ItemGemAxe;
 import net.silentchaos512.gems.item.tool.ItemGemBow;
 import net.silentchaos512.gems.item.tool.ItemGemDagger;
@@ -103,14 +105,14 @@ public class ModItems implements IRegistrationHandler<Item> {
   public static final ItemGemSickle sickle = new ItemGemSickle();
 
   // Armor
-//  public static final ItemGemArmor gemHelmet = new ItemGemArmor(0, EntityEquipmentSlot.HEAD,
-//      Names.HELMET);
-//  public static final ItemGemArmor gemChestplate = new ItemGemArmor(1, EntityEquipmentSlot.CHEST,
-//      Names.CHESTPLATE);
-//  public static final ItemGemArmor gemLeggings = new ItemGemArmor(2, EntityEquipmentSlot.LEGS,
-//      Names.LEGGINGS);
-//  public static final ItemGemArmor gemBoots = new ItemGemArmor(3, EntityEquipmentSlot.FEET,
-//      Names.BOOTS);
+  public static final ItemGemArmor gemHelmet = new ItemGemArmor(0, EntityEquipmentSlot.HEAD,
+      Names.HELMET);
+  public static final ItemGemArmor gemChestplate = new ItemGemArmor(1, EntityEquipmentSlot.CHEST,
+      Names.CHESTPLATE);
+  public static final ItemGemArmor gemLeggings = new ItemGemArmor(2, EntityEquipmentSlot.LEGS,
+      Names.LEGGINGS);
+  public static final ItemGemArmor gemBoots = new ItemGemArmor(3, EntityEquipmentSlot.FEET,
+      Names.BOOTS);
 
   public static final ToolRenderHelperBase toolRenderHelper = FMLCommonHandler.instance()
       .getSide() == Side.CLIENT ? new ToolRenderHelper() : new ToolRenderHelperBase();
@@ -165,10 +167,10 @@ public class ModItems implements IRegistrationHandler<Item> {
     reg.registerItem(sickle, Names.SICKLE);
 
     // Armor
-//    reg.registerItem(gemHelmet, Names.HELMET);
-//    reg.registerItem(gemChestplate, Names.CHESTPLATE);
-//    reg.registerItem(gemLeggings, Names.LEGGINGS);
-//    reg.registerItem(gemBoots, Names.BOOTS);
+    reg.registerItem(gemHelmet, Names.HELMET);
+    reg.registerItem(gemChestplate, Names.CHESTPLATE);
+    reg.registerItem(gemLeggings, Names.LEGGINGS);
+    reg.registerItem(gemBoots, Names.BOOTS);
 
     // ToolRenderHelper
     reg.registerItem(toolRenderHelper).setCreativeTab(null);

@@ -920,16 +920,6 @@ misc.silentgems:state.off=Off
 
 misc.silentgems:ToolPart.Rod=&3Tool Rod
 misc.silentgems:ToolPart.Main=&3Tool Material
-misc.silentgems:ToolPart.Grade=&3Grade: %s
-misc.silentgems:ToolPart.Tier=&3Tier: %s
-misc.silentgems:ToolPart.ValidTiers=Valid tool tiers:
-misc.silentgems:ToolTier=Tier: %s
-misc.silentgems:ToolTier.MUNDANE=Mundane
-misc.silentgems:ToolTier.REGULAR=Regular
-misc.silentgems:ToolTier.SUPER=Super
-misc.silentgems:ToolTier.HYPER=Hyper
-
-misc.silentgems:Grade.none=None
 
 misc.silentgems:Tooltip.Tipped=%s-Tipped
 misc.silentgems:Tooltip.tip_iron=&fIron
@@ -946,7 +936,7 @@ misc.silentgems:Tooltip.level4=Cobalt
 misc.silentgems:Tooltip.ArrowDamage=Arrow Damage:&f %sx
 misc.silentgems:Tooltip.BlockingPower=Blocking Power:&f %s
 misc.silentgems:Tooltip.Broken=&cYou broke it!
-misc.silentgems:Tooltip.ExampleTool=&cExample recipe (%s Tier)
+misc.silentgems:Tooltip.ExampleTool=&cExample Tool
 misc.silentgems:Tooltip.NoData1=&cAppears to be made of... nothing.
 misc.silentgems:Tooltip.NoData2=&c(This tool is missing NBT. Something has gone wrong.)
 misc.silentgems:Tooltip.ChargeSpeed=Charge Speed:&f %s
@@ -974,7 +964,6 @@ misc.silentgems:Tooltip.PathsMade=&ePaths Made:&f %s
 misc.silentgems:Tooltip.ShotsFired=&eShots Fired:&f %s
 misc.silentgems:Tooltip.ShotsLanded=&eShots Landed:&f %s
 misc.silentgems:Tooltip.ThrownCount=&eTimes Thrown:&f %s
-misc.silentgems:Tooltip.Redecorated=&eRedecorated:&f %s time(s)
 
 misc.silentgems:Tooltip.CtrlForProp=Properties <Press Ctrl>
 misc.silentgems:Tooltip.AltForStat=Statistics <Press Alt>
@@ -983,6 +972,11 @@ misc.silentgems:Tooltip.Separator=&8-------------------
 misc.silentgems:Tooltip.Properties=&6Properties
 misc.silentgems:Tooltip.Statistics=&6Statistics
 misc.silentgems:Tooltip.Construction=&6Construction
+
+# Tool Souls
+
+misc.silentgems:ToolSoul.level=Level %d (%,d / %,d XP)
+misc.silentgems:ToolSoul.elements=Elements: %s
 
 
 

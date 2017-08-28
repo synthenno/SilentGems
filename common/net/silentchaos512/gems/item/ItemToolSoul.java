@@ -10,9 +10,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.init.ModItems;
-import net.silentchaos512.gems.lib.EnumSoulElement;
 import net.silentchaos512.gems.lib.Names;
-import net.silentchaos512.gems.lib.ToolSoul;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.lib.item.ItemSL;
 import net.silentchaos512.lib.registry.RecipeMaker;
 
@@ -52,12 +51,7 @@ public class ItemToolSoul extends ItemSL {
     // TODO: Localizations!
     ToolSoul soul = getSoul(stack);
     if (soul != null) {
-      String str = "Level %d (%,d / %,d XP)";
-      list.add(String.format(str, soul.getLevel(), soul.getXp(), soul.getXpToNextLevel()));
-      String element1 = soul.getPrimaryElement().getDisplayName();
-      String element2 = soul.getSecondaryElement().getDisplayName();
-      String elements = element1 + (element2.equalsIgnoreCase("none") ? "" : ", " + element2);
-      list.add("Elements: " + elements);
+      soul.addInformation(stack, world, list, advanced);
     }
   }
 

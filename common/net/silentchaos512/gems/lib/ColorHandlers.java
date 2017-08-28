@@ -6,11 +6,11 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.client.handler.ClientTickHandler;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ItemHoldingGem;
 import net.silentchaos512.gems.item.ItemSoulGem.Soul;
+import net.silentchaos512.gems.util.ArmorHelper;
 import net.silentchaos512.gems.util.ToolHelper;
 
 public class ColorHandlers {
@@ -45,15 +45,15 @@ public class ColorHandlers {
     }, ModItems.shield);
 
     // Armor (temp)
-//    itemColors.registerItemColorHandler(new IItemColor() {
-//
-//      @Override
-//      public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-//
-//        return 0xFFFFFF; // FIXME
-//        // return ArmorHelper.getRenderPart(stack, EnumDecoPos.NORTH).getColor(stack);
-//      }
-//    }, ModItems.gemHelmet, ModItems.gemChestplate, ModItems.gemLeggings, ModItems.gemBoots);
+    itemColors.registerItemColorHandler(new IItemColor() {
+
+      @Override
+      public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+
+        //return 0xFFFFFF; // FIXME
+        return ArmorHelper.getRenderMaterial(stack).getColor(stack);
+      }
+    }, ModItems.gemHelmet, ModItems.gemChestplate, ModItems.gemLeggings, ModItems.gemBoots);
 
     // Enchantment Tokens
     itemColors.registerItemColorHandler(new IItemColor() {

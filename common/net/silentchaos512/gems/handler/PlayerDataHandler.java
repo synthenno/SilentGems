@@ -96,7 +96,7 @@ public class PlayerDataHandler {
       }
     }
 
-    final int SOUL_TICK_DELAY = 600;
+    final int SOUL_TICK_DELAY = 4 * 1200;
     final int SOUL_TICK_SALT = 10 + SilentGems.random.nextInt(60);
 
     @SubscribeEvent
@@ -125,7 +125,10 @@ public class PlayerDataHandler {
     @SubscribeEvent
     public void onPlayerLogout(PlayerLoggedOutEvent event) {
 
+      // Save the players tool souls before logging out.
       ToolHelper.writeToolSoulsToNBT(event.player);
+      // Wipe the tool soul map (could probably just wipe the player's souls, but do all to be safe).
+      ToolHelper.clearToolSoulMap();
     }
   }
 

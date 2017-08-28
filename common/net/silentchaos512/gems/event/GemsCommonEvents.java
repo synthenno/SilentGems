@@ -15,6 +15,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -45,6 +46,7 @@ import net.silentchaos512.gems.lib.EnumModParticles;
 import net.silentchaos512.gems.lib.Greetings;
 import net.silentchaos512.gems.lib.module.ModuleCoffee;
 import net.silentchaos512.gems.lib.module.ModuleEntityRandomEquipment;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.loot.LootHandler;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.gems.skills.ToolSkillDigger;
@@ -187,12 +189,6 @@ public class GemsCommonEvents {
     Entity entitySource = event.getSource().getTrueSource();
     EntityPlayer player = null;
 
-    if (event.getEntityLiving() instanceof EntityPlayer) {
-      EntityPlayer deadPlayer = (EntityPlayer) event.getEntityLiving();
-      PlayerData data = PlayerDataHandler.get(deadPlayer);
-      data.haloTime = data.HALO_TIME_DEFAULT;
-    }
-
     if (entitySource instanceof EntityPlayer) {
       player = (EntityPlayer) entitySource;
     } else if (entitySource instanceof EntityChaosProjectile) {
@@ -202,13 +198,13 @@ public class GemsCommonEvents {
         player = (EntityPlayer) shooter;
     }
 
-    if (player != null) {
+    if (player != null && event.getEntity() instanceof EntityLivingBase) {
       ItemStack weapon = player.getHeldItem(EnumHand.MAIN_HAND);
       if (StackHelper.isValid(weapon) && weapon.getItem() instanceof ITool)
         ToolHelper.incrementStatKillCount(weapon, 1);
 
       // Soul Gems
-      Entity killed = event.getEntity();
+      EntityLivingBase killed = event.getEntityLiving();
       Soul soul = ModItems.soulGem.getSoul(killed.getClass());
       if (soul != null && SilentGems.random.nextFloat() < soul.getDropRate()) {
         ItemStack soulGem = ModItems.soulGem.getStack(soul);
@@ -216,6 +212,14 @@ public class GemsCommonEvents {
           EntityItem entityItem = new EntityItem(killed.world, killed.posX, killed.posY + killed.height / 2f, killed.posZ, soulGem);
           killed.world.spawnEntity(entityItem);
         }
+      }
+
+      // XP for tool souls
+      ToolSoul toolSoul = ToolHelper.getSoul(weapon);
+      if (toolSoul != null) {
+        int xp = (int) (ToolSoul.XP_FACTOR_KILLS * killed.getMaxHealth());
+        xp = MathHelper.clamp(xp, 1, 1000);
+        toolSoul.addXp(xp, weapon, player);
       }
     }
   }
