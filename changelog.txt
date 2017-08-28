@@ -6,6 +6,11 @@ Removed: Multi-gem (mixed material) construction. Tool heads must be a single ma
 Removed: Tool decorating. You will be able to change the appearance of tool heads later.
 Removed: Tiers and Grades.
 Removed: The Material Grader.
+Changed: Dark and light gems now have slightly different hues than their "classic" counterparts. The differences are subtle in most cases, but I think it's a big improvement.
+Changed: Dark and light gem tool heads now have dedicated textures. That means richer, more vibrant colors all around.
+Changed: Bow speed are a bit more balanced, with less of a gap between regular and super gems.
+Changed: Bows display "draw speed" instead of "draw delay". Display as a multiple of vanilla bow speed for easy comparison. Higher numbers are better now.
+Changed: Bows display arrow damage as a multiple of vanilla arrow damage for easy comparison.
 
 2.4.6
 Added: Scaling Health blights can now receive gem swords

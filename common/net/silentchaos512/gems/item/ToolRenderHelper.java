@@ -34,6 +34,7 @@ import net.silentchaos512.gems.item.tool.ItemGemShield;
 import net.silentchaos512.gems.item.tool.ItemGemShovel;
 import net.silentchaos512.gems.item.tool.ItemGemSword;
 import net.silentchaos512.gems.item.tool.ItemGemTomahawk;
+import net.silentchaos512.gems.lib.ToolSoul;
 import net.silentchaos512.gems.lib.TooltipHelper;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.LocalizationHelper;
@@ -70,6 +71,9 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     boolean shiftDown = KeyTracker.isShiftDown();
     String line;
 
+    // UUID (temporary)
+    list.add(ToolHelper.getUUID(tool).toString());
+
     // Tipped upgrade
     ToolPartTip partTip = (ToolPartTip) ToolHelper.getPartTip(tool);
     if (partTip != null) {
@@ -77,6 +81,14 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       tipName = loc.getMiscText("Tooltip." + tipName);
       line = loc.getMiscText("Tooltip.Tipped", tipName);
       list.add(line);
+    }
+
+    // Tool Soul
+    ToolSoul soul = ToolHelper.getSoul(tool);
+    if (soul != null) {
+      // TODO
+      list.add("XP: " + soul.getXp());
+      list.add("Level: " + soul.getLevel());
     }
 
     // Show original owner?
@@ -147,8 +159,8 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       }
 
       if (isBow) {
-        list.add(color + getTooltipLine("DrawDelay", ModItems.bow.getDrawDelay(tool)));
-        list.add(color + getTooltipLine("ArrowDamage", 2f + ModItems.bow.getArrowDamage(tool)));
+        list.add(color + getTooltipLine("DrawSpeed", ModItems.bow.getDrawSpeedForDisplay(tool)));
+        list.add(color + getTooltipLine("ArrowDamage", ModItems.bow.getArrowDamageForDisplay(tool)));
       }
     } else {
       list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.CtrlForProp"));
@@ -272,7 +284,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     arrowModels = new ModelResourceLocation[8];
     for (int i = 0; i < 8; ++i) {
       String tier = i < 4 ? "regular" : "super";
-      ModelResourceLocation model = new ModelResourceLocation(SilentGems.RESOURCE_PREFIX + "bow/bowarrow" + tier + (i & 3));
+      ModelResourceLocation model = new ModelResourceLocation(SilentGems.RESOURCE_PREFIX + "bow/bow_arrow_" + tier + (i & 3));
       if (model != null)
         set.add(model);
       arrowModels[i] = model;

@@ -6,14 +6,11 @@ import com.google.common.collect.Maps;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.tool.part.ToolPartMain;
-import net.silentchaos512.gems.item.ToolRenderHelper;
+import net.silentchaos512.gems.item.armor.ItemGemArmor;
 import net.silentchaos512.gems.item.tool.ItemGemBow;
-import net.silentchaos512.gems.item.tool.ItemGemShield;
 import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.lib.registry.IRegistryObject;
@@ -41,12 +38,10 @@ public class ToolPartGem extends ToolPartMain {
   @Override
   public int getColor(ItemStack toolOrArmor) {
 
-//    if (gem.ordinal() < EnumGem.CARNELIAN.ordinal()) {
-//      return 0xFFFFFF;
-//    } else if (gem.ordinal() < EnumGem.PYROPE.ordinal()) {
-//      return 0x999999;
-//    }
-//    return gem.getColor();
+    if (toolOrArmor.getItem() instanceof ItemGemBow || toolOrArmor.getItem() instanceof ItemGemArmor) {
+      return gem.getColor();
+    }
+    // Most gem tools use a separate texture for each head.
     return 0xFFFFFF;
   }
 
@@ -71,13 +66,15 @@ public class ToolPartGem extends ToolPartMain {
     name = SilentGems.RESOURCE_PREFIX + name + "/" + name;
 
     // Gem number
-    name += gem.ordinal();
-//    if (gem.ordinal() < EnumGem.PYROPE.ordinal()) {
-//      name += gem.ordinal() & 0xF;
-//    } else {
-//      name += "15";
-//    }
-    String frameNum = frame == 3 ? "_3" : "";
+    if (!(tool.getItem() instanceof ItemGemBow || tool.getItem() instanceof ItemGemArmor)) {
+      // Bows and armor apply color via a color handler.
+      name += gem.ordinal();
+    }
+
+    // Frame number. Currently just used by bows. Only the 4th frame (3) is distinct for bow
+    // bodies, but I'm adding additional models in case anyone wants to do a resource pack.
+    // FIXME: Not working?
+    String frameNum = frame > 0 ? "_" + frame : "";
 
     if (modelMap.containsKey(name)) {
       return modelMap.get(name);

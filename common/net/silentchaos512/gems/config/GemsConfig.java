@@ -1,15 +1,11 @@
 package net.silentchaos512.gems.config;
 
-import java.io.File;
 import java.util.List;
 
 import com.google.common.collect.Lists;
 
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.config.IConfigElement;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.lib.EnumGem;
@@ -67,13 +63,16 @@ public class GemsConfig extends AdaptiveConfig {
   public static int TOMAHAWK_MAX_AMMO = 4;
   public static int TOMAHAWK_AMMO_PER_MAT = 1;
   public static boolean SWITCH_AXE_SUPER = false;
-  
+
   public static ConfigOptionToolClass sword = new ConfigOptionToolClass(ModItems.sword, "sword");
   public static ConfigOptionToolClass dagger = new ConfigOptionToolClass(ModItems.dagger, "dagger");
   public static ConfigOptionToolClass katana = new ConfigOptionToolClass(ModItems.katana, "katana");
-  public static ConfigOptionToolClass scepter = new ConfigOptionToolClass(ModItems.scepter, "scepter");
-  public static ConfigOptionToolClass tomahawk = new ConfigOptionToolClass(ModItems.tomahawk, "tomahawk");
-  public static ConfigOptionToolClass pickaxe = new ConfigOptionToolClass(ModItems.pickaxe, "pickaxe");
+  public static ConfigOptionToolClass scepter = new ConfigOptionToolClass(ModItems.scepter,
+      "scepter");
+  public static ConfigOptionToolClass tomahawk = new ConfigOptionToolClass(ModItems.tomahawk,
+      "tomahawk");
+  public static ConfigOptionToolClass pickaxe = new ConfigOptionToolClass(ModItems.pickaxe,
+      "pickaxe");
   public static ConfigOptionToolClass shovel = new ConfigOptionToolClass(ModItems.shovel, "shovel");
   public static ConfigOptionToolClass axe = new ConfigOptionToolClass(ModItems.axe, "axe");
   public static ConfigOptionToolClass paxel = new ConfigOptionToolClass(ModItems.paxel, "paxel");
@@ -135,10 +134,12 @@ public class GemsConfig extends AdaptiveConfig {
 
   public static ConfigOptionOreGen WORLD_GEN_GEMS;
   public static ConfigOptionOreGen WORLD_GEN_GEMS_DARK;
+  public static ConfigOptionOreGen WORLD_GEN_GEMS_LIGHT;
   public static ConfigOptionOreGen WORLD_GEN_CHAOS;
   public static ConfigOptionOreGen WORLD_GEN_ENDER;
   public static List<WeightedRandomItemSG> GEM_WEIGHTS = Lists.newArrayList();
   public static List<WeightedRandomItemSG> GEM_WEIGHTS_DARK = Lists.newArrayList();
+  public static List<WeightedRandomItemSG> GEM_WEIGHTS_LIGHT = Lists.newArrayList();
   public static int GLOW_ROSE_PER_CHUNK = 2;
   public static float CHAOS_NODES_PER_CHUNK = 0.006f;
 
@@ -412,9 +413,11 @@ public class GemsConfig extends AdaptiveConfig {
       WORLD_GEN_GEMS.loadValue(config, CAT_WORLD_GEN);
       WORLD_GEN_GEMS_DARK = new ConfigOptionOreGen("Dark Gems (Nether)", -1, 12.5f, 10, 30, 100);
       WORLD_GEN_GEMS_DARK.loadValue(config, CAT_WORLD_GEN);
+      WORLD_GEN_GEMS_LIGHT = new ConfigOptionOreGen("Light Gems (The End)", 1, 12.5f, 8, 16, 64);
+      WORLD_GEN_GEMS_LIGHT.loadValue(config, CAT_WORLD_GEN);
       WORLD_GEN_CHAOS = new ConfigOptionOreGen("Chaos Ore", 0, 1.75f, 16, 5, 20);
       WORLD_GEN_CHAOS.loadValue(config, CAT_WORLD_GEN);
-      WORLD_GEN_ENDER = new ConfigOptionOreGen("Ender Essence Ore", 1, 1.0f, 32, 10, 70);
+      WORLD_GEN_ENDER = new ConfigOptionOreGen("Ender Essence Ore", 1, 0.8f, 24, 10 , 70);
       WORLD_GEN_ENDER.loadValue(config, CAT_WORLD_GEN);
 
       // Gem weights
@@ -430,8 +433,10 @@ public class GemsConfig extends AdaptiveConfig {
         WeightedRandomItemSG item = new WeightedRandomItemSG(k, gem.ordinal() & 0xF);
         if (gem.ordinal() < EnumGem.CARNELIAN.ordinal()) {
           GEM_WEIGHTS.add(item);
-        } else {
+        } else if (gem.ordinal() < EnumGem.PYROPE.ordinal()) {
           GEM_WEIGHTS_DARK.add(item);
+        } else {
+          GEM_WEIGHTS_LIGHT.add(item);
         }
       }
 

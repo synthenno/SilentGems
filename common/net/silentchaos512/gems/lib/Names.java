@@ -19,7 +19,6 @@ public class Names {
   public static final String GEM_BRICK = "GemBrick";
   public static final String GEM_LAMP = "GemLamp";
   public static final String GEM_ORE = "GemOre";
-  public static final String GEM_ORE_DARK = "GemOreDark";
   public static final String GLOW_ROSE = "GlowRose";
   public static final String MATERIAL_GRADER = "MaterialGrader";
   public static final String MISC_BLOCK = "MiscBlock";
@@ -48,6 +47,7 @@ public class Names {
   public static final String RETURN_HOME_CHARM = "ReturnHomeCharm";
   public static final String SOUL_GEM = "SoulGem";
   public static final String TELEPORTER_LINKER = "TeleporterLinker";
+  public static final String TOOL_SOUL = "ToolSoul";
   public static final String TORCH_BANDOLIER = "TorchBandolier";
   public static final String UPGRADE_TIP = "TipUpgrade";
   public static final String TOOL_RENDER_HELPER = "ToolRenderHelper";

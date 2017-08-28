@@ -7,10 +7,12 @@ import net.silentchaos512.gems.api.SilentGemsAPI;
 import net.silentchaos512.gems.lib.EnumGem;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.recipe.RecipeApplyEnchantmentToken;
+import net.silentchaos512.gems.recipe.RecipeApplyToolSoul;
 import net.silentchaos512.gems.recipe.RecipeChaosGemUpgrade;
 import net.silentchaos512.gems.recipe.RecipeCraftTool;
 import net.silentchaos512.gems.recipe.RecipeHoldingGemSetBlock;
 import net.silentchaos512.gems.recipe.RecipeNamePlate;
+import net.silentchaos512.gems.recipe.RecipeToolSoul;
 import net.silentchaos512.gems.recipe.RecipeUpgradeTool;
 import net.silentchaos512.lib.registry.IRegistrationHandler;
 import net.silentchaos512.lib.registry.RecipeMaker;
@@ -43,6 +45,8 @@ public class ModRecipes implements IRegistrationHandler<IRecipe> {
     // Recipe handlers.
     recipes.addCustomRecipe("craft_tool", new RecipeCraftTool());
     recipes.addCustomRecipe("upgrade_tool", new RecipeUpgradeTool());
+    recipes.addCustomRecipe("craft_tool_soul", new RecipeToolSoul());
+    recipes.addCustomRecipe("apply_tool_soul", new RecipeApplyToolSoul());
 //    recipes.addCustomRecipe("multipart_tool", new RecipeMultiGemTool());
 //    recipes.addCustomRecipe("multipart_shield", new RecipeMultiGemShield());
 //    recipes.addCustomRecipe("multipart_bow", new RecipeMultiGemBow());

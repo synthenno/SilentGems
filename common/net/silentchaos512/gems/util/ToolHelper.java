@@ -1,9 +1,12 @@
 package net.silentchaos512.gems.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -34,6 +37,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
@@ -61,11 +65,13 @@ import net.silentchaos512.gems.item.tool.ItemGemSickle;
 import net.silentchaos512.gems.item.tool.ItemGemSword;
 import net.silentchaos512.gems.lib.Greetings;
 import net.silentchaos512.gems.lib.Names;
+import net.silentchaos512.gems.lib.ToolSoul;
 import net.silentchaos512.gems.skills.SkillAreaMiner;
 import net.silentchaos512.gems.skills.SkillLumberjack;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.lib.recipe.IngredientSL;
 import net.silentchaos512.lib.util.ItemHelper;
+import net.silentchaos512.lib.util.PlayerHelper;
 import net.silentchaos512.lib.util.StackHelper;
 import net.silentchaos512.lib.util.WorldHelper;
 
@@ -85,7 +91,11 @@ public class ToolHelper {
   // Root keys
   public static final String NBT_ROOT_CONSTRUCTION = "SGConstruction";
   public static final String NBT_ROOT_PROPERTIES = "SGProperties";
+  public static final String NBT_ROOT_TOOL_SOUL = "SGToolSoul";
   public static final String NBT_ROOT_STATISTICS = "SGStatistics";
+
+  // UUID key
+  public static final String NBT_UUID = "SG_UUID";
 
   // Settings
   public static final String NBT_SETTINGS_SPECIAL = "SpecialEnabled";
@@ -121,6 +131,9 @@ public class ToolHelper {
   public static final String NBT_STATS_SHOTS_LANDED = "ShotsLanded";
   public static final String NBT_STATS_THROWN = "ThrownCount";
 
+  // Compatibility
+  public static final String NBT_COMPAT_SG2 = "SG2_Tool";
+
   // NBT example key
   public static final String NBT_EXAMPLE_TOOL_TIER = "ExampleToolTier";
 
@@ -136,6 +149,12 @@ public class ToolHelper {
    * @param tool
    */
   public static void recalculateStats(ItemStack tool) {
+
+    // Is this an SG2 tool (TODO: What do we do with these?)
+    boolean sg2tool = detectAndMarkSG2Tool(tool);
+
+    // Make sure the tool has a UUID!
+    getUUID(tool);
 
     ToolPart partHead = getPartHead(tool);
     ToolPart partRod = getPartRod(tool);
@@ -185,6 +204,27 @@ public class ToolHelper {
     setTagInt(tool, ToolRenderHelper.NBT_MODEL_INDEX, key, color);
   }
 
+  private static boolean detectAndMarkSG2Tool(ItemStack tool) {
+
+    // TODO: Test this. Maybe add the marker in next SG2 build?
+    if (!getPartId(tool, "Head0").isEmpty()) {
+      setTagBoolean(tool, NBT_ROOT_CONSTRUCTION, NBT_COMPAT_SG2, true);
+      return true;
+    }
+    return false;
+  }
+
+  public static UUID getUUID(ItemStack tool) {
+
+    initRootTag(tool);
+    if (!tool.getTagCompound().hasKey(NBT_UUID)) {
+      UUID uuid = UUID.randomUUID();
+      tool.getTagCompound().setString(NBT_UUID, uuid.toString());
+      return uuid;
+    }
+    return UUID.fromString(tool.getTagCompound().getString(NBT_UUID));
+  }
+
   // ==========================================================================
   // Mining, using, repairing, etc
   // ==========================================================================
@@ -197,6 +237,8 @@ public class ToolHelper {
 
   public static void attemptDamageTool(ItemStack tool, int amount, EntityLivingBase entityLiving) {
 
+    boolean willBreak = tool.getItemDamage() + amount > tool.getMaxDamage();
+    // TODO: Return tool soul if broken.
     tool.damageItem(amount, entityLiving);
   }
 
@@ -481,6 +523,16 @@ public class ToolHelper {
     // TODO: Add some sort of delay, so tool name doesn't pop up every time?
     incrementStatBlocksMined(stack, 1);
 
+    // XP for tool soul
+    if (player != null && !player.world.isRemote) {
+      IBlockState stateMined = player.world.getBlockState(pos);
+      float hardness = stateMined.getBlockHardness(player.world, pos);
+      if (hardness >= 0.5f) {
+        int xp = MathHelper.clamp(Math.round(hardness / 3f), 1, 10);
+        addSoulXp(stack, xp);
+      }
+    }
+
     // Mining achievements TODO: Uncomment
     // amount = getStatBlocksMined(stack);
     // if (amount >= 1000) {
@@ -677,6 +729,60 @@ public class ToolHelper {
     return SilentGems.localizationHelper.getLocalizedString("tool", toolClass, material);
   }
 
+  private static Map<UUID, ToolSoul> toolSoulMap = new HashMap<>();
+
+  public static ToolSoul getSoul(ItemStack tool) {
+
+    ToolSoul soul = toolSoulMap.get(getUUID(tool));
+    if (soul != null) {
+      return soul;
+    }
+
+    initRootTag(tool);
+    if (!tool.getTagCompound().hasKey(NBT_ROOT_TOOL_SOUL)) {
+      return null;
+    }
+
+    soul = ToolSoul.readFromNBT(getRootTag(tool, NBT_ROOT_TOOL_SOUL));
+    toolSoulMap.put(getUUID(tool), soul);
+    SilentGems.logHelper.debug("Put tool soul " + soul + " in the map! " + toolSoulMap.size());
+    return soul;
+  }
+
+  public static void setSoul(ItemStack tool, ToolSoul soul) {
+
+    initRootTag(tool);
+    NBTTagCompound tags = new NBTTagCompound();
+    soul.writeToNBT(tags);
+    tool.getTagCompound().setTag(NBT_ROOT_TOOL_SOUL, tags);
+  }
+
+  public static void writeToolSoulsToNBT(EntityPlayer player) {
+
+    // Find all the players tools. Find the matching souls in the map.
+    int count = 0;
+    for (ItemStack tool : PlayerHelper.getNonEmptyStacks(player, true, true, true,
+        s -> s.getItem() instanceof ITool)) {
+      UUID uuid = ToolHelper.getUUID(tool);
+      ToolSoul soul = toolSoulMap.get(uuid);
+      if (soul != null) {
+        setSoul(tool, soul);
+        ++count;
+      }
+    }
+    SilentGems.logHelper.debug("Saved " + count + " tool(s) for " + player.getName());
+  }
+
+  public static void addSoulXp(ItemStack tool, int amount) {
+
+    ToolSoul soul = getSoul(tool);
+    if (soul != null) {
+      int current = soul.getXp();
+      soul.addXp(amount);
+      SilentGems.logHelper.debug(current, soul.getXp());
+    }
+  }
+
   // ==========================================================================
   // NBT helper methods
   // ==========================================================================
@@ -804,7 +910,6 @@ public class ToolHelper {
 
   public static void setPartTip(ItemStack tool, ToolPart part) {
 
-    // FIXME: Tips are not being saved!
     setTagPart(tool, NBT_PART_HEAD_TIP, part);
   }
 

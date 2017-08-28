@@ -95,7 +95,7 @@ public class GemsWorldGenerator extends WorldGeneratorSL {
       z = posZ + random.nextInt(16);
       pos = new BlockPos(x, y, z);
       // GemTest.instance.logHelper.debug(pos);
-      meta = ((WeightedRandomItemSG) WeightedRandom.getRandomItem(random, GemsConfig.GEM_WEIGHTS))
+      meta = ((WeightedRandomItemSG) WeightedRandom.getRandomItem(random, GemsConfig.GEM_WEIGHTS_DARK))
           .getMeta();
       EnumGem gem = EnumGem.values()[meta];
       state = block.getDefaultState().withProperty(EnumGem.VARIANT_GEM, gem);
@@ -112,6 +112,24 @@ public class GemsWorldGenerator extends WorldGeneratorSL {
     IBlockState state;
     ConfigOptionOreGen config;
     Predicate predicate = BlockMatcher.forBlock(Blocks.END_STONE);
+
+    // Light Gems
+    config = GemsConfig.WORLD_GEN_GEMS_LIGHT;
+    block = ModBlocks.gemOreLight;
+    veinCount = config.getVeinCount(random);
+    veinSize = config.veinSize;
+    for (i = 0; i < config.veinCount; ++i) {
+      x = posX + random.nextInt(16);
+      y = random.nextInt(config.maxY - config.minY) + config.minY;
+      z = posZ + random.nextInt(16);
+      pos = new BlockPos(x, y, z);
+      // GemTest.instance.logHelper.debug(pos);
+      meta = ((WeightedRandomItemSG) WeightedRandom.getRandomItem(random, GemsConfig.GEM_WEIGHTS_LIGHT))
+          .getMeta();
+      EnumGem gem = EnumGem.values()[meta];
+      state = block.getDefaultState().withProperty(EnumGem.VARIANT_GEM, gem);
+      new WorldGenMinable(state, veinSize, predicate).generate(world, random, pos);
+    }
 
     // Ender Ore
     config = GemsConfig.WORLD_GEN_ENDER;
@@ -147,8 +165,10 @@ public class GemsWorldGenerator extends WorldGeneratorSL {
 
       // Find top-most valid block
       for (; y > 50; --y) {
-        //if (world.isAirBlock(pos) && (!world.provider.hasNoSky() || pos.getY() < 255) && ModBlocks.glowRose.canBlockStay(world, pos, state)) {
-        if (world.isAirBlock(pos) && pos.getY() < 255 && ModBlocks.glowRose.canBlockStay(world, pos, state)) {
+        // if (world.isAirBlock(pos) && (!world.provider.hasNoSky() || pos.getY() < 255) &&
+        // ModBlocks.glowRose.canBlockStay(world, pos, state)) {
+        if (world.isAirBlock(pos) && pos.getY() < 255
+            && ModBlocks.glowRose.canBlockStay(world, pos, state)) {
           world.setBlockState(pos, state, 2);
           break;
         }

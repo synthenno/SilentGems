@@ -301,6 +301,13 @@ public enum EnumGem implements IStringSerializable {
 
   public static enum Set {
 
-    CLASSIC, DARK, LIGHT // Overworld, Nether, and the End
+    CLASSIC(0), DARK(16), LIGHT(32); // Overworld, Nether, and the End
+
+    public final int startMeta;
+
+    Set(int startMeta) {
+
+      this.startMeta = startMeta;
+    }
   }
 }

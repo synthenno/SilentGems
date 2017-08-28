@@ -2,6 +2,8 @@ package net.silentchaos512.gems.event;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCrops;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -20,9 +22,11 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.ITool;
@@ -35,6 +39,7 @@ import net.silentchaos512.gems.init.ModBlocks;
 import net.silentchaos512.gems.init.ModEnchantments;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ItemBlockPlacer;
+import net.silentchaos512.gems.item.ItemSoulGem;
 import net.silentchaos512.gems.item.ItemSoulGem.Soul;
 import net.silentchaos512.gems.lib.EnumModParticles;
 import net.silentchaos512.gems.lib.Greetings;
@@ -110,6 +115,21 @@ public class GemsCommonEvents {
       ToolSkill skill = ToolHelper.getSuperSkill(mainHand);
       if (skill instanceof ToolSkillDigger && ToolHelper.isSpecialAbilityEnabled(mainHand))
         ((ToolSkillDigger) skill).onGetBreakSpeed(event);
+    }
+  }
+
+  @SubscribeEvent
+  public void onBlockHarvest(BlockEvent.HarvestDropsEvent event) {
+
+    ItemSoulGem.Soul soul = ModItems.soulGem.getSoul(event);
+    Block block = event.getState().getBlock();
+    boolean isCrop = block instanceof BlockCrops;
+    boolean isMature = isCrop && ((BlockCrops) block).isMaxAge(event.getState());
+    if (soul != null && (!isCrop || (isCrop && isMature))) {
+      float dropRate = soul.getDropRate() * (1f + 0.15f * event.getFortuneLevel());
+      if (SilentGems.random.nextFloat() < dropRate) {
+        event.getDrops().add(soul.getStack());
+      }
     }
   }
 

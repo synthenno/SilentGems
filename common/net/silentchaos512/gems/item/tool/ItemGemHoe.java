@@ -61,6 +61,8 @@ public class ItemGemHoe extends ItemHoe implements IRegistryObject, ITool {
 
     ItemStack stack = player.getHeldItem(hand);
 
+    // FIXME: Likely not catching tool breakage here.
+
     EnumActionResult result = ItemHelper.onItemUse(Items.DIAMOND_HOE, player, world, pos, hand,
         side, hitX, hitY, hitZ); // Use diamond hoe so we don't get stack overflow.
     int tilledCount = result == EnumActionResult.SUCCESS ? 1 : 0;
