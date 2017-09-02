@@ -965,8 +965,9 @@ misc.silentgems:Tooltip.ShotsFired=&eShots Fired:&f %s
 misc.silentgems:Tooltip.ShotsLanded=&eShots Landed:&f %s
 misc.silentgems:Tooltip.ThrownCount=&eTimes Thrown:&f %s
 
-misc.silentgems:Tooltip.CtrlForProp=Properties <Press Ctrl>
-misc.silentgems:Tooltip.AltForStat=Statistics <Press Alt>
+misc.silentgems:Tooltip.keyForSkills=Skills <Press Ctrl>
+misc.silentgems:Tooltip.keyForProp=Properties <Press Shift>
+misc.silentgems:Tooltip.keyForStat=Statistics <Press Alt>
 
 misc.silentgems:Tooltip.Separator=&8-------------------
 misc.silentgems:Tooltip.Properties=&6Properties
@@ -976,7 +977,17 @@ misc.silentgems:Tooltip.Construction=&6Construction
 # Tool Souls
 
 misc.silentgems:ToolSoul.level=Level %d (%,d / %,d XP)
+misc.silentgems:ToolSoul.actionPoints=AP: %d / %d
 misc.silentgems:ToolSoul.elements=Elements: %s
+
+# Soul Skills
+
+skill.silentgems:antivenom.name=Antivenom
+skill.silentgems:durability_boost.name=Reinforce
+skill.silentgems:harvest_speed_boost.name=Lighten
+skill.silentgems:magic_damage_boost.name=Focus
+skill.silentgems:melee_damage_boost.name=Sharpen
+skill.silentgems:super_skill.name=Super Skill
 
 
 

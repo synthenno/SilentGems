@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.potion.Potion;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +23,6 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.ITool;
-import net.silentchaos512.gems.compat.ScalingHealthCompat;
 import net.silentchaos512.gems.compat.VeinMinerCompat;
 import net.silentchaos512.gems.compat.tconstruct.TConstructGemsCompat;
 import net.silentchaos512.gems.config.GemsConfig;
@@ -31,11 +31,13 @@ import net.silentchaos512.gems.entity.packet.EntityChaosNodePacket;
 import net.silentchaos512.gems.init.ModBlocks;
 import net.silentchaos512.gems.init.ModEnchantments;
 import net.silentchaos512.gems.init.ModItems;
+import net.silentchaos512.gems.init.ModPotions;
 import net.silentchaos512.gems.init.ModRecipes;
 import net.silentchaos512.gems.item.tool.ItemGemShield;
 import net.silentchaos512.gems.lib.GemsCreativeTabs;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.lib.part.ModParts;
+import net.silentchaos512.gems.lib.soul.SoulSkill;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.gems.world.GemsWorldGenerator;
 import net.silentchaos512.lib.SilentLib;
@@ -115,10 +117,12 @@ public class SilentGems {
     GemsConfig.INSTANCE.init(event.getSuggestedConfigurationFile());
 
     registry.addRegistrationHandler(new ModEnchantments(), Enchantment.class);
+    registry.addRegistrationHandler(new ModPotions(), Potion.class);
     registry.addRegistrationHandler(new ModBlocks(), Block.class);
     registry.addRegistrationHandler(new ModItems(), Item.class);
     registry.addRegistrationHandler(new ModRecipes(), IRecipe.class);
     ModParts.init();
+    SoulSkill.init();
 
     GemsConfig.INSTANCE.loadModuleConfigs();
 

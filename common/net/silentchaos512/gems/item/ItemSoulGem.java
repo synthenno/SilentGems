@@ -100,8 +100,8 @@ public class ItemSoulGem extends ItemSL {
 
     float rateHigh = 0.075f;
 
-    registerSoul(EntityZombie.class, new Soul("Zombie", EARTH, MONSTER));
-    registerSoul(EntitySkeleton.class, new Soul("Skeleton", LIGHTNING, MONSTER));
+    registerSoul(EntityZombie.class, new Soul("Zombie", MONSTER, VENOM));
+    registerSoul(EntitySkeleton.class, new Soul("Skeleton", MONSTER, LIGHTNING));
     registerSoul(EntityCreeper.class, new Soul("Creeper", FIRE, FLORA));
     registerSoul(EntitySpider.class, new Soul("Spider", WIND, FAUNA));
     registerSoul(EntityCaveSpider.class, new Soul("CaveSpider", "cave_spider", VENOM, FAUNA));
@@ -109,8 +109,8 @@ public class ItemSoulGem extends ItemSL {
     registerSoul(EntitySlime.class, new Soul("Slime", WATER, EARTH));
     registerSoul(EntityWitch.class, new Soul("Witch", VENOM, ICE));
     registerSoul(EntityGuardian.class, new Soul("Guardian", WATER, LIGHTNING));
-    registerSoul(EntityHusk.class, new Soul("Husk", EARTH, MONSTER));
-    registerSoul(EntityStray.class, new Soul("Stray", ICE, MONSTER));
+    registerSoul(EntityHusk.class, new Soul("Husk", MONSTER, EARTH));
+    registerSoul(EntityStray.class, new Soul("Stray", MONSTER, ICE));
 
     registerSoul(EntityEvoker.class, new Soul("EvocationIllager", "evocation_illager", ICE));
     registerSoul(EntityVex.class, new Soul("Vex", LIGHTNING));

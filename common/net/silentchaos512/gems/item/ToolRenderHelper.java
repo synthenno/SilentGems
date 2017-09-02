@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.lwjgl.input.Keyboard;
+
 import com.google.common.collect.Sets;
 
 import net.minecraft.client.Minecraft;
@@ -90,7 +92,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
     }
 
     // Show original owner?
-    if (controlDown) {
+    if (shiftDown) {
       String owner = ToolHelper.getOriginalOwner(tool);
       if (owner.equals(SilentGems.localizationHelper.getMiscText("Tooltip.OriginalOwner.Creative")))
         owner = TextFormatting.LIGHT_PURPLE + owner;
@@ -122,7 +124,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
 
     final String sep = loc.getMiscText("Tooltip.Separator");
 
-    if (controlDown) {
+    if (shiftDown) {
       // Properties Header
       line = loc.getMiscText("Tooltip.Properties");
       list.add(line);
@@ -161,7 +163,7 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
         list.add(color + getTooltipLine("ArrowDamage", ModItems.bow.getArrowDamageForDisplay(tool)));
       }
     } else {
-      list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.CtrlForProp"));
+      list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.keyForProp"));
     }
 
     if (altDown) {
@@ -212,13 +214,11 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       list.add("Tip: " + strTip);
       list.add(sep);
     } else {
-      list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.AltForStat"));
+      list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.keyForStat"));
     }
 
     // Debug render layers
-    if (controlDown && shiftDown && tool.hasTagCompound()) {
-      if (!altDown)
-        list.add(sep);
+    if (Keyboard.isKeyDown(Keyboard.KEY_K) && tool.hasTagCompound()) {
       for (int layer = 0; layer < RENDER_PASS_COUNT; ++layer) {
         NBTTagCompound tags = tool.getTagCompound().getCompoundTag(NBT_MODEL_INDEX);
         if (tags != null) {

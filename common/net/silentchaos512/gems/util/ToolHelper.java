@@ -162,7 +162,12 @@ public class ToolHelper {
     ToolPart partDeco = getPartDeco(tool);
     ToolPart[] parts = { partHead, partRod, partTip };
 
+    // Calculate stats
     ToolStats stats = new ToolStats(tool, parts).calculate();
+    ToolSoul soul = getSoul(tool);
+    if (soul != null) {
+      soul.applyToStats(stats);
+    }
 
     // Reset render cache
     for (int i = 0; i < ToolRenderHelperBase.RENDER_PASS_COUNT; ++i) {
@@ -612,6 +617,14 @@ public class ToolHelper {
       if (tool.hasTagCompound() && tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL)) {
         tool.getTagCompound().removeTag(NBT_EXAMPLE_TOOL);
       }
+
+      // Tick tool souls
+      if (entity instanceof EntityPlayer) {
+        ToolSoul soul = getSoul(tool);
+        if (soul != null) {
+          soul.updateTick(tool, (EntityPlayer) entity);
+        }
+      }
     }
   }
 
@@ -775,6 +788,14 @@ public class ToolHelper {
     return soul;
   }
 
+  /**
+   * Set the soul for the tool, saving it to NBT. NOTE: to prevent a dupe bug, the UUID of the tool must be changed if
+   * this is called on a recipe result. Doing so will also apply the soul to the ingredient tool if it has the same
+   * UUID. In other cases, leaving the UUID alone should be fine.
+   * 
+   * @param tool
+   * @param soul
+   */
   public static void setSoul(ItemStack tool, ToolSoul soul) {
 
     initRootTag(tool);

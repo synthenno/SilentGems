@@ -48,7 +48,6 @@ public class ItemToolSoul extends ItemSL {
   @Override
   public void clAddInformation(ItemStack stack, World world, List<String> list, boolean advanced) {
 
-    // TODO: Localizations!
     ToolSoul soul = getSoul(stack);
     if (soul != null) {
       soul.addInformation(stack, world, list, advanced);

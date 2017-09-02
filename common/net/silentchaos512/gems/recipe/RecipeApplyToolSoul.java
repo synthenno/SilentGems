@@ -54,7 +54,10 @@ public class RecipeApplyToolSoul extends RecipeBaseSL {
     }
 
     ItemStack result = StackHelper.safeCopy(tool);
+    // Have to change UUID to prevent soul duping.
+    result.getTagCompound().removeTag(ToolHelper.NBT_UUID);
     ToolHelper.setSoul(result, toolSoul);
+    ToolHelper.recalculateStats(result);
     return result;
   }
 }
