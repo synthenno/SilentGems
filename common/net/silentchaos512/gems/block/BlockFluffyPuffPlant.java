@@ -88,6 +88,11 @@ public class BlockFluffyPuffPlant extends BlockCrops implements IRegistryObject 
         }
       }
 
+      // Soul gem drops (since they normally only drop when breaking blocks).
+      if (SilentGems.random.nextFloat() < 0.025f) {
+        drops.add(ModItems.soulGem.getStack("FluffyPuff"));
+      }
+
       // Reset to newly planted state
       world.setBlockState(pos, getDefaultState());
     }

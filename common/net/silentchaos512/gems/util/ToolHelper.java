@@ -65,8 +65,10 @@ import net.silentchaos512.gems.item.tool.ItemGemSickle;
 import net.silentchaos512.gems.item.tool.ItemGemSword;
 import net.silentchaos512.gems.lib.Greetings;
 import net.silentchaos512.gems.lib.Names;
+import net.silentchaos512.gems.lib.soul.SoulSkill;
 import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.skills.SkillAreaMiner;
+import net.silentchaos512.gems.skills.SkillAreaTill;
 import net.silentchaos512.gems.skills.SkillLumberjack;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.lib.recipe.IngredientSL;
@@ -253,6 +255,13 @@ public class ToolHelper {
       if (soul != null) {
         ItemStack toGive = new ItemStack(ModItems.toolSoul);
         ModItems.toolSoul.setSoul(toGive, soul);
+        if (soul.hasName()) {
+          // Soul already has a name.
+          toGive.setStackDisplayName(soul.getName(StackHelper.empty()));
+        } else if (tool.hasDisplayName()) {
+          // Soul wasn't named, tool was. Inherit the name.
+          toGive.setStackDisplayName(tool.getDisplayName());
+        }
         PlayerHelper.giveItem((EntityPlayer) entityLiving, toGive);
       }
     }
@@ -513,11 +522,16 @@ public class ToolHelper {
 
   public static @Nullable ToolSkill getSuperSkill(ItemStack tool) {
 
-    // TODO: What conditions do we allow super skills in?
+    ToolSoul soul = getSoul(tool);
+    if (soul == null || !soul.hasSkill(SoulSkill.SUPER_SKILL)) {
+      return null;
+    }
 
     Item item = tool.getItem();
     if (item instanceof ItemGemPickaxe || item instanceof ItemGemShovel) {
       return SkillAreaMiner.INSTANCE;
+    } else if (item instanceof ItemGemHoe) {
+      return SkillAreaTill.INSTANCE;
     } else if (item instanceof ItemGemAxe) {
       return GemsConfig.SWITCH_AXE_SUPER ? SkillAreaMiner.INSTANCE : SkillLumberjack.INSTANCE;
     }
@@ -768,7 +782,8 @@ public class ToolHelper {
 
   public static ToolSoul getSoul(ItemStack tool) {
 
-    if (tool.hasTagCompound() && tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL)) {
+    if (StackHelper.isEmpty(tool)
+        || (tool.hasTagCompound() && tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL))) {
       return null;
     }
 

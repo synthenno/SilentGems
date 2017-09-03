@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,15 +29,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.ITool;
 import net.silentchaos512.gems.enchantment.EnchantmentIceAspect;
 import net.silentchaos512.gems.enchantment.EnchantmentLightningAspect;
 import net.silentchaos512.gems.entity.EntityChaosProjectile;
-import net.silentchaos512.gems.handler.PlayerDataHandler;
-import net.silentchaos512.gems.handler.PlayerDataHandler.PlayerData;
 import net.silentchaos512.gems.init.ModBlocks;
 import net.silentchaos512.gems.init.ModEnchantments;
 import net.silentchaos512.gems.init.ModItems;
@@ -47,12 +45,14 @@ import net.silentchaos512.gems.lib.EnumModParticles;
 import net.silentchaos512.gems.lib.Greetings;
 import net.silentchaos512.gems.lib.module.ModuleCoffee;
 import net.silentchaos512.gems.lib.module.ModuleEntityRandomEquipment;
+import net.silentchaos512.gems.lib.soul.SoulSkill;
 import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.loot.LootHandler;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.gems.skills.ToolSkillDigger;
 import net.silentchaos512.gems.util.ArmorHelper;
 import net.silentchaos512.gems.util.ModDamageSource;
+import net.silentchaos512.gems.util.SoulHelper;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.Color;
 import net.silentchaos512.lib.util.PlayerHelper;
@@ -65,7 +65,8 @@ public class GemsCommonEvents {
 
     Greetings.greetPlayer(event.player);
 
-    SilentGems.instance.logHelper.info("Recalculating tool and armor stats for " + event.player.getDisplayNameString());
+    SilentGems.instance.logHelper
+        .info("Recalculating tool and armor stats for " + event.player.getDisplayNameString());
     // Recalculate tool stats.
     for (ItemStack stack : PlayerHelper.getNonEmptyStacks(event.player)) {
       if (stack != null) {
@@ -158,7 +159,8 @@ public class GemsCommonEvents {
       if (StackHelper.isValid(mainHand)) {
         lifeStealLevel = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.lifeSteal, mainHand);
         iceAspectLevel = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.iceAspect, mainHand);
-        lightningAspectLevel = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.lightningAspect, mainHand);
+        lightningAspectLevel = EnchantmentHelper
+            .getEnchantmentLevel(ModEnchantments.lightningAspect, mainHand);
       }
       // If not, is it on off hand?
       if (lifeStealLevel < 1 && StackHelper.isValid(offHand)) {
@@ -210,7 +212,8 @@ public class GemsCommonEvents {
       if (soul != null && SilentGems.random.nextFloat() < soul.getDropRate()) {
         ItemStack soulGem = ModItems.soulGem.getStack(soul);
         if (StackHelper.isValid(soulGem)) {
-          EntityItem entityItem = new EntityItem(killed.world, killed.posX, killed.posY + killed.height / 2f, killed.posZ, soulGem);
+          EntityItem entityItem = new EntityItem(killed.world, killed.posX,
+              killed.posY + killed.height / 2f, killed.posZ, soulGem);
           killed.world.spawnEntity(entityItem);
         }
       }
@@ -264,7 +267,8 @@ public class GemsCommonEvents {
             double motionX = 0.005 * rand.nextGaussian();
             double motionY = 0.005 * rand.nextGaussian();
             double motionZ = 0.005 * rand.nextGaussian();
-            SilentGems.proxy.spawnParticles(EnumModParticles.FREEZING, new Color(0x76e3f2), entity.world, posX, posY, posZ, motionX, motionY, motionZ);
+            SilentGems.proxy.spawnParticles(EnumModParticles.FREEZING, new Color(0x76e3f2),
+                entity.world, posX, posY, posZ, motionX, motionY, motionZ);
           }
         }
 
@@ -308,7 +312,30 @@ public class GemsCommonEvents {
             double motionX = 0.02 * rand.nextGaussian();
             double motionY = 0.05 + Math.abs(0.1 * rand.nextGaussian());
             double motionZ = 0.02 * rand.nextGaussian();
-            SilentGems.proxy.spawnParticles(EnumModParticles.SHOCKING, new Color(0xffef63), entity.world, posX, posY, posZ, motionX, motionY, motionZ);
+            SilentGems.proxy.spawnParticles(EnumModParticles.SHOCKING, new Color(0xffef63),
+                entity.world, posX, posY, posZ, motionX, motionY, motionZ);
+          }
+        }
+      }
+    }
+  }
+
+  final int CLIMB_TIME_TO_DRAIN_AP = 120;
+  ItemStack lastMainHand = StackHelper.empty();
+
+  @SubscribeEvent
+  public void onPlayerTick(PlayerTickEvent event) {
+
+    if (event.player.isCollidedHorizontally && !event.player.isOnLadder()) {
+      // Do we have a wall climbing item?
+      ItemStack stack = SoulHelper.getStackThatCanUseSkill(event.player, SoulSkill.WALL_CLIMB);
+      if (StackHelper.isValid(stack)) {
+        ToolSoul soul = ToolHelper.getSoul(stack);
+        if (soul.getActionPoints() > 0) {
+//          event.player.stepHeight = 1.0f;
+          event.player.motionY = 0.1;
+          if (++soul.climbTimer % CLIMB_TIME_TO_DRAIN_AP == 0) {
+            soul.addActionPoints(-1);
           }
         }
       }
@@ -331,7 +358,8 @@ public class GemsCommonEvents {
       for (ItemStack stack : PlayerHelper.getNonEmptyStacks(event.getEntityPlayer())) {
         if (stack.getItem() instanceof ItemBlockPlacer) {
           ItemBlockPlacer itemPlacer = (ItemBlockPlacer) stack.getItem();
-          IBlockState state = ((ItemBlock) entityStack.getItem()).getBlock().getStateFromMeta(entityStack.getItemDamage());
+          IBlockState state = ((ItemBlock) entityStack.getItem()).getBlock()
+              .getStateFromMeta(entityStack.getItemDamage());
           if (state.equals(itemPlacer.getBlockPlaced(stack))) {
             // TODO
             // event.getItem().setDead();

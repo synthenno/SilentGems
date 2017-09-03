@@ -85,12 +85,6 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
       list.add(line);
     }
 
-    // Tool Soul
-    ToolSoul soul = ToolHelper.getSoul(tool);
-    if (soul != null) {
-      soul.addInformation(tool, world, list, advanced);
-    }
-
     // Show original owner?
     if (shiftDown) {
       String owner = ToolHelper.getOriginalOwner(tool);
@@ -101,6 +95,12 @@ public class ToolRenderHelper extends ToolRenderHelperBase {
         list.add(loc.getMiscText("Tooltip.OriginalOwner", owner));
       else
         list.add(loc.getMiscText("Tooltip.OriginalOwner.Unknown"));
+    }
+
+    // Tool Soul
+    ToolSoul soul = ToolHelper.getSoul(tool);
+    if (soul != null) {
+      soul.addInformation(tool, world, list, advanced);
     }
 
     // Example tool?

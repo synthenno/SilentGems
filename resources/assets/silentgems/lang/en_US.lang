@@ -733,6 +733,12 @@ item.silentgems:ReturnHomeCharm.NotSane=&cDestination Y is less than or equal to
 item.silentgems:ReturnHomeCharm.NotSafe=&cDestination obstructed! There is a solid block at head level!
 item.silentgems:ReturnHomeCharm.NotEnoughCharge=Not enough Chaos!
 
+item.silentgems:SkillOrb.name=Skill Orb
+item.silentgems:SkillOrb.name_proper=Skill Orb: %s
+item.silentgems:SkillOrb.no_soul=That item has no soul.
+item.silentgems:SkillOrb.no_skill=This orb has no skill.
+item.silentgems:SkillOrb.max_level=The skill is already at the maximum level.
+
 item.silentgems:SoulGem.name=Soul Gem
 item.silentgems:SoulGem.name_proper=Soul Gem: %s
 
@@ -745,6 +751,8 @@ item.silentgems:TeleporterLinker.name=Teleporter Linker
 item.silentgems:TeleporterLinker.desc=Links teleporters, obviously.
 item.silentgems:TeleporterLinker.Distance=Distance: %,d
 item.silentgems:TeleporterLinker.DifferentDimension=Dimension Hop
+
+item.silentgems:ToolSoul.name=Unnamed Tool Soul
 
 item.silentgems:TorchBandolier.name=Torch Bandolier
 
@@ -892,6 +900,7 @@ enchantment.silentgems:MagicDamage.desc=Increases damage dealt by magic attacks.
 
 # Tool Skills
 skill.silentgems:AreaMiner.name=Area Miner
+skill.silentgems:AreaTill.name=Plow
 skill.silentgems:Lumberjack.name=Lumberjack
 skill.silentgems:all.insufficientChaos=Not enough Chaos!
 
@@ -979,15 +988,27 @@ misc.silentgems:Tooltip.Construction=&6Construction
 misc.silentgems:ToolSoul.level=Level %d (%,d / %,d XP)
 misc.silentgems:ToolSoul.actionPoints=AP: %d / %d
 misc.silentgems:ToolSoul.elements=Elements: %s
+misc.silentgems:ToolSoul.nameless=Nameless Soul
+misc.silentgems:ToolSoul.levelUp=%s is now level %d!
+misc.silentgems:ToolSoul.skillLearned=Learned skill "%s".
+misc.silentgems:ToolSoul.skillLevelUp=Skill "%s" is now level %d.
+misc.silentgems:ToolSoul.activated=%s activated %s
 
 # Soul Skills
 
 skill.silentgems:antivenom.name=Antivenom
+skill.silentgems:chill.name=Chill
+skill.silentgems:coffee_pot.name=Coffee Pot
+skill.silentgems:coffee_pot.act=%s somehow made fresh coffee for you.
+skill.silentgems:crop_growth.name=Nature's Bounty
 skill.silentgems:durability_boost.name=Reinforce
 skill.silentgems:harvest_speed_boost.name=Lighten
 skill.silentgems:magic_damage_boost.name=Focus
 skill.silentgems:melee_damage_boost.name=Sharpen
+skill.silentgems:slow_fall.name=Slow Fall
 skill.silentgems:super_skill.name=Super Skill
+skill.silentgems:wall_climb.name=Wall Climber
+skill.silentgems:warm.name=Warm
 
 
 

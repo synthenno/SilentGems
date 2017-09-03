@@ -1,5 +1,6 @@
 package net.silentchaos512.gems.lib.soul;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import net.silentchaos512.gems.item.ItemToolSoul;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.ChatHelper;
 import net.silentchaos512.lib.util.LocalizationHelper;
+import net.silentchaos512.lib.util.StackHelper;
 
 public class ToolSoul {
 
@@ -35,6 +37,8 @@ public class ToolSoul {
 
   static final int BASE_XP = 30;
   static final float XP_CURVE_FACTOR = 2.5f;
+
+  String name = "";
 
   // Experience and levels
   int xp = 0;
@@ -49,6 +53,10 @@ public class ToolSoul {
   // Skills
   int actionPoints = 10;
   Map<SoulSkill, Integer> skills = new LinkedHashMap<>();
+
+  // Temporary variables NOT saved to NBT
+  public int climbTimer = 0;
+  public int coffeeCooldown = 0;
 
   // =================
   // = XP and Levels =
@@ -78,10 +86,32 @@ public class ToolSoul {
     return level;
   }
 
+  public String getName(ItemStack tool) {
+
+    if (name.isEmpty()) {
+      if (StackHelper.isValid(tool)) {
+        return tool.getDisplayName();
+      }
+      return SilentGems.localizationHelper.getMiscText("ToolSoul.nameless");
+    }
+    return name;
+  }
+
+  public void setName(String value) {
+
+    this.name = value;
+  }
+
+  public boolean hasName() {
+
+    return !name.isEmpty();
+  }
+
   protected void levelUp(ItemStack tool, EntityPlayer player) {
 
     ++level;
-    String line = String.format("Your %s is now level %d!", tool.getDisplayName(), level);
+    String line = String.format(
+        SilentGems.localizationHelper.getMiscText("ToolSoul.levelUp", getName(tool), level));
     ChatHelper.sendMessage(player, line);
     player.world.playSound(null, player.getPosition(), SoundEvents.ENTITY_PLAYER_LEVELUP,
         SoundCategory.PLAYERS, 1.0f, 1.0f);
@@ -91,7 +121,7 @@ public class ToolSoul {
     // Learn new skill?
     SoulSkill toLearn = SoulSkill.selectSkillToLearn(this, tool);
     if (toLearn != null) {
-      addOrLevelSkill(toLearn, player);
+      addOrLevelSkill(toLearn, tool, player);
     }
 
     ToolHelper.recalculateStats(tool);
@@ -137,22 +167,34 @@ public class ToolSoul {
   // = Skills =
   // ==========
 
-  public void addOrLevelSkill(SoulSkill skill, EntityPlayer player) {
+  public boolean addOrLevelSkill(SoulSkill skill, ItemStack tool, EntityPlayer player) {
 
+    LocalizationHelper loc = SilentGems.localizationHelper;
     if (skills.containsKey(skill)) {
+      // Has skill already.
       int level = skills.get(skill);
       if (level < skill.maxLevel) {
+        // Can be leveled up.
         ++level;
         skills.put(skill, level);
         if (player != null) {
-          ChatHelper.sendMessage(player, "Skill level up: " + skill.getLocalizedName(level));
+          ChatHelper.sendMessage(player,
+              loc.getMiscText("ToolSoul.skillLevelUp", skill.getLocalizedName(tool, 0), level));
         }
+
+        return true;
+      } else {
+        // Already max level.
+        return false;
       }
     } else {
       skills.put(skill, 1);
       if (player != null) {
-        ChatHelper.sendMessage(player, "Learned skill: " + skill.getLocalizedName(1));
+        ChatHelper.sendMessage(player,
+            loc.getMiscText("ToolSoul.skillLearned", skill.getLocalizedName(tool, 1)));
       }
+
+      return true;
     }
   }
 
@@ -171,8 +213,8 @@ public class ToolSoul {
 
     if (KeyTracker.isControlDown() || stack.getItem() instanceof ItemToolSoul) {
       // Display elements.
-      String e1 = element1.getDisplayName();
-      String e2 = element2.getDisplayName();
+      String e1 = element1 == null ? "None" : element1.getDisplayName();
+      String e2 = element2 == null ? "None" : element2.getDisplayName();
       String elements = e1 + (e2.equalsIgnoreCase("none") ? "" : ", " + e2);
       list.add(loc.getMiscText("ToolSoul.elements", elements));
     }
@@ -181,7 +223,7 @@ public class ToolSoul {
       for (Entry<SoulSkill, Integer> entry : skills.entrySet()) {
         SoulSkill skill = entry.getKey();
         int level = entry.getValue();
-        list.add("  " + skill.getLocalizedName(level));
+        list.add("  " + skill.getLocalizedName(stack, level));
       }
     } else {
       list.add(TextFormatting.GOLD + loc.getMiscText("Tooltip.keyForSkills"));
@@ -223,6 +265,25 @@ public class ToolSoul {
     return toolSoul;
   }
 
+  public static ToolSoul randomSoul() {
+
+    ToolSoul soul = new ToolSoul();
+
+    List<EnumSoulElement> elements = new ArrayList<>();
+    for (EnumSoulElement elem : EnumSoulElement.values()) {
+      if (elem != EnumSoulElement.NONE) {
+        elements.add(elem);
+      }
+    }
+
+    soul.element1 = elements.get(SilentGems.random.nextInt(elements.size()));
+    elements.remove(soul.element1);
+    elements.add(EnumSoulElement.NONE);
+    soul.element2 = elements.get(SilentGems.random.nextInt(elements.size()));
+
+    return soul;
+  }
+
   private static EnumSoulElement selectHighestWeight(Map<EnumSoulElement, Integer> elements) {
 
     EnumSoulElement element = EnumSoulElement.NONE;
@@ -254,7 +315,7 @@ public class ToolSoul {
     // Regen action points
     int regenDelay = AP_REGEN_DELAY;
     if (SilentGems.BUILD_NUM == 0) {
-      regenDelay /= 10;
+      regenDelay /= 5;
     }
     if ((ticksExisted + apRegenSalt) % regenDelay == 0) {
       addActionPoints(1);
@@ -264,18 +325,24 @@ public class ToolSoul {
     boolean isInHand = player.getHeldItemMainhand() == tool || player.getHeldItemOffhand() == tool;
     boolean isArmor = tool.getItem() instanceof IArmor;
     int time = ticksExisted + skillActivateSalt;
-    if (isInHand || isArmor) {
-      for (SoulSkill skill : skills.keySet()) {
+
+    for (SoulSkill skill : skills.keySet()) {
+      if (isInHand || isArmor || skill.canActivateWhenUnequipped()) {
+        int skillLevel = skills.get(skill);
         if (time % skill.getActivateDelay() == 0) {
-          if (skill.activate(this, tool, player)) {
+          if (skill.activate(this, tool, player, skillLevel)) {
             addActionPoints(-skill.apCost);
-            // TODO: Chat message?
-            ChatHelper.sendMessage(player, "Activated skill " + skill.id);
-            // Only one skill use per activate cycle.
-            break;
+            if (skill.sendChatMessageOnActivation()) {
+              ChatHelper.sendMessage(player, SilentGems.localizationHelper.getMiscText(
+                  "ToolSoul.activated", getName(tool), skill.getLocalizedName(tool, skillLevel)));
+            }
           }
         }
       }
+    }
+
+    if (coffeeCooldown > 0) {
+      --coffeeCooldown;
     }
   }
 
@@ -283,6 +350,7 @@ public class ToolSoul {
 
     ToolSoul soul = new ToolSoul();
 
+    soul.name = tags.getString("name");
     String e1 = tags.getString("element1");
     String e2 = tags.getString("element2");
     for (EnumSoulElement element : EnumSoulElement.values()) {
@@ -306,10 +374,8 @@ public class ToolSoul {
       if (skill != null) {
         int level = tagCompound.getShort("level");
         soul.skills.put(skill, level);
-        SilentGems.logHelper.debug("  Skill: " + skill.getLocalizedName(level));
-      } else {
-        SilentGems.logHelper.debug("  No skill with id " + tagCompound.getString("id") + "!");
       }
+      // Skills with unknown IDs are ignored!
     }
 
     return soul;
@@ -317,6 +383,9 @@ public class ToolSoul {
 
   public void writeToNBT(NBTTagCompound tags) {
 
+    if (!name.isEmpty()) {
+      tags.setString("name", name);
+    }
     tags.setString("element1", this.element1.name());
     tags.setString("element2", this.element2.name());
     tags.setInteger("xp", xp);

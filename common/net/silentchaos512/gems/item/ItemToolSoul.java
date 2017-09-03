@@ -2,6 +2,7 @@ package net.silentchaos512.gems.item;
 
 import java.util.List;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -14,6 +15,7 @@ import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.lib.item.ItemSL;
 import net.silentchaos512.lib.registry.RecipeMaker;
+import net.silentchaos512.lib.util.StackHelper;
 
 public class ItemToolSoul extends ItemSL {
 
@@ -24,6 +26,7 @@ public class ItemToolSoul extends ItemSL {
   public ItemToolSoul() {
 
     super(1, SilentGems.MODID, Names.TOOL_SOUL);
+    setMaxStackSize(1);
   }
 
   public ToolSoul getSoul(ItemStack stack) {
@@ -55,6 +58,17 @@ public class ItemToolSoul extends ItemSL {
   }
 
   @Override
+  public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot,
+      boolean isSelected) {
+
+    if (StackHelper.isValid(stack) && !stack.hasTagCompound()) {
+      // Randomize souls with no data!
+      ToolSoul soul = ToolSoul.randomSoul();
+      setSoul(stack, soul);
+    }
+  }
+
+  @Override
   public void addRecipes(RecipeMaker recipes) {
 
     // FIXME? JEI only shows zombie souls?
@@ -62,7 +76,7 @@ public class ItemToolSoul extends ItemSL {
     ModItems.soulGem.getSubItems(ModItems.soulGem.getCreativeTab(), listSouls);
     Ingredient ingSouls = Ingredient.fromStacks(listSouls.toArray(new ItemStack[listSouls.size()]));
 
-    recipe = recipes.addShaped("tool_soul", new ItemStack(this), " s ", "scs", " s ", 's',
-        ingSouls, 'c', ModItems.craftingMaterial.chaosCore);
+    recipe = recipes.addShaped("tool_soul", new ItemStack(this), " s ", "scs", " s ", 's', ingSouls,
+        'c', ModItems.craftingMaterial.chaosCore);
   }
 }

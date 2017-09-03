@@ -38,6 +38,7 @@ import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ItemChaosGem;
 import net.silentchaos512.gems.lib.TooltipHelper;
 import net.silentchaos512.gems.skills.SkillAreaMiner;
+import net.silentchaos512.gems.skills.SkillAreaTill;
 import net.silentchaos512.gems.skills.SkillLumberjack;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.gems.util.ToolHelper;
@@ -98,17 +99,22 @@ public class GemsClientEvents {
     if (ctrlDown) {
       list.add(index++, sep);
       TextFormatting color = TextFormatting.GOLD;
-      list.add(index++, color + TooltipHelper.get("HarvestSpeed", "x" + (int) (stats.harvestSpeedMulti * 100) + "%"));
-      //list.add(index++, color + TooltipHelper.get("HarvestLevel", part.getHarvestLevel()));
-      
+      list.add(index++, color
+          + TooltipHelper.get("HarvestSpeed", "x" + (int) (stats.harvestSpeedMulti * 100) + "%"));
+      // list.add(index++, color + TooltipHelper.get("HarvestLevel", part.getHarvestLevel()));
+
       color = TextFormatting.DARK_GREEN;
-//      list.add(index++, color + TooltipHelper.get("MeleeSpeed", (int) (part.getMeleeSpeed() * 100)));
-      list.add(index++, color + TooltipHelper.get("MeleeDamage", "x" + (int) (stats.meleeDamageMulti * 100) + "%"));
-      list.add(index++, color + TooltipHelper.get("MagicDamage", "x" + (int) (stats.magicDamageMulti * 100) + "%"));
-      
+      // list.add(index++, color + TooltipHelper.get("MeleeSpeed", (int) (part.getMeleeSpeed() * 100)));
+      list.add(index++, color
+          + TooltipHelper.get("MeleeDamage", "x" + (int) (stats.meleeDamageMulti * 100) + "%"));
+      list.add(index++, color
+          + TooltipHelper.get("MagicDamage", "x" + (int) (stats.magicDamageMulti * 100) + "%"));
+
       color = TextFormatting.BLUE;
-      list.add(index++, color + TooltipHelper.get("Durability", "x" + (int) (stats.durabilityMulti * 100) + "%"));
-      list.add(index++, color + TooltipHelper.get("Enchantability", "x" + (int) (stats.enchantabilityMulti * 100) + "%"));
+      list.add(index++,
+          color + TooltipHelper.get("Durability", "x" + (int) (stats.durabilityMulti * 100) + "%"));
+      list.add(index++, color + TooltipHelper.get("Enchantability",
+          "x" + (int) (stats.enchantabilityMulti * 100) + "%"));
       list.add(index++, sep);
 
       // Debug info
@@ -173,13 +179,13 @@ public class GemsClientEvents {
     }
 
     Item item = mainHand.getItem();
-    boolean isDigger = item instanceof ITool && ((ITool) item).isDiggingTool();
 
-    if (isDigger && event.isCancelable() && event.getType() == ElementType.CROSSHAIRS) {
+    if (event.isCancelable() && event.getType() == ElementType.CROSSHAIRS) {
       if (ToolHelper.isSpecialAbilityEnabled(mainHand)) {
         event.setCanceled(true);
         ToolSkill skill = ToolHelper.getSuperSkill(mainHand);
-        int type = skill == SkillAreaMiner.INSTANCE ? 0 : skill == SkillLumberjack.INSTANCE ? 1 : 2;
+        int type = skill == SkillAreaMiner.INSTANCE || skill == SkillAreaTill.INSTANCE ? 0
+            : skill == SkillLumberjack.INSTANCE ? 1 : 2;
         GuiCrosshairs.INSTANCE.renderOverlay(event, type, skill);
       }
     }

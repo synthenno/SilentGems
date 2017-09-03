@@ -96,7 +96,7 @@ public class ItemSoulGem extends ItemSL {
     registerStackSoul(new Soul("Beetroot", new ItemStack(Items.BEETROOT),
         0x812921, 0xA74D54, FLORA, WATER).setDropRate(blockDropRate));
     registerStackSoul(new Soul("FluffyPuff", new ItemStack(ModItems.fluffyPuff),
-        0xFFFFFF, 0x999999, FLORA, WIND));
+        0xFFFFFF, 0x999999, FLORA, WIND).setDropRate(blockDropRate));
 
     float rateHigh = 0.075f;
 
@@ -192,6 +192,16 @@ public class ItemSoulGem extends ItemSL {
     tags.setString(NBT_SOUL, soul.id);
     stack.setTagCompound(tags);
     return stack;
+  }
+
+  public ItemStack getStack(String soulKey) {
+
+    for (Soul soul : listSorted) {
+      if (soul.id.equals(soulKey)) {
+        return getStack(soul);
+      }
+    }
+    return StackHelper.empty();
   }
 
   public Soul getSoul(ItemStack stack) {

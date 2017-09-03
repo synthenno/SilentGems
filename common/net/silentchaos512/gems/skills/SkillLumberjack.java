@@ -195,6 +195,6 @@ public class SkillLumberjack extends ToolSkillDigger {
   @Override
   public String getTranslatedName() {
 
-    return SilentGems.instance.localizationHelper.getLocalizedString("skill", "Lumberjack");
+    return SilentGems.instance.localizationHelper.getLocalizedString("skill", "Lumberjack.name");
   }
 }

@@ -57,6 +57,15 @@ public class RecipeApplyToolSoul extends RecipeBaseSL {
     // Have to change UUID to prevent soul duping.
     result.getTagCompound().removeTag(ToolHelper.NBT_UUID);
     ToolHelper.setSoul(result, toolSoul);
+
+    // Apply name, if applicable.
+    if (soul.hasDisplayName()) {
+      String name = soul.getDisplayName();
+      toolSoul.setName(name);
+      result.setStackDisplayName(name);
+    }
+
+    // Recalculate stats and return.
     ToolHelper.recalculateStats(result);
     return result;
   }

@@ -20,6 +20,7 @@ public class PotionSlowFall extends Potion {
 
     SilentGems.logHelper.debug(entityLiving.motionY);
     if (entityLiving.motionY < SLOW_FALL_SPEED) {
+      // TODO: Not setting speed on client-side? There's no fall damage at least.
       entityLiving.motionY = SLOW_FALL_SPEED;
       entityLiving.fallDistance = 0;
     }

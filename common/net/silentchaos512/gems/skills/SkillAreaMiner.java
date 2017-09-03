@@ -254,6 +254,6 @@ public class SkillAreaMiner extends ToolSkillDigger {
   @Override
   public String getTranslatedName() {
 
-    return SilentGems.instance.localizationHelper.getLocalizedString("skill", "AreaMiner");
+    return SilentGems.instance.localizationHelper.getLocalizedString("skill", "AreaMiner.name");
   }
 }
