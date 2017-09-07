@@ -146,8 +146,9 @@ public class PlayerDataHandler {
     public int rechargeCooldown;
     @SyncVariable(name = "FlightTime", onRead = false)
     public int flightTime = 200;
-    @SyncVariable(name = "HaloTime")
-    public int haloTime;
+    @SyncVariable(name = "StarterSoulsGiven")
+    public boolean starterToolSoulsGiven;
+
     public int magicCooldown;
 
     public WeakReference<EntityPlayer> playerWR;
@@ -190,12 +191,6 @@ public class PlayerDataHandler {
           player.capabilities.allowFlying = false;
           player.capabilities.isFlying = false;
         }
-        shouldSave = true;
-      }
-
-      // Halo timer
-      if (haloTime > 0) {
-        --haloTime;
         shouldSave = true;
       }
 

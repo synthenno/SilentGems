@@ -3,6 +3,7 @@ package net.silentchaos512.gems.item;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
@@ -77,6 +78,6 @@ public class ItemToolSoul extends ItemSL {
     Ingredient ingSouls = Ingredient.fromStacks(listSouls.toArray(new ItemStack[listSouls.size()]));
 
     recipe = recipes.addShaped("tool_soul", new ItemStack(this), " s ", "scs", " s ", 's', ingSouls,
-        'c', ModItems.craftingMaterial.chaosCore);
+        'c', new ItemStack(Items.DIAMOND));
   }
 }

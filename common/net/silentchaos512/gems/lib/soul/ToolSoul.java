@@ -64,7 +64,7 @@ public class ToolSoul {
 
   public void addXp(int amount, ItemStack tool, EntityPlayer player) {
 
-    xp += amount * 10;
+    xp += amount;
     if (xp >= getXpToNextLevel()) {
       levelUp(tool, player);
     }
@@ -314,9 +314,9 @@ public class ToolSoul {
     ++ticksExisted;
     // Regen action points
     int regenDelay = AP_REGEN_DELAY;
-    if (SilentGems.BUILD_NUM == 0) {
-      regenDelay /= 5;
-    }
+//    if (SilentGems.BUILD_NUM == 0) {
+//      regenDelay /= 5;
+//    }
     if ((ticksExisted + apRegenSalt) % regenDelay == 0) {
       addActionPoints(1);
     }

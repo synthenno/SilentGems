@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,9 +31,12 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.ITool;
+import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.enchantment.EnchantmentIceAspect;
 import net.silentchaos512.gems.enchantment.EnchantmentLightningAspect;
 import net.silentchaos512.gems.entity.EntityChaosProjectile;
+import net.silentchaos512.gems.handler.PlayerDataHandler;
+import net.silentchaos512.gems.handler.PlayerDataHandler.PlayerData;
 import net.silentchaos512.gems.init.ModBlocks;
 import net.silentchaos512.gems.init.ModEnchantments;
 import net.silentchaos512.gems.init.ModItems;
@@ -74,6 +76,19 @@ public class GemsCommonEvents {
           ToolHelper.recalculateStats(stack);
         if (stack.getItem() instanceof IArmor)
           ArmorHelper.recalculateStats(stack);
+      }
+    }
+
+    // Give tool souls on first login?
+    if (GemsConfig.SPAWN_PLAYER_WITH_TOOL_SOULS > 0) {
+      PlayerData data = PlayerDataHandler.get(event.player);
+      if (data != null && !data.starterToolSoulsGiven) {
+        for (int i = 0; i < GemsConfig.SPAWN_PLAYER_WITH_TOOL_SOULS; ++i) {
+          ItemStack stack = new ItemStack(ModItems.toolSoul);
+          ModItems.toolSoul.setSoul(stack, ToolSoul.randomSoul());
+          PlayerHelper.giveItem(event.player, stack);
+        }
+        data.starterToolSoulsGiven = true;
       }
     }
   }

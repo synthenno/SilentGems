@@ -43,6 +43,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.silentchaos512.gems.SilentGems;
+import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.IBlockPlacer;
 import net.silentchaos512.gems.api.ITool;
 import net.silentchaos512.gems.api.tool.ToolStats;
@@ -222,6 +223,10 @@ public class ToolHelper {
   }
 
   public static @Nullable UUID getUUID(ItemStack tool) {
+
+    if (!(tool.getItem() instanceof ITool || tool.getItem() instanceof IArmor)) {
+      return null;
+    }
 
     initRootTag(tool);
     if (tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL)) {
@@ -783,6 +788,7 @@ public class ToolHelper {
   public static ToolSoul getSoul(ItemStack tool) {
 
     if (StackHelper.isEmpty(tool)
+        || !(tool.getItem() instanceof ITool || tool.getItem() instanceof IArmor)
         || (tool.hasTagCompound() && tool.getTagCompound().hasKey(NBT_EXAMPLE_TOOL))) {
       return null;
     }

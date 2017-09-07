@@ -8,7 +8,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,24 +18,18 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.tool.part.ToolPart;
 import net.silentchaos512.gems.api.tool.part.ToolPartRegistry;
-import net.silentchaos512.gems.client.gui.ModelGemArmor;
 import net.silentchaos512.gems.client.key.KeyTracker;
-import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.gems.lib.EnumGem;
-import net.silentchaos512.gems.network.NetworkHandler;
 import net.silentchaos512.gems.util.ArmorHelper;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.item.ItemArmorSL;
@@ -167,24 +160,24 @@ public class ItemGemArmor extends ItemArmorSL implements ISpecialArmor, IArmor {
       String type) {
 
     // FIXME
-    return SilentGems.RESOURCE_PREFIX + "textures/armor/temparmor.png";
-    // return SilentGems.RESOURCE_PREFIX + "textures/armor/gemarmor_" + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") +
-    // ".png";
+    // return SilentGems.RESOURCE_PREFIX + "textures/armor/temparmor.png";
+    return SilentGems.RESOURCE_PREFIX + "textures/armor/gemarmor_"
+        + (slot == EntityEquipmentSlot.LEGS ? "2" : "1") + ".png";
   }
 
   // FIXME
-//  @Override
-//  @SideOnly(Side.CLIENT)
-//  public ModelBiped getArmorModel(EntityLivingBase entity, ItemStack itemStack,
-//      EntityEquipmentSlot slot, ModelBiped original) {
-//
-//    ModelGemArmor model = ModelGemArmor.getModel(ArmorHelper.getRenderColorList(itemStack));
-//    if (model != null) {
-//      model.setModelAttributes(original);
-//      return model;
-//    }
-//    return super.getArmorModel(entity, itemStack, slot, original);
-//  }
+  // @Override
+  // @SideOnly(Side.CLIENT)
+  // public ModelBiped getArmorModel(EntityLivingBase entity, ItemStack itemStack,
+  // EntityEquipmentSlot slot, ModelBiped original) {
+  //
+  // ModelGemArmor model = ModelGemArmor.getModel(ArmorHelper.getRenderColorList(itemStack));
+  // if (model != null) {
+  // model.setModelAttributes(original);
+  // return model;
+  // }
+  // return super.getArmorModel(entity, itemStack, slot, original);
+  // }
 
   @Override
   public boolean hasEffect(ItemStack stack) {
@@ -315,14 +308,26 @@ public class ItemGemArmor extends ItemArmorSL implements ISpecialArmor, IArmor {
     }
   }
 
+  @SuppressWarnings("incomplete-switch")
   protected void addRecipe(RecipeMaker recipes, String name, ItemStack material) {
 
-    // FIXME
-//    ToolPart part = ToolPartRegistry.fromStack(material);
-//    if (part != null && !part.isBlacklisted(material)) {
-//      recipes.addShaped(name, constructArmor(material), " g ", "gfg", " g ", 'g', material, 'f',
-//          ModItems.armorFrame.getFrameForArmorPiece(this, part.getTier()));
-//    }
+    ToolPart part = ToolPartRegistry.fromStack(material);
+    if (part != null && !part.isBlacklisted(material)) {
+      switch (type) {
+        case CHEST:
+          recipes.addShaped(name, constructArmor(material), "m m", "mmm", "mmm", 'm', material);
+          break;
+        case FEET:
+          recipes.addShaped(name, constructArmor(material), "m m", "m m", 'm', material);
+          break;
+        case HEAD:
+          recipes.addShaped(name, constructArmor(material), "mmm", "m m", 'm', material);
+          break;
+        case LEGS:
+          recipes.addShaped(name, constructArmor(material), "mmm", "m m", "m m", 'm', material);
+          break;
+      }
+    }
   }
 
   @Override

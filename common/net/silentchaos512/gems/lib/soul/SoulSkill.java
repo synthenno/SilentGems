@@ -62,19 +62,32 @@ public class SoulSkill {
 
   public static void init() {
 
+    //@formatter:off
     SUPER_SKILL = new SoulSkill("super_skill", 1, 0, 5, 0.0);
     DURABILITY_BOOST = new SoulSkill("durability_boost", 5, 0, 0, 0.0, EARTH, METAL);
     HARVEST_SPEED_BOOST = new SoulSkill("harvest_speed_boost", 5, 0, 0, 0.0, WIND, LIGHTNING);
     MELEE_DAMAGE_BOOST = new SoulSkill("melee_damage_boost", 5, 0, 0, 0.0, FIRE, VENOM);
     MAGIC_DAMAGE_BOOST = new SoulSkill("magic_damage_boost", 5, 0, 0, 0.0, WATER, ICE);
-    WARM = new SoulSkill("warm", 1, 10, 3, -2.0, FIRE, METAL);
-    CHILL = new SoulSkill("chill", 1, 10, 3, -2.0, WATER, ICE);
-    ANTIVENOM = new SoulSkill("antivenom", 1, 5, 4, -3.0, VENOM, FLORA);
-    SLOW_FALL = new SoulSkill("slow_fall", 1, 2, 10, -3.0, WIND, ALIEN).setActivateDelay(1);
-    CROP_GROWTH = new SoulSkill("crop_growth", 3, 1, 4, -4.0, FLORA).setActivateDelay(300)
-        .setFavorWeightMulti(2.0);
-    WALL_CLIMB = new SoulSkill("wall_climb", 1, 1, 6, -5.0, METAL, MONSTER);
-    COFFEE_POT = new SoulSkill("coffee_pot", 1, 4, 13, -7.0, FLORA, EARTH);
+    WARM = new SoulSkill("warm", 1, 10, 3, -6.0, FIRE, METAL)
+        .setFavorWeightMulti(0.5f);
+    CHILL = new SoulSkill("chill", 1, 10, 3, -6.0, WATER, ICE)
+        .setFavorWeightMulti(0.5f);
+    ANTIVENOM = new SoulSkill("antivenom", 1, 5, 4, -5.0, VENOM, FLORA)
+        .setFavorWeightMulti(0.5f);
+    SLOW_FALL = new SoulSkill("slow_fall", 1, 2, 10, -5.0, WIND, ALIEN)
+        .setActivateDelay(1)
+        .setFavorWeightMulti(0.25f)
+        .lockToFavoredElements();
+    CROP_GROWTH = new SoulSkill("crop_growth", 3, 1, 4, -6.0, FLORA)
+        .setActivateDelay(300)
+        .setFavorWeightMulti(0.75f)
+        .lockToFavoredElements();
+    WALL_CLIMB = new SoulSkill("wall_climb", 1, 1, 6, -7.0, METAL, MONSTER)
+        .setFavorWeightMulti(0.25f)
+        .lockToFavoredElements();
+    COFFEE_POT = new SoulSkill("coffee_pot", 1, 4, 13, -8.0, FLORA, EARTH)
+        .setFavorWeightMulti(0.25f);
+    //@formatter:on
   }
 
   /** Unique String ID */
@@ -95,6 +108,7 @@ public class SoulSkill {
 
   protected int activateDelay = SKILL_ACTIVATE_DELAY;
   protected double favorWeightMulti = 1.0;
+  protected boolean lockedToFavoredElements = false;
 
   public SoulSkill(String id, int maxLevel, int apCost, int medianXpLevel, double weightDiff,
       EnumSoulElement... favoredElements) {
@@ -218,6 +232,21 @@ public class SoulSkill {
       return false;
     }
 
+    // Is the skill locked to favored elements?
+    if (lockedToFavoredElements) {
+      boolean foundMatch = false;
+      for (EnumSoulElement elem : favoredElements) {
+        if (elem == soul.element1 || elem == soul.element2) {
+          foundMatch = true;
+          break;
+        }
+      }
+
+      if (!foundMatch) {
+        return false;
+      }
+    }
+
     if (soul.skills.containsKey(this)) {
       int currentLevel = soul.skills.get(this);
       return currentLevel < maxLevel;
@@ -233,6 +262,12 @@ public class SoulSkill {
   public SoulSkill setActivateDelay(int value) {
 
     this.activateDelay = value;
+    return this;
+  }
+
+  public SoulSkill lockToFavoredElements() {
+
+    this.lockedToFavoredElements = true;
     return this;
   }
 
@@ -299,9 +334,10 @@ public class SoulSkill {
 
         // If a lower level of the skill is already known, reduce the weight.
         if (soul.skills.containsKey(skill)) {
-          weight -= soul.skills.get(skill);
+          weight -= 3 * soul.skills.get(skill);
         }
 
+        // Base weight diff, favors multiplier
         weight += skill.weightDiff;
         if (favorsElement) {
           weight *= skill.favorWeightMulti;

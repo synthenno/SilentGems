@@ -34,7 +34,8 @@ public class GuiCrosshairs extends GuiIngame {
 
   public void renderOverlay(RenderGameOverlayEvent event, int type, ToolSkill skill) {
 
-    int cost = skill.getCost(null, Minecraft.getMinecraft().player, BlockPos.ORIGIN);
+    int cost = skill == null ? 0
+        : skill.getCost(null, Minecraft.getMinecraft().player, BlockPos.ORIGIN);
     PlayerData data = PlayerDataHandler.get(Minecraft.getMinecraft().player);
 
     if (data != null && data.getCurrentChaos() < cost)

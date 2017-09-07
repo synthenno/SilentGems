@@ -75,7 +75,6 @@ public class ModItems implements IRegistrationHandler<Item> {
   public static final ItemSkillOrb skillOrb = new ItemSkillOrb();
   public static final ItemChaosGem chaosGem = new ItemChaosGem();
   public static final ItemChaosRune chaosRune = new ItemChaosRune();
-//  public static final ItemArmorFrame armorFrame = new ItemArmorFrame();
   public static final ItemFluffyPuffSeeds fluffyPuffSeeds = new ItemFluffyPuffSeeds();
   public static final ItemFluffyPuff fluffyPuff = new ItemFluffyPuff();
   public static final ItemGlowRoseFertilizer glowRoseFertilizier = new ItemGlowRoseFertilizer();

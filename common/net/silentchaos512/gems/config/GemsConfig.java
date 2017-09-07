@@ -45,6 +45,7 @@ public class GemsConfig extends AdaptiveConfig {
 
   public static int BURN_TIME_CHAOS_COAL = 6400;
   public static boolean SPAWN_PLAYER_WITH_GUIDE_BOOK = true;
+  public static int SPAWN_PLAYER_WITH_TOOL_SOULS = 0;
 
   public static int FOOD_SUPPORT_DURATION = 600;
   public static float FOOD_SECRET_DONUT_CHANCE = 0.33f;
@@ -236,8 +237,11 @@ public class GemsConfig extends AdaptiveConfig {
       SPAWN_PLAYER_WITH_GUIDE_BOOK = loadBoolean("Spawn with Guide Book", CAT_ITEM,
           SPAWN_PLAYER_WITH_GUIDE_BOOK,
           "Should players be given a copy of the guide book when they first spawn?");
-//      if (ModItems.guideBook != null)
-//        ModItems.guideBook.giveBookOnFirstLogin = SPAWN_PLAYER_WITH_GUIDE_BOOK;
+      if (ModItems.guideBook != null)
+        ModItems.guideBook.giveBookOnFirstLogin = SPAWN_PLAYER_WITH_GUIDE_BOOK;
+      SPAWN_PLAYER_WITH_TOOL_SOULS = loadInt("Spawn with Tool Souls", CAT_ITEM,
+          SPAWN_PLAYER_WITH_TOOL_SOULS, 0, 5,
+          "If set greater than zero, player's will be given random tool souls to start their journey with.");
 
       // Food
       final String catFood = CAT_ITEM + split + "Food";

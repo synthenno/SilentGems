@@ -182,11 +182,13 @@ public class GemsClientEvents {
 
     if (event.isCancelable() && event.getType() == ElementType.CROSSHAIRS) {
       if (ToolHelper.isSpecialAbilityEnabled(mainHand)) {
-        event.setCanceled(true);
         ToolSkill skill = ToolHelper.getSuperSkill(mainHand);
-        int type = skill == SkillAreaMiner.INSTANCE || skill == SkillAreaTill.INSTANCE ? 0
-            : skill == SkillLumberjack.INSTANCE ? 1 : 2;
-        GuiCrosshairs.INSTANCE.renderOverlay(event, type, skill);
+        if (skill != null) {
+          event.setCanceled(true);
+          int type = skill == SkillAreaMiner.INSTANCE || skill == SkillAreaTill.INSTANCE ? 0
+              : skill == SkillLumberjack.INSTANCE ? 1 : 2;
+          GuiCrosshairs.INSTANCE.renderOverlay(event, type, skill);
+        }
       }
     }
 
