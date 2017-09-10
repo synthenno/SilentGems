@@ -122,7 +122,7 @@ public class ToolHelper {
   public static final String NBT_PROP_MAGIC_DAMAGE = "MagicDamage";
   public static final String NBT_PROP_ENCHANTABILITY = "Enchantability";
   public static final String NBT_PROP_MELEE_SPEED = "MeleeSpeed";
-  public static final String NBT_PROP_BLOCKING_POWER = "BlockingPower";
+  public static final String NBT_PROP_PROTECTION = "Protection";
 
   // NBT for statistics
   public static final String NBT_STATS_ORIGINAL_OWNER = "OriginalOwner";
@@ -194,7 +194,7 @@ public class ToolHelper {
     setTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_MELEE_DAMAGE, stats.meleeDamage);
     setTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_MAGIC_DAMAGE, stats.magicDamage);
     setTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_MELEE_SPEED, stats.meleeSpeed);
-    setTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_BLOCKING_POWER, stats.blockingPower);
+    setTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_PROTECTION, stats.protection);
     setTagInt(tool, NBT_ROOT_PROPERTIES, NBT_PROP_ENCHANTABILITY, (int) stats.enchantability);
     setTagInt(tool, NBT_ROOT_PROPERTIES, NBT_PROP_HARVEST_LEVEL, stats.harvestLevel);
   }
@@ -324,6 +324,19 @@ public class ToolHelper {
     return getTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_MAGIC_DAMAGE);
   }
 
+  public static float getProtection(ItemStack shieldOrArmor) {
+
+    return getTagFloat(shieldOrArmor, NBT_ROOT_PROPERTIES, NBT_PROP_PROTECTION);
+  }
+
+  public static float getMagicProtection(ItemStack shieldOrArmor) {
+
+    float magic = getMagicDamage(shieldOrArmor);
+    float protection = getProtection(shieldOrArmor);
+    // Mostly impacted by magic, a little bit by protection.
+    return magic / 16f + protection / 300f;
+  }
+
   public static int getHarvestLevel(ItemStack tool) {
 
     return getTagInt(tool, NBT_ROOT_PROPERTIES, NBT_PROP_HARVEST_LEVEL);
@@ -332,11 +345,6 @@ public class ToolHelper {
   public static int getMaxDamage(ItemStack tool) {
 
     return getTagInt(tool, NBT_ROOT_PROPERTIES, NBT_PROP_DURABILITY);
-  }
-
-  public static float getBlockingPower(ItemStack tool) {
-
-    return getTagFloat(tool, NBT_ROOT_PROPERTIES, NBT_PROP_BLOCKING_POWER);
   }
 
   /**

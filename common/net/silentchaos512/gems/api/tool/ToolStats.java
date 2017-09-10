@@ -15,7 +15,7 @@ public final class ToolStats {
   public float magicDamage = 0f;
   public float meleeSpeed = 0f;
   public float enchantability = 0f;
-  public float blockingPower = 0f;
+  public float protection = 0f;
   public int harvestLevel = 0;
 
   public ToolStats(ItemStack tool, ToolPart[] parts) {

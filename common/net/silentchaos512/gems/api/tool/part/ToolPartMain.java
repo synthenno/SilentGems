@@ -11,14 +11,6 @@ import net.silentchaos512.gems.init.ModItems;
 
 public class ToolPartMain extends ToolPart {
 
-  @Deprecated
-  static final float[][] REPAIR_VALUES = {//
-      { 0.500f, 1.000f, 1.000f, 1.000f }, // mundane
-      { 0.000f, 0.500f, 1.000f, 1.000f }, // regular
-      { 0.000f, 0.250f, 1.000f, 1.000f }, // super
-      { 0.000f, 0.125f, 0.500f, 1.000f }  // hyper
-  };
-
   public ToolPartMain(String key, ItemStack craftingStack) {
 
     super(key, craftingStack);
@@ -38,7 +30,7 @@ public class ToolPartMain extends ToolPart {
     stats.magicDamage += getMagicDamage();
     stats.meleeSpeed += getMeleeSpeed();
     stats.enchantability += getEnchantability();
-    stats.blockingPower += getProtection() / 16f;
+    stats.protection += getProtection();
     stats.harvestLevel = Math.max(getHarvestLevel(), stats.harvestLevel);
   }
 

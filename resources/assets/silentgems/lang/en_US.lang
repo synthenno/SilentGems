@@ -943,7 +943,7 @@ misc.silentgems:Tooltip.level3=Obsidian
 misc.silentgems:Tooltip.level4=Cobalt
 
 misc.silentgems:Tooltip.ArrowDamage=Arrow Damage:&f %sx
-misc.silentgems:Tooltip.BlockingPower=Blocking Power:&f %s
+misc.silentgems:Tooltip.MagicProtection=Magic Protection:&f %s%%
 misc.silentgems:Tooltip.Broken=&cYou broke it!
 misc.silentgems:Tooltip.ExampleTool=&cExample Tool
 misc.silentgems:Tooltip.NoData1=&cAppears to be made of... nothing.

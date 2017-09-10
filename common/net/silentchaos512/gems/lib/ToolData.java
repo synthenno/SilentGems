@@ -84,7 +84,7 @@ public class ToolData {
   public float magicDamage;
   public int enchantability;
   public float meleeSpeed;
-  public float blockingPower; // TODO: Is this needed?
+  public float protection;
 
   // Settings
   public boolean superSkillEnabled = false;
@@ -153,7 +153,7 @@ public class ToolData {
     data.magicDamage = props.getFloat(NBT_PROP_MAGIC_DAMAGE);
     data.enchantability = props.getInteger(NBT_PROP_ENCHANTABILITY);
     data.meleeSpeed = props.getFloat(NBT_PROP_MELEE_SPEED);
-    data.blockingPower = props.getFloat(NBT_PROP_BLOCKING_POWER);
+    data.protection = props.getFloat(NBT_PROP_BLOCKING_POWER);
 
     // Settings
     data.superSkillEnabled = props.getBoolean(NBT_SETTINGS_SUPER_SKILL);
@@ -200,7 +200,7 @@ public class ToolData {
     meleeDamage = stats.meleeDamage;
     magicDamage = stats.magicDamage;
     meleeSpeed = stats.meleeSpeed;
-    blockingPower = stats.blockingPower;
+    protection = stats.protection;
     enchantability = (int) stats.enchantability;
   }
 
