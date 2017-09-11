@@ -1,0 +1,25 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancements.silentgems:antivenom.title"
+        },
+        "description": {
+            "translate": "advancements.silentgems:antivenom.desc"
+        },
+        "icon": {
+            "item": "minecraft:spider_eye"
+        }
+    },
+    "parent": "silentgems:tool_soul",
+    "criteria": {
+        "slow_fall_gained": {
+            "trigger": "minecraft:effects_changed",
+            "conditions": {
+                "effects": {
+                    "silentgems:antivenom": {
+                    }
+                }
+            }
+        }
+    }
+}

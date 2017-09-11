@@ -1,0 +1,27 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancements.silentgems:tool_soul.title"
+        },
+        "description": {
+            "translate": "advancements.silentgems:tool_soul.desc"
+        },
+        "icon": {
+            "item": "silentgems:toolsoul"
+        }
+    },
+    "parent": "silentgems:root",
+    "criteria": {
+        "tool_soul_obtained": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "silentgems:toolsoul",
+                        "data": 0
+                    }
+                ]
+            }
+        }
+    }
+}

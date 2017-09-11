@@ -645,12 +645,13 @@ public class ToolHelper {
         tool.getTagCompound().removeTag(NBT_EXAMPLE_TOOL);
       }
 
-      // Tick tool souls
-      if (entity instanceof EntityPlayer) {
-        ToolSoul soul = getSoul(tool);
-        if (soul != null) {
-          soul.updateTick(tool, (EntityPlayer) entity);
-        }
+    }
+
+    // Tick tool souls
+    if (entity instanceof EntityPlayer) {
+      ToolSoul soul = getSoul(tool);
+      if (soul != null) {
+        soul.updateTick(tool, (EntityPlayer) entity);
       }
     }
   }

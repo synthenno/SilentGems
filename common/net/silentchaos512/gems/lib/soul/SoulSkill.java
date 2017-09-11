@@ -1,16 +1,6 @@
 package net.silentchaos512.gems.lib.soul;
 
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.ALIEN;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.EARTH;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.FIRE;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.FLORA;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.ICE;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.LIGHTNING;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.METAL;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.MONSTER;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.VENOM;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.WATER;
-import static net.silentchaos512.gems.lib.soul.EnumSoulElement.WIND;
+import static net.silentchaos512.gems.lib.soul.EnumSoulElement.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +13,16 @@ import net.minecraft.block.BlockCrops;
 import net.minecraft.block.IGrowable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.tool.ToolStats;
 import net.silentchaos512.gems.init.ModItems;
@@ -37,8 +31,8 @@ import net.silentchaos512.gems.potion.PotionSlowFall;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.ChatHelper;
+import net.silentchaos512.lib.util.ItemHelper;
 import net.silentchaos512.lib.util.PlayerHelper;
-import net.silentchaos512.lib.util.StackHelper;
 
 public class SoulSkill {
 
@@ -48,12 +42,16 @@ public class SoulSkill {
   static final float STAT_BOOST_MULTI = 0.1f;
 
   public static SoulSkill SUPER_SKILL;
+  // Stat boosters
   public static SoulSkill DURABILITY_BOOST;
   public static SoulSkill HARVEST_SPEED_BOOST;
   public static SoulSkill MELEE_DAMAGE_BOOST;
   public static SoulSkill MAGIC_DAMAGE_BOOST;
+  // Active
   public static SoulSkill WARM;
   public static SoulSkill CHILL;
+  // Passive
+  public static SoulSkill HEAD_BONUS;
   public static SoulSkill ANTIVENOM;
   public static SoulSkill SLOW_FALL;
   public static SoulSkill CROP_GROWTH;
@@ -68,9 +66,11 @@ public class SoulSkill {
     HARVEST_SPEED_BOOST = new SoulSkill("harvest_speed_boost", 5, 0, 0, 0.0, WIND, LIGHTNING);
     MELEE_DAMAGE_BOOST = new SoulSkill("melee_damage_boost", 5, 0, 0, 0.0, FIRE, VENOM);
     MAGIC_DAMAGE_BOOST = new SoulSkill("magic_damage_boost", 5, 0, 0, 0.0, WATER, ICE);
-    WARM = new SoulSkill("warm", 1, 10, 3, -6.0, FIRE, METAL)
+    WARM = new SoulSkill("warm", 3, 10, 3, -6.0, FIRE, METAL)
         .setFavorWeightMulti(0.5f);
-    CHILL = new SoulSkill("chill", 1, 10, 3, -6.0, WATER, ICE)
+    CHILL = new SoulSkill("chill", 3, 10, 3, -6.0, WATER, ICE)
+        .setFavorWeightMulti(0.5f);
+    HEAD_BONUS = new SoulSkill("head_bonus", 5, 0, 0, -5.0f, MONSTER, ALIEN, METAL)
         .setFavorWeightMulti(0.5f);
     ANTIVENOM = new SoulSkill("antivenom", 1, 5, 4, -5.0, VENOM, FLORA)
         .setFavorWeightMulti(0.5f);
@@ -78,7 +78,7 @@ public class SoulSkill {
         .setActivateDelay(1)
         .setFavorWeightMulti(0.25f)
         .lockToFavoredElements();
-    CROP_GROWTH = new SoulSkill("crop_growth", 3, 1, 4, -6.0, FLORA)
+    CROP_GROWTH = new SoulSkill("crop_growth", 4, 1, 4, -6.0, FLORA)
         .setActivateDelay(300)
         .setFavorWeightMulti(0.75f)
         .lockToFavoredElements();
@@ -106,8 +106,11 @@ public class SoulSkill {
    */
   public final EnumSoulElement[] favoredElements;
 
+  /** The number of ticks that must pass before activation is tried again. */
   protected int activateDelay = SKILL_ACTIVATE_DELAY;
+  /** Weight is multiplied by this when selecting a level-up skill. Set less than 1 to make the skill rarer. */
   protected double favorWeightMulti = 1.0;
+  /** If true, only souls with one of the favored elements can learn this skill. */
   protected boolean lockedToFavoredElements = false;
 
   public SoulSkill(String id, int maxLevel, int apCost, int medianXpLevel, double weightDiff,
@@ -127,6 +130,10 @@ public class SoulSkill {
   }
 
   public boolean activate(ToolSoul soul, ItemStack tool, EntityPlayer player, int level) {
+
+    if (!shouldActivateOnClient()) {
+      return false;
+    }
 
     if (soul.getActionPoints() < this.apCost) {
       return false;
@@ -149,7 +156,6 @@ public class SoulSkill {
       // Slow Fall
       if (player.motionY < PotionSlowFall.SLOW_FALL_SPEED && player.fallDistance > 2.5f) {
         player.addPotionEffect(new PotionEffect(ModPotions.SLOW_FALL, 200));
-        SilentGems.logHelper.derp();
         return true;
       }
     } else if (this == CROP_GROWTH) {
@@ -160,7 +166,7 @@ public class SoulSkill {
       int endX = startX + 13;
       int endY = startY + 2;
       int endZ = startZ + 13;
-      float chance = 0.15f * level;
+      float chance = 0.1125f * level; // max 0.45
       boolean ret = false;
       for (int y = startY; y <= endY; ++y) {
         for (int x = startX; x <= endX; ++x) {
@@ -190,6 +196,64 @@ public class SoulSkill {
             SoundCategory.PLAYERS, 0.9f, 1.5f);
         return true;
       }
+    }
+
+    return false;
+  }
+
+  static final int WARM_CHILL_ACT_COST = 2;
+
+  public boolean activateOnBlock(ToolSoul soul, ItemStack tool, EntityPlayer player, int level,
+      World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
+    if (this == WARM && soul.actionPoints >= WARM_CHILL_ACT_COST) {
+      BlockPos blockpos = pos.offset(facing);
+      // Can place fire?
+      if (world.isAirBlock(blockpos) && Blocks.FIRE.canPlaceBlockAt(world, blockpos)) {
+        // Don't modify the world on client-side.
+        if (world.isRemote) {
+          return true;
+        }
+
+        float chance = 0.25f + 0.125f * (level - 1);
+        // Should proc?
+        if (SilentGems.random.nextFloat() < chance) {
+          // world.setBlockState(blockpos, Blocks.FIRE.getDefaultState());
+          // Using flint and steel should allow compatibility with other mods, maybe?
+          ItemHelper.useItemAsPlayer(new ItemStack(Items.FLINT_AND_STEEL), player, world, pos,
+              facing, hitX, hitY, hitZ);
+          soul.addActionPoints(-WARM_CHILL_ACT_COST);
+        }
+        // Damage tool and play sound regardless.
+        ToolHelper.attemptDamageTool(tool, 1, player);
+        world.playSound(null, player.posX, player.posY, player.posZ,
+            SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0f,
+            SilentGems.random.nextFloat() * 0.4F + 0.8F);
+        return true;
+      }
+    } else if (this == CHILL && soul.actionPoints >= apCost / 2) {
+      BlockPos blockpos = pos.offset(facing);
+      // Can freeze water?
+      if (world.getBlockState(blockpos) == Blocks.WATER.getDefaultState()) {
+        // Don't modify the world on client-side.
+        if (world.isRemote) {
+          return true;
+        }
+
+        float chance = 0.25f + 0.125f * (level - 1);
+        // Should proc?
+        if (SilentGems.random.nextFloat() < chance) {
+          world.setBlockState(blockpos, Blocks.ICE.getDefaultState());
+          soul.addActionPoints(-WARM_CHILL_ACT_COST);
+        }
+        // Damage tool and play sound regardless.
+        ToolHelper.attemptDamageTool(tool, 1, player);
+        world.playSound(null, player.posX, player.posY, player.posZ,
+            SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0f,
+            SilentGems.random.nextFloat() * 0.4F + 0.8F);
+      }
+
+      return true;
     }
 
     return false;
@@ -290,6 +354,11 @@ public class SoulSkill {
   public boolean canActivateWhenUnequipped() {
 
     return this == COFFEE_POT;
+  }
+
+  public boolean shouldActivateOnClient() {
+
+    return this == ANTIVENOM || this == SLOW_FALL;
   }
 
   public static SoulSkill getById(String id) {

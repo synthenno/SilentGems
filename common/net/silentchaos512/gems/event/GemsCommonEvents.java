@@ -20,6 +20,7 @@ import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IArmor;
 import net.silentchaos512.gems.api.ITool;
+import net.silentchaos512.gems.api.Skulls;
 import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.enchantment.EnchantmentIceAspect;
 import net.silentchaos512.gems.enchantment.EnchantmentLightningAspect;
@@ -153,6 +155,17 @@ public class GemsCommonEvents {
   }
 
   @SubscribeEvent
+  public void onLivingDrops(LivingDropsEvent event) {
+
+    EntityLivingBase entity = event.getEntityLiving();
+    if (entity instanceof EntityPlayer) {
+      EntityPlayer player = (EntityPlayer) entity;
+      event.getDrops().add(new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
+          Skulls.getPlayerSkull(player)));
+    }
+  }
+
+  @SubscribeEvent
   public void onLootLoad(LootTableLoadEvent event) {
 
     LootHandler.init(event);
@@ -233,13 +246,31 @@ public class GemsCommonEvents {
         }
       }
 
-      // XP for tool souls
       ToolSoul toolSoul = ToolHelper.getSoul(weapon);
       if (toolSoul != null) {
+        // XP for tool souls
         int xp = (int) (ToolSoul.XP_FACTOR_KILLS * killed.getMaxHealth());
         xp = MathHelper.clamp(xp, 1, 1000);
         toolSoul.addXp(xp, weapon, player);
+
+        // Head bonus?
+        if (toolSoul.hasSkill(SoulSkill.HEAD_BONUS)) {
+          int level = toolSoul.getSkillLevel(SoulSkill.HEAD_BONUS);
+          float rate = Skulls.getDropRate(killed);
+          if (SilentGems.random.nextFloat() < 1.5f * level * rate) {
+            ItemStack skull = Skulls.getSkull(killed);
+            if (StackHelper.isValid(skull)) {
+              EntityItem entityItem = new EntityItem(killed.world, killed.posX,
+                  killed.posY + killed.height / 2f, killed.posZ, skull);
+              killed.world.spawnEntity(entityItem);
+            }
+          }
+        }
       }
+    }
+
+    if (event.getEntityLiving() instanceof EntityPlayer) {
+      ;
     }
   }
 
@@ -347,7 +378,7 @@ public class GemsCommonEvents {
       if (StackHelper.isValid(stack)) {
         ToolSoul soul = ToolHelper.getSoul(stack);
         if (soul.getActionPoints() > 0) {
-//          event.player.stepHeight = 1.0f;
+          // event.player.stepHeight = 1.0f;
           event.player.motionY = 0.1;
           if (++soul.climbTimer % CLIMB_TIME_TO_DRAIN_AP == 0) {
             soul.addActionPoints(-1);

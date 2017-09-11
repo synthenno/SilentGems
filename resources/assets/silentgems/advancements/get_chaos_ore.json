@@ -1,0 +1,27 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancements.silentgems:get_chaos_ore.title"
+        },
+        "description": {
+            "translate": "advancements.silentgems:get_chaos_ore.desc"
+        },
+        "icon": {
+            "item": "silentgems:essenceore"
+        }
+    },
+    "parent": "silentgems:get_gem",
+    "criteria": {
+        "get_chaos_ore": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "silentgems:essenceore",
+                        "data": 0
+                    }
+                ]
+            }
+        }
+    }
+}

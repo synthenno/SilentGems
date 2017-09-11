@@ -10,7 +10,7 @@ public class PotionAntivenom extends Potion {
   public PotionAntivenom() {
 
     super(false, 0xa8ef75);
-    setPotionName(SilentGems.RESOURCE_PREFIX + "effect.antivenom");
+    setPotionName("effect." + SilentGems.RESOURCE_PREFIX + "antivenom");
     setBeneficial();
   }
 

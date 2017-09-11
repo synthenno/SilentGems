@@ -1,0 +1,26 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancements.silentgems:get_gem.title"
+        },
+        "description": {
+            "translate": "advancements.silentgems:get_gem.desc"
+        },
+        "icon": {
+            "item": "silentgems:gem"
+        }
+    },
+    "parent": "silentgems:root",
+    "criteria": {
+        "get_gem": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "silentgems:gem"
+                    }
+                ]
+            }
+        }
+    }
+}

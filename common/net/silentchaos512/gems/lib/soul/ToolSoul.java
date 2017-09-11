@@ -12,7 +12,9 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -179,7 +181,7 @@ public class ToolSoul {
         skills.put(skill, level);
         if (player != null) {
           ChatHelper.sendMessage(player,
-              loc.getMiscText("ToolSoul.skillLevelUp", skill.getLocalizedName(tool, 0), level));
+              loc.getMiscText("ToolSoul.skillLearned", skill.getLocalizedName(tool, level)));
         }
 
         return true;
@@ -201,6 +203,11 @@ public class ToolSoul {
   public boolean hasSkill(SoulSkill skill) {
 
     return skills.containsKey(skill);
+  }
+
+  public int getSkillLevel(SoulSkill skill) {
+
+    return skills.get(skill);
   }
 
   public void addInformation(ItemStack stack, World world, List<String> list, boolean advanced) {
@@ -311,14 +318,21 @@ public class ToolSoul {
 
   public void updateTick(ItemStack tool, EntityPlayer player) {
 
-    ++ticksExisted;
-    // Regen action points
-    int regenDelay = AP_REGEN_DELAY;
-//    if (SilentGems.BUILD_NUM == 0) {
-//      regenDelay /= 5;
-//    }
-    if ((ticksExisted + apRegenSalt) % regenDelay == 0) {
-      addActionPoints(1);
+    // if (SilentGems.BUILD_NUM == 0) {
+    // regenDelay /= 5;
+    // }
+
+    if (!player.world.isRemote) {
+      ++ticksExisted;
+      // Regen action points
+      int regenDelay = AP_REGEN_DELAY;
+      if ((ticksExisted + apRegenSalt) % regenDelay == 0) {
+        addActionPoints(1);
+      }
+
+      if (coffeeCooldown > 0) {
+        --coffeeCooldown;
+      }
     }
 
     // Try to activate skills?
@@ -332,7 +346,7 @@ public class ToolSoul {
         if (time % skill.getActivateDelay() == 0) {
           if (skill.activate(this, tool, player, skillLevel)) {
             addActionPoints(-skill.apCost);
-            if (skill.sendChatMessageOnActivation()) {
+            if (!player.world.isRemote && skill.sendChatMessageOnActivation()) {
               ChatHelper.sendMessage(player, SilentGems.localizationHelper.getMiscText(
                   "ToolSoul.activated", getName(tool), skill.getLocalizedName(tool, skillLevel)));
             }
@@ -341,9 +355,19 @@ public class ToolSoul {
       }
     }
 
-    if (coffeeCooldown > 0) {
-      --coffeeCooldown;
+  }
+
+  public boolean activateSkillsOnBlock(ItemStack tool, EntityPlayer player, World world,
+      BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
+    boolean activated = false;
+    for (SoulSkill skill : skills.keySet()) {
+      if (skill.activateOnBlock(this, tool, player, skills.get(skill), world, pos, facing, hitX,
+          hitY, hitZ)) {
+        activated = true;
+      }
     }
+    return activated;
   }
 
   public static ToolSoul readFromNBT(NBTTagCompound tags) {

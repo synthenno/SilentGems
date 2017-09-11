@@ -3,15 +3,22 @@ package net.silentchaos512.gems.event;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FOVModifier;
@@ -24,7 +31,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.IAmmoTool;
-import net.silentchaos512.gems.api.ITool;
 import net.silentchaos512.gems.api.tool.part.ToolPart;
 import net.silentchaos512.gems.api.tool.part.ToolPartMain;
 import net.silentchaos512.gems.api.tool.part.ToolPartRegistry;
@@ -35,14 +41,17 @@ import net.silentchaos512.gems.client.key.KeyTracker;
 import net.silentchaos512.gems.client.render.particle.ParticleRenderDispatcher;
 import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.init.ModItems;
+import net.silentchaos512.gems.init.ModPotions;
 import net.silentchaos512.gems.item.ItemChaosGem;
 import net.silentchaos512.gems.lib.TooltipHelper;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.skills.SkillAreaMiner;
 import net.silentchaos512.gems.skills.SkillAreaTill;
 import net.silentchaos512.gems.skills.SkillLumberjack;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.client.render.BufferBuilderSL;
+import net.silentchaos512.lib.util.Color;
 import net.silentchaos512.lib.util.LocalizationHelper;
 import net.silentchaos512.lib.util.StackHelper;
 
@@ -60,6 +69,7 @@ public class GemsClientEvents {
     renderCrosshairs(event);
     renderArmorExtra(event);
     renderAmmoCount(event);
+    renderAPBars(event);
   }
 
   @SubscribeEvent
@@ -167,6 +177,128 @@ public class GemsClientEvents {
     } else {
       list.add(index++, TextFormatting.GOLD + loc.getMiscText("PressCtrl"));
     }
+  }
+
+  protected static final ResourceLocation WIDGETS_TEX_PATH = new ResourceLocation(
+      "textures/gui/widgets.png");
+
+  private void renderAPBars(RenderGameOverlayEvent event) {
+
+    if (event.getType() != ElementType.HOTBAR || !(event instanceof RenderGameOverlayEvent.Post)) {
+      return;
+    }
+//    boolean temp = true; if (temp) return;
+
+    Minecraft mc = Minecraft.getMinecraft();
+    ScaledResolution sr = event.getResolution();
+
+    GlStateManager.pushMatrix();
+
+//    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    mc.getTextureManager().bindTexture(WIDGETS_TEX_PATH);
+    EntityPlayer player = mc.player;
+    ItemStack itemstack = player.getHeldItemOffhand();
+    EnumHandSide enumhandside = player.getPrimaryHand().opposite();
+    int i = sr.getScaledWidth() / 2;
+    int j = 182;
+    int k = 91;
+
+    //
+
+    GlStateManager.enableRescaleNormal();
+    GlStateManager.enableBlend();
+    GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+        GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+        GlStateManager.DestFactor.ZERO);
+    RenderHelper.enableGUIStandardItemLighting();
+
+    if (!itemstack.isEmpty()) {
+      int l1 = sr.getScaledHeight() - 16 - 2;
+
+      if (enumhandside == EnumHandSide.LEFT)
+      {
+          renderAPBarForItem(itemstack, i - 91 - 26, l1);
+      }
+      else
+      {
+        renderAPBarForItem(itemstack, i + 91 + 10, l1);
+      }
+    }
+
+    for (int l = 0; l < 9; ++l) {
+      int i1 = i - 90 + l * 20 + 2;
+      int j1 = sr.getScaledHeight() - 16 - 2;
+
+      renderAPBarForItem(player.inventory.mainInventory.get(l), i1, j1);
+    }
+
+    RenderHelper.disableStandardItemLighting();
+    GlStateManager.disableRescaleNormal();
+    GlStateManager.disableBlend();
+
+    GlStateManager.popMatrix();
+  }
+
+  private void renderAPBarForItem(ItemStack stack, int xPosition, int yPosition) {
+
+    if (!stack.isEmpty()) {
+      ToolSoul soul = ToolHelper.getSoul(stack);
+      if (soul != null) {
+//        SilentGems.logHelper.debug(soul);
+        GlStateManager.disableLighting();
+        GlStateManager.disableDepth();
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableAlpha();
+        GlStateManager.disableBlend();
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        double ap = 1.0 - ((double) soul.getActionPoints() / soul.getMaxActionPoints());
+        int rgbfordisplay = new Color(0f, 0.75f * (1f - (float) ap), 1f).getColor();
+        int i = Math.round(13.0F - (float) ap * 13.0F);
+        int j = rgbfordisplay;
+        this.draw(bufferbuilder, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+        this.draw(bufferbuilder, xPosition + 2, yPosition + 13, i, 1, j >> 16 & 255, j >> 8 & 255,
+            j & 255, 255);
+        GlStateManager.enableBlend();
+        GlStateManager.enableAlpha();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableLighting();
+        GlStateManager.enableDepth();
+      }
+
+//      EntityPlayerSP entityplayersp = Minecraft.getMinecraft().player;
+//      float f3 = entityplayersp == null ? 0.0F
+//          : entityplayersp.getCooldownTracker().getCooldown(stack.getItem(),
+//              Minecraft.getMinecraft().getRenderPartialTicks());
+//
+//      if (f3 > 0.0F) {
+//        GlStateManager.disableLighting();
+//        GlStateManager.disableDepth();
+//        GlStateManager.disableTexture2D();
+//        Tessellator tessellator1 = Tessellator.getInstance();
+//        BufferBuilder bufferbuilder1 = tessellator1.getBuffer();
+//        this.draw(bufferbuilder1, xPosition, yPosition + MathHelper.floor(16.0F * (1.0F - f3)), 16,
+//            MathHelper.ceil(16.0F * f3), 255, 255, 255, 127);
+////        GlStateManager.enableTexture2D();
+////        GlStateManager.enableLighting();
+////        GlStateManager.enableDepth();
+//      }
+    }
+  }
+
+  private void draw(BufferBuilder renderer, int x, int y, int width, int height, int red, int green,
+      int blue, int alpha) {
+
+    renderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+    renderer.pos((double) (x + 0), (double) (y + 0), 0.0D).color(red, green, blue, alpha)
+        .endVertex();
+    renderer.pos((double) (x + 0), (double) (y + height), 0.0D).color(red, green, blue, alpha)
+        .endVertex();
+    renderer.pos((double) (x + width), (double) (y + height), 0.0D).color(red, green, blue, alpha)
+        .endVertex();
+    renderer.pos((double) (x + width), (double) (y + 0), 0.0D).color(red, green, blue, alpha)
+        .endVertex();
+    Tessellator.getInstance().draw();
   }
 
   private void renderCrosshairs(RenderGameOverlayEvent event) {

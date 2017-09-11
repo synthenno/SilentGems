@@ -25,6 +25,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -43,10 +44,12 @@ import net.silentchaos512.gems.init.ModEnchantments;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.gems.lib.Names;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.item.IItemSL;
 import net.silentchaos512.lib.registry.IRegistryObject;
 import net.silentchaos512.lib.registry.RecipeMaker;
+import net.silentchaos512.lib.util.Color;
 import net.silentchaos512.lib.util.EntityHelper;
 import net.silentchaos512.lib.util.ItemHelper;
 import net.silentchaos512.lib.util.StackHelper;
@@ -64,7 +67,8 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
 
     if (getConfig().isDisabled)
       return StackHelper.empty();
-    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold : new ItemStack(Items.STICK);
+    ItemStack rod = supercharged ? ModItems.craftingMaterial.toolRodGold
+        : new ItemStack(Items.STICK);
     return ToolHelper.constructTool(this, rod, head);
   }
 
@@ -109,7 +113,8 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   // ==============
 
   @Override
-  public ActionResult<ItemStack> onItemLeftClickSL(World world, EntityPlayer player, EnumHand hand) {
+  public ActionResult<ItemStack> onItemLeftClickSL(World world, EntityPlayer player,
+      EnumHand hand) {
 
     ItemStack stack = player.getHeldItem(hand);
 
@@ -208,6 +213,17 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   }
 
   @Override
+  public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand,
+      EnumFacing facing, float hitX, float hitY, float hitZ) {
+
+    ToolSoul soul = ToolHelper.getSoul(player.getHeldItem(hand));
+    if (soul != null && soul.activateSkillsOnBlock(player.getHeldItem(hand), player, world, pos, facing, hitX, hitY, hitZ)) {
+      return EnumActionResult.SUCCESS;
+    }
+    return EnumActionResult.PASS;
+  }
+
+  @Override
   public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, EntityPlayer player) {
 
     boolean canceled = super.onBlockStartBreak(stack, pos, player);
@@ -224,7 +240,8 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   }
 
   @Override
-  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+  public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack,
+      boolean slotChanged) {
 
     return ToolRenderHelper.instance.shouldCauseReequipAnimation(oldStack, newStack, slotChanged);
   }
@@ -248,7 +265,8 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   }
 
   @Override
-  public void onUpdate(ItemStack tool, World world, Entity entity, int itemSlot, boolean isSelected) {
+  public void onUpdate(ItemStack tool, World world, Entity entity, int itemSlot,
+      boolean isSelected) {
 
     ToolHelper.onUpdate(tool, world, entity, itemSlot, isSelected);
   }
@@ -264,13 +282,15 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   // ==================
 
   @Override
-  public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+  public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot,
+      ItemStack stack) {
 
     return ToolHelper.getAttributeModifiers(slot, stack);
   }
 
   @Override
-  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos, EntityLivingBase entityLiving) {
+  public boolean onBlockDestroyed(ItemStack stack, World world, IBlockState state, BlockPos pos,
+      EntityLivingBase entityLiving) {
 
     return ToolHelper.onBlockDestroyed(stack, world, state, pos, entityLiving);
   }
@@ -349,7 +369,8 @@ public class ItemGemSword extends ItemSword implements IRegistryObject, ITool, I
   @Override
   public void addInformation(ItemStack stack, World world, List list, ITooltipFlag flag) {
 
-    ToolRenderHelper.getInstance().clAddInformation(stack, world, list, flag == TooltipFlags.ADVANCED);
+    ToolRenderHelper.getInstance().clAddInformation(stack, world, list,
+        flag == TooltipFlags.ADVANCED);
   }
 
   // getSubItems 1.10.2

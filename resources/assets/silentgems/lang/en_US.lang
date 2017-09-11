@@ -898,6 +898,12 @@ enchantment.silentgems:MagicDamage.desc=Increases damage dealt by magic attacks.
 
 
 
+# Potions
+effect.silentgems:antivenom=Antivenom
+effect.silentgems:slow_fall=Slow Fall
+
+
+
 # Tool Skills
 skill.silentgems:AreaMiner.name=Area Miner
 skill.silentgems:AreaTill.name=Plow
@@ -1003,12 +1009,31 @@ skill.silentgems:coffee_pot.act=%s somehow made fresh coffee for you.
 skill.silentgems:crop_growth.name=Nature's Bounty
 skill.silentgems:durability_boost.name=Reinforce
 skill.silentgems:harvest_speed_boost.name=Lighten
+skill.silentgems:head_bonus.name=Skull Collector
 skill.silentgems:magic_damage_boost.name=Focus
 skill.silentgems:melee_damage_boost.name=Sharpen
 skill.silentgems:slow_fall.name=Slow Fall
 skill.silentgems:super_skill.name=Super Skill
 skill.silentgems:wall_climb.name=Wall Climber
 skill.silentgems:warm.name=Warm
+
+
+
+# Advancements
+advancements.silentgems:root.title=Silent's Gems
+advancements.silentgems:root.desc=Mine all the things!
+advancements.silentgems:antivenom.title=A Grain of Salt
+advancements.silentgems:antivenom.desc=Cure poison with antivenom
+advancements.silentgems:get_chaos_ore.title=Chaos Ore!
+advancements.silentgems:get_chaos_ore.desc=Find some Chaos Ore
+advancements.silentgems:get_gem_super.title=Supercharge Me!
+advancements.silentgems:get_gem_super.desc=Craft a supercharged gem
+advancements.silentgems:get_gem.title=Shinies Acquired!
+advancements.silentgems:get_gem.desc=Get some gems
+advancements.silentgems:slow_fall.title=Drop Me Gently
+advancements.silentgems:slow_fall.desc=Fall slowly with slow fall
+advancements.silentgems:tool_soul.title=Do Tools Have Souls?
+advancements.silentgems:tool_soul.desc=Craft a tool soul
 
 
 

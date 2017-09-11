@@ -11,14 +11,13 @@ public class PotionSlowFall extends Potion {
   public PotionSlowFall() {
 
     super(false, 0x4286f4);
-    setPotionName(SilentGems.RESOURCE_PREFIX + "effect.slow_fall");
+    setPotionName("effect." + SilentGems.RESOURCE_PREFIX + "slow_fall");
     setBeneficial();
   }
 
   @Override
   public void performEffect(EntityLivingBase entityLiving, int amplifier) {
 
-    SilentGems.logHelper.debug(entityLiving.motionY);
     if (entityLiving.motionY < SLOW_FALL_SPEED) {
       // TODO: Not setting speed on client-side? There's no fall damage at least.
       entityLiving.motionY = SLOW_FALL_SPEED;

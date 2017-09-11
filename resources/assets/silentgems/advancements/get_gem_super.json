@@ -1,0 +1,26 @@
+{
+    "display": {
+        "title": {
+            "translate": "advancements.silentgems:get_gem_super.title"
+        },
+        "description": {
+            "translate": "advancements.silentgems:get_gem_super.desc"
+        },
+        "icon": {
+            "item": "silentgems:gemsuper"
+        }
+    },
+    "parent": "silentgems:get_chaos_ore",
+    "criteria": {
+        "get_gem_super": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "silentgems:gemsuper"
+                    }
+                ]
+            }
+        }
+    }
+}
