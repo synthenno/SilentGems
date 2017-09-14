@@ -71,7 +71,7 @@ public class SoulSkill {
     CHILL = new SoulSkill("chill", 3, 10, 3, -6.0, WATER, ICE)
         .setFavorWeightMulti(0.5f);
     HEAD_BONUS = new SoulSkill("head_bonus", 5, 0, 0, -5.0f, MONSTER, ALIEN, METAL)
-        .setFavorWeightMulti(0.5f);
+        .setFavorWeightMulti(0.75f);
     ANTIVENOM = new SoulSkill("antivenom", 1, 5, 4, -5.0, VENOM, FLORA)
         .setFavorWeightMulti(0.5f);
     SLOW_FALL = new SoulSkill("slow_fall", 1, 2, 10, -5.0, WIND, ALIEN)

@@ -570,11 +570,7 @@ public class ToolHelper {
     // XP for tool soul
     if (player != null && !player.world.isRemote) {
       IBlockState stateMined = player.world.getBlockState(pos);
-      float hardness = stateMined.getBlockHardness(player.world, pos);
-      if (hardness >= 0.5f) {
-        int xp = MathHelper.clamp(Math.round(ToolSoul.XP_FACTOR_BLOCK_MINED * hardness), 1, 20);
-        addSoulXp(xp, stack, player);
-      }
+      addSoulXp(ToolSoul.getXpForBlockHarvest(player.world, pos, stateMined), stack, player);
     }
 
     // Mining achievements TODO: Uncomment
@@ -858,7 +854,7 @@ public class ToolHelper {
   public static void addSoulXp(int amount, ItemStack tool, EntityPlayer player) {
 
     ToolSoul soul = getSoul(tool);
-    if (soul != null) {
+    if (soul != null && amount > 0) {
       int current = soul.getXp();
       soul.addXp(amount, tool, player);
     }

@@ -20,6 +20,7 @@ import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.api.ITool;
 import net.silentchaos512.gems.handler.PlayerDataHandler;
 import net.silentchaos512.gems.handler.PlayerDataHandler.PlayerData;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.ChatHelper;
 
@@ -106,6 +107,7 @@ public class SkillAreaMiner extends ToolSkillDigger {
     }
 
     int blocksBroken = 0;
+    int totalXp = 0;
 
     final int x = pos.getX();
     final int y = pos.getY();
@@ -117,14 +119,18 @@ public class SkillAreaMiner extends ToolSkillDigger {
             continue;
           }
 
-          if (breakExtraBlock(tool, player.world, new BlockPos(xPos, yPos, zPos), player, pos)) {
+          BlockPos blockpos = new BlockPos(xPos, yPos, zPos);
+          IBlockState stateMined = world.getBlockState(blockpos);
+          if (breakExtraBlock(tool, player.world, blockpos, player, pos)) {
             ++blocksBroken;
+            totalXp += ToolSoul.getXpForBlockHarvest(world, blockpos, stateMined);
           }
         }
       }
     }
 
     ToolHelper.incrementStatBlocksMined(tool, blocksBroken);
+    ToolHelper.addSoulXp(totalXp, tool, player);
     return true;
   }
 

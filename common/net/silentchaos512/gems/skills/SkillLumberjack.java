@@ -14,6 +14,7 @@ import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.handler.PlayerDataHandler;
 import net.silentchaos512.gems.handler.PlayerDataHandler.PlayerData;
 import net.silentchaos512.gems.item.tool.ItemGemAxe;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.util.ToolHelper;
 import net.silentchaos512.lib.util.ChatHelper;
 
@@ -76,7 +77,8 @@ public class SkillLumberjack extends ToolSkillDigger {
         if (data.chaos >= cost) {
           data.drainChaos(cost);
         } else {
-          String msg = SilentGems.localizationHelper.getLocalizedString("skill", "all.insufficientChaos");
+          String msg = SilentGems.localizationHelper.getLocalizedString("skill",
+              "all.insufficientChaos");
           ChatHelper.sendStatusMessage(player, msg, true);
           return false;
         }
@@ -147,7 +149,8 @@ public class SkillLumberjack extends ToolSkillDigger {
             float localHardness = localBlock == null ? Float.MAX_VALUE
                 : localState.getBlockHardness(world, localPos);
 
-            if (harvestLevel <= axe.getHarvestLevel(tool, "axe", player, localState) && localHardness >= 0) {
+            if (harvestLevel <= axe.getHarvestLevel(tool, "axe", player, localState)
+                && localHardness >= 0) {
               boolean cancel = false;
 
               // Block break event
@@ -172,6 +175,8 @@ public class SkillLumberjack extends ToolSkillDigger {
                       localBlock.harvestBlock(world, player, pos, state, world.getTileEntity(pos),
                           tool);
                       axe.onBlockDestroyed(tool, world, localState, localPos, player);
+                      int xp = ToolSoul.getXpForBlockHarvest(world, localPos, localState);
+                      ToolHelper.addSoulXp(xp, tool, player);
                       ++blocksBroken;
                     }
 

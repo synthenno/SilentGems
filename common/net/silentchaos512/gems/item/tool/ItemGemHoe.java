@@ -41,6 +41,7 @@ import net.silentchaos512.gems.handler.PlayerDataHandler.PlayerData;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.item.ToolRenderHelper;
 import net.silentchaos512.gems.lib.Names;
+import net.silentchaos512.gems.lib.soul.ToolSoul;
 import net.silentchaos512.gems.skills.SkillAreaTill;
 import net.silentchaos512.gems.skills.ToolSkill;
 import net.silentchaos512.gems.util.ToolHelper;
@@ -72,107 +73,128 @@ public class ItemGemHoe extends ItemHoe implements IRegistryObject, ITool {
     ItemStack stack = player.getHeldItem(hand);
 
     int tilledCount = 0;
+    EnumActionResult result;
 
     // Till the target block first.
-    if (tryTillGround(stack, player, world, pos, true)) {
+    result = super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+    if (result == EnumActionResult.SUCCESS) {
       ++tilledCount;
     } else {
       return EnumActionResult.FAIL;
     }
 
-    // Do we have area till?
+    // Do we have super till and can it be used?
     ToolSkill skill = ToolHelper.getSuperSkill(stack);
     boolean skillEnabled = skill instanceof SkillAreaTill
         && ToolHelper.isSpecialAbilityEnabled(stack);
-    if (tilledCount > 0 && skillEnabled) {
-      BlockPos[] array = new BlockPos[] { new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ() - 1),
-          new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ() + 0),
-          new BlockPos(pos.getX() - 1, pos.getY(), pos.getZ() + 1),
-          new BlockPos(pos.getX() + 0, pos.getY(), pos.getZ() - 1),
-          new BlockPos(pos.getX() + 0, pos.getY(), pos.getZ() + 1),
-          new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ() - 1),
-          new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ() + 0),
-          new BlockPos(pos.getX() + 1, pos.getY(), pos.getZ() + 1) };
-      for (BlockPos blockpos : array) {
-        if (tryTillGround(stack, player, world, blockpos, false)) {
+    int skillCost = skill != null ? skill.getCost(stack, player, pos) : 0;
+    PlayerData data = PlayerDataHandler.get(player);
+
+    // Must have tilled first block, has skill and is enabled, player has enough chaos.
+    if (tilledCount > 0 && skillEnabled && data.getCurrentChaos() >= skillCost) {
+      EnumFacing playerFacing = player.getHorizontalFacing();
+
+      // Tilling up to 8 extra blocks in the direction the player is facing.
+      for (int i = 0, yOffset = 0; i < 8; ++i) {
+        BlockPos blockpos = pos.offset(playerFacing, i + 1).up(yOffset);
+        if (super.onItemUse(player, world, blockpos, hand, side, hitX, hitY,
+            hitZ) == EnumActionResult.SUCCESS) {
+          // Same height.
           ++tilledCount;
+        } else if (super.onItemUse(player, world, blockpos.up(1), hand, side, hitX, hitY,
+            hitZ) == EnumActionResult.SUCCESS) {
+          // Go up one block.
+          ++tilledCount;
+          ++yOffset;
+        } else if (super.onItemUse(player, world, blockpos.down(1), hand, side, hitX, hitY,
+            hitZ) == EnumActionResult.SUCCESS) {
+          // Go down one block.
+          ++tilledCount;
+          --yOffset;
+        } else {
+          // Hit a cliff or wall.
+          break;
         }
       }
 
       if (tilledCount > 1) {
-        PlayerData data = PlayerDataHandler.get(player);
         if (data != null) {
-          data.drainChaos(skill.getCost(stack, player, pos));
+          data.drainChaos(skillCost);
         }
       }
     }
 
+    // Sound, XP, damage, stats
     if (tilledCount > 0) {
+      world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1f, 1f);
+      ToolHelper.addSoulXp((int) (ToolSoul.XP_FACTOR_TILLING * tilledCount), stack, player);
       ToolHelper.incrementStatBlocksTilled(stack, tilledCount);
-      ToolHelper.addSoulXp(2 * tilledCount, stack, player);
       ToolHelper.attemptDamageTool(stack, tilledCount, player);
     }
 
     return EnumActionResult.SUCCESS;
   }
 
-  /**
-   * Try to till the ground at the given position. Largely copied from ItemHoe#onItemUse.
-   * 
-   * @param stack
-   *          The hoe.
-   * @param player
-   *          The player.
-   * @param world
-   *          The world.
-   * @param pos
-   *          The position to till.
-   * @param playSound
-   *          Whether or know we will play a sound on a successful till.
-   * @return True if the block was tilled, false otherwise.
-   */
-  public boolean tryTillGround(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
-      boolean playSound) {
-
-    int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(stack, player, world, pos);
-    if (hook != 0)
-      return hook > 0 ? true : false;
-
-    IBlockState state = world.getBlockState(pos);
-    Block block = state.getBlock();
-
-    boolean ret = false;
-
-    if (world.isAirBlock(pos.up())) {
-      if (block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
-        setBlock(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
-        ret = true;
-      } else if (block == Blocks.DIRT) {
-        switch ((BlockDirt.DirtType) state.getValue(BlockDirt.VARIANT)) {
-          case DIRT:
-            this.setBlock(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
-            ret = true;
-            break;
-          case COARSE_DIRT:
-            this.setBlock(stack, player, world, pos, Blocks.DIRT.getDefaultState()
-                .withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT));
-            ret = true;
-            break;
-        }
-      }
-    }
-
-    if (ret && playSound) {
-      world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1f, 1f);
-    }
-
-    return ret;
-  }
+  // /**
+  // * Try to till the ground at the given position. Largely copied from ItemHoe#onItemUse.
+  // *
+  // * @param stack
+  // * The hoe.
+  // * @param player
+  // * The player.
+  // * @param world
+  // * The world.
+  // * @param pos
+  // * The position to till.
+  // * @param playSound
+  // * Whether or know we will play a sound on a successful till.
+  // * @return True if the block was tilled, false otherwise.
+  // */
+  // @SuppressWarnings("incomplete-switch")
+  // public boolean tryTillGround(ItemStack stack, EntityPlayer player, World world, BlockPos pos,
+  // boolean playSound) {
+  //
+  // int hook = net.minecraftforge.event.ForgeEventFactory.onHoeUse(stack, player, world, pos);
+  // if (hook != 0)
+  // return hook > 0 ? true : false;
+  //
+  // IBlockState state = world.getBlockState(pos);
+  // Block block = state.getBlock();
+  //
+  // boolean ret = false;
+  //
+  // if (world.isAirBlock(pos.up())) {
+  // if (block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
+  // setBlock(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
+  // ret = true;
+  // } else if (block == Blocks.DIRT) {
+  // switch ((BlockDirt.DirtType) state.getValue(BlockDirt.VARIANT)) {
+  // case DIRT:
+  // this.setBlock(stack, player, world, pos, Blocks.FARMLAND.getDefaultState());
+  // ret = true;
+  // break;
+  // case COARSE_DIRT:
+  // this.setBlock(stack, player, world, pos, Blocks.DIRT.getDefaultState()
+  // .withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT));
+  // ret = true;
+  // break;
+  // }
+  // }
+  // }
+  //
+  // if (ret && playSound) {
+  // world.playSound(player, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1f, 1f);
+  // }
+  //
+  // return ret;
+  // }
 
   @Override
   protected void setBlock(ItemStack stack, EntityPlayer player, World worldIn, BlockPos pos,
       IBlockState state) {
 
+    // Unlike ItemHoe#setBlock, this does not play a sound or damage the tool.
+    // That will be handled in onItemUse
     if (!worldIn.isRemote) {
       worldIn.setBlockState(pos, state, 11);
     }

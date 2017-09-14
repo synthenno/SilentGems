@@ -1,5 +1,11 @@
 package net.silentchaos512.gems.event;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -58,6 +64,7 @@ import net.silentchaos512.gems.util.ArmorHelper;
 import net.silentchaos512.gems.util.ModDamageSource;
 import net.silentchaos512.gems.util.SoulHelper;
 import net.silentchaos512.gems.util.ToolHelper;
+import net.silentchaos512.lib.util.ChatHelper;
 import net.silentchaos512.lib.util.Color;
 import net.silentchaos512.lib.util.PlayerHelper;
 import net.silentchaos512.lib.util.StackHelper;
@@ -90,9 +97,29 @@ public class GemsCommonEvents {
           ModItems.toolSoul.setSoul(stack, ToolSoul.randomSoul());
           PlayerHelper.giveItem(event.player, stack);
         }
+        // FIXME: This is not saving.
         data.starterToolSoulsGiven = true;
+        data.save();
       }
     }
+
+    // Test server connection.
+//    try {
+//      URL url = new URL("http://silentchaos512.net/test.html");
+//
+//      URLConnection con = url.openConnection();
+//      InputStream input = con.getInputStream();
+//      BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+//
+//      String line = null;
+//
+//      while ((line = reader.readLine()) != null) {
+//        ChatHelper.sendMessage(event.player, line);
+//      }
+//    } catch (IOException e) {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
   }
 
   @SubscribeEvent

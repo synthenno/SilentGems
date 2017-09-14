@@ -906,7 +906,7 @@ effect.silentgems:slow_fall=Slow Fall
 
 # Tool Skills
 skill.silentgems:AreaMiner.name=Area Miner
-skill.silentgems:AreaTill.name=Plow
+skill.silentgems:AreaTill.name=Row Tiller
 skill.silentgems:Lumberjack.name=Lumberjack
 skill.silentgems:all.insufficientChaos=Not enough Chaos!
 

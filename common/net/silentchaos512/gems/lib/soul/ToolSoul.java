@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -32,7 +33,10 @@ import net.silentchaos512.lib.util.StackHelper;
 public class ToolSoul {
 
   public static final float XP_FACTOR_KILLS = 0.4f;
+  public static final float XP_FACTOR_TILLING = 2.0f;
   public static final float XP_FACTOR_BLOCK_MINED = 1.0f;
+  public static final int XP_MAX_PER_BLOCK = 20;
+  public static final float XP_MIN_BLOCK_HARDNESS = 0.5f;
   public static final int AP_START = 10;
   public static final int AP_PER_LEVEL = 2;
   public static final int AP_REGEN_DELAY = 600;
@@ -130,6 +134,15 @@ public class ToolSoul {
 
     // Save soul to NBT
     ToolHelper.setSoul(tool, this);
+  }
+
+  public static int getXpForBlockHarvest(World world, BlockPos pos, IBlockState state) {
+
+    float hardness = state.getBlockHardness(world, pos);
+    if (hardness < XP_MIN_BLOCK_HARDNESS) {
+      return 0;
+    }
+    return MathHelper.clamp(Math.round(XP_FACTOR_BLOCK_MINED * hardness), 1, XP_MAX_PER_BLOCK);
   }
 
   // ======================
