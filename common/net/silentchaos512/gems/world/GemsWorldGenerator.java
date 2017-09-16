@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.block.BlockEssenceOre;
+import net.silentchaos512.gems.block.BlockSentient;
 import net.silentchaos512.gems.config.ConfigOptionOreGen;
 import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.init.ModBlocks;
@@ -72,6 +73,65 @@ public class GemsWorldGenerator extends WorldGeneratorSL {
           BlockEssenceOre.Type.CHAOS);
       new WorldGenMinable(state, veinSize).generate(world, random, pos);
     }
+
+    // Sentient Blocks
+    block = ModBlocks.sentientBlock;
+
+    // Stone
+    // TODO: Configs
+    veinCount = SilentGems.random.nextFloat() < 0.15f ? 1 : 0;
+    veinSize = 8;
+    for (i = 0; i < veinCount; ++i) {
+      x = posX + random.nextInt(16);
+      y = random.nextInt(52 - 24) + 24;
+      z = posZ + random.nextInt(16);
+      pos = new BlockPos(x, y, z);
+      state = block.getDefaultState().withProperty(BlockSentient.PROPERTY,
+          BlockSentient.Type.STONE);
+      new WorldGenMinable(state, veinSize).generate(world, random, pos);
+    }
+
+    // Dirt
+    // TODO: Configs
+    veinCount = SilentGems.random.nextFloat() < 0.15f ? 1 : 0;
+    veinSize = 8;
+    for (i = 0; i < veinCount; ++i) {
+      x = posX + random.nextInt(16);
+      y = random.nextInt(52 - 24) + 24;
+      z = posZ + random.nextInt(16);
+      pos = new BlockPos(x, y, z);
+      state = block.getDefaultState().withProperty(BlockSentient.PROPERTY,
+          BlockSentient.Type.DIRT);
+      new WorldGenMinable(state, veinSize).generate(world, random, pos);
+    }
+
+    // Gravel
+    // TODO: Configs
+    veinCount = SilentGems.random.nextFloat() < 0.15f ? 1 : 0;
+    veinSize = 8;
+    for (i = 0; i < veinCount; ++i) {
+      x = posX + random.nextInt(16);
+      y = random.nextInt(52 - 24) + 24;
+      z = posZ + random.nextInt(16);
+      pos = new BlockPos(x, y, z);
+      state = block.getDefaultState().withProperty(BlockSentient.PROPERTY,
+          BlockSentient.Type.GRAVEL);
+      new WorldGenMinable(state, veinSize).generate(world, random, pos);
+    }
+
+    // Sand
+    // TODO: Configs
+    veinCount = SilentGems.random.nextFloat() < 0.15f ? 1 : 0;
+    veinSize = 8;
+    for (i = 0; i < veinCount; ++i) {
+      x = posX + random.nextInt(16);
+      y = random.nextInt(52 - 24) + 24;
+      z = posZ + random.nextInt(16);
+      pos = new BlockPos(x, y, z);
+      state = block.getDefaultState().withProperty(BlockSentient.PROPERTY,
+          BlockSentient.Type.SAND);
+      new WorldGenMinable(state, veinSize).generate(world, random, pos);
+    }
   }
 
   @Override
@@ -95,8 +155,8 @@ public class GemsWorldGenerator extends WorldGeneratorSL {
       z = posZ + random.nextInt(16);
       pos = new BlockPos(x, y, z);
       // GemTest.instance.logHelper.debug(pos);
-      meta = ((WeightedRandomItemSG) WeightedRandom.getRandomItem(random, GemsConfig.GEM_WEIGHTS_DARK))
-          .getMeta();
+      meta = ((WeightedRandomItemSG) WeightedRandom.getRandomItem(random,
+          GemsConfig.GEM_WEIGHTS_DARK)).getMeta();
       EnumGem gem = EnumGem.values()[meta];
       state = block.getDefaultState().withProperty(EnumGem.VARIANT_GEM, gem);
       new WorldGenMinable(state, veinSize, predicate).generate(world, random, pos);
@@ -124,8 +184,8 @@ public class GemsWorldGenerator extends WorldGeneratorSL {
       z = posZ + random.nextInt(16);
       pos = new BlockPos(x, y, z);
       // GemTest.instance.logHelper.debug(pos);
-      meta = ((WeightedRandomItemSG) WeightedRandom.getRandomItem(random, GemsConfig.GEM_WEIGHTS_LIGHT))
-          .getMeta();
+      meta = ((WeightedRandomItemSG) WeightedRandom.getRandomItem(random,
+          GemsConfig.GEM_WEIGHTS_LIGHT)).getMeta();
       EnumGem gem = EnumGem.values()[meta];
       state = block.getDefaultState().withProperty(EnumGem.VARIANT_GEM, gem);
       new WorldGenMinable(state, veinSize, predicate).generate(world, random, pos);

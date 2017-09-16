@@ -369,6 +369,11 @@ tile.silentgems:MiscBlock3.name=Chaos Coal Block
 
 tile.silentgems:PhantomLight.name=Phantom Light
 
+tile.silentgems:SentientBlock0.name=Sentient Stone
+tile.silentgems:SentientBlock1.name=Sentient Dirt
+tile.silentgems:SentientBlock2.name=Sentient Gravel
+tile.silentgems:SentientBlock3.name=Sentient Sand
+
 tile.silentgems:TeleporterAnchor.name=Teleporter Anchor
 
 tile.silentgems:Teleporter0.name=Ruby Teleporter
@@ -808,6 +813,10 @@ item.silentgems:OrnateStickGold.name=Ornate Gold Rod
 item.silentgems:OrnateStickSilver.name=Ornate Silver Rod
 item.silentgems:Plume.name=Plume
 item.silentgems:RawhideBone.name=Rawhide Bone
+item.silentgems:SentientStoneShard.name=Sentient Stone Shard
+item.silentgems:SentientDirtShard.name=Sentient Dirt Pile
+item.silentgems:SentientGravelShard.name=Sentient Gravel Pebble
+item.silentgems:SentientSandShard.name=Sentient Sand Pile
 item.silentgems:ShinyPlume.name=Shiny Plume
 item.silentgems:StickIron.name=Iron Rod
 item.silentgems:UpgradeBase.name=Upgrade Base

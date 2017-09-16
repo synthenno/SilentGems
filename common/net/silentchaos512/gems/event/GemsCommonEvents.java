@@ -187,6 +187,7 @@ public class GemsCommonEvents {
     EntityLivingBase entity = event.getEntityLiving();
     if (entity instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) entity;
+      // TODO: Remove this?
       event.getDrops().add(new EntityItem(entity.world, entity.posX, entity.posY, entity.posZ,
           Skulls.getPlayerSkull(player)));
     }

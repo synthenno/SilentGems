@@ -1,0 +1,33 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "inventory": [{
+    }],
+    "type": {
+      "stone": {
+        "textures": {
+          "all": "blocks/stone"
+        }
+      },
+      "dirt": {
+        "textures": {
+          "all": "blocks/dirt"
+        }
+      },
+      "gravel": {
+        "textures": {
+          "all": "blocks/gravel"
+        }
+      },
+      "sand": {
+        "textures": {
+          "all": "blocks/sand"
+        }
+      }
+    }
+  }
+}

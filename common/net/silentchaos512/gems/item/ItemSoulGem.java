@@ -98,6 +98,16 @@ public class ItemSoulGem extends ItemSL {
     registerStackSoul(new Soul("FluffyPuff", new ItemStack(ModItems.fluffyPuff),
         0xFFFFFF, 0x999999, FLORA, WIND).setDropRate(blockDropRate));
 
+    float sentientBlockRate = 0.1f;
+    registerStackSoul(new Soul("SentientStone", ModItems.craftingMaterial.sentientStoneShard,
+        0x747474, 0x8F8F8F, FIRE).setDropRate(sentientBlockRate));
+    registerStackSoul(new Soul("SentientDirt", ModItems.craftingMaterial.sentientDirtShard,
+        0x593D29, 0x966C4A, EARTH).setDropRate(sentientBlockRate));
+    registerStackSoul(new Soul("SentientGravel", ModItems.craftingMaterial.sentientGravelShard,
+        0xAA9E98, 0xABAAA9, WIND).setDropRate(sentientBlockRate));
+    registerStackSoul(new Soul("SentientSand", ModItems.craftingMaterial.sentientSandShard,
+        0xB0AA72, 0xF1E6BA, WATER).setDropRate(sentientBlockRate));
+
     float rateHigh = 0.075f;
 
     registerSoul(EntityZombie.class, new Soul("Zombie", MONSTER, VENOM));

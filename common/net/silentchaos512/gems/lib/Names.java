@@ -23,6 +23,7 @@ public class Names {
   public static final String MATERIAL_GRADER = "MaterialGrader";
   public static final String MISC_BLOCK = "MiscBlock";
   public static final String PHANTOM_LIGHT = "PhantomLight";
+  public static final String SENTIENT_BLOCK = "SentientBlock";
   public static final String TELEPORTER = "Teleporter";
   public static final String TELEPORTER_ANCHOR = "TeleporterAnchor";
   public static final String TELEPORTER_REDSTONE = "TeleporterRedstone";
@@ -85,6 +86,10 @@ public class Names {
   public static final String ORNATE_STICK_SILVER = "OrnateStickSilver";
   public static final String PLUME = "Plume";
   public static final String RAWHIDE_BONE = "RawhideBone";
+  public static final String SENTIENT_STONE_SHARD = "SentientStoneShard";
+  public static final String SENTIENT_DIRT_SHARD = "SentientDirtShard";
+  public static final String SENTIENT_GRAVEL_SHARD = "SentientGravelShard";
+  public static final String SENTIENT_SAND_SHARD = "SentientSandShard";
   public static final String SHINY_PLUME = "ShinyPlume";
   public static final String STICK_IRON = "StickIron";
   public static final String UPGRADE_BASE = "UpgradeBase";

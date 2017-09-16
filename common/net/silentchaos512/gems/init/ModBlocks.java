@@ -16,6 +16,7 @@ import net.silentchaos512.gems.block.BlockGemOre;
 import net.silentchaos512.gems.block.BlockGlowRose;
 import net.silentchaos512.gems.block.BlockMisc;
 import net.silentchaos512.gems.block.BlockPhantomLight;
+import net.silentchaos512.gems.block.BlockSentient;
 import net.silentchaos512.gems.block.BlockTeleporter;
 import net.silentchaos512.gems.block.BlockTeleporterAnchor;
 import net.silentchaos512.gems.block.BlockTeleporterRedstone;
@@ -77,6 +78,7 @@ public class ModBlocks implements IRegistrationHandler<Block> {
   public static final BlockTeleporterRedstone teleporterRedstoneLight = new BlockTeleporterRedstone(EnumGem.Set.LIGHT);
   
   public static final BlockGlowRose glowRose = new BlockGlowRose();
+  public static final BlockSentient sentientBlock = new BlockSentient();
   public static final BlockEssenceOre essenceOre = new BlockEssenceOre();
   public static final BlockMisc miscBlock = new BlockMisc();
   public static final BlockFluffyBlock fluffyBlock = new BlockFluffyBlock();
@@ -134,6 +136,7 @@ public class ModBlocks implements IRegistrationHandler<Block> {
     reg.registerBlock(teleporterRedstoneLight);
 
     reg.registerBlock(glowRose, Names.GLOW_ROSE);
+    reg.registerBlock(sentientBlock);
     reg.registerBlock(essenceOre);
     reg.registerBlock(miscBlock);
     reg.registerBlock(fluffyBlock);

@@ -35,6 +35,7 @@ public class ConfigOptionOreGen extends ConfigOption {
   public int getVeinCount(Random random) {
 
     float diff = veinCount - (int) veinCount;
+    // FIXME: Should be less than (<) below? Fix older versions too.
     return (int) veinCount + (random.nextFloat() > diff ? 1 : 0);
   }
 

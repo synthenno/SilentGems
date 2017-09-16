@@ -20,7 +20,9 @@ import net.minecraftforge.fml.common.IFuelHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.silentchaos512.gems.SilentGems;
+import net.silentchaos512.gems.block.BlockSentient;
 import net.silentchaos512.gems.config.GemsConfig;
+import net.silentchaos512.gems.init.ModBlocks;
 import net.silentchaos512.gems.init.ModItems;
 import net.silentchaos512.gems.lib.Names;
 import net.silentchaos512.lib.item.ItemNamedSubtypesSorted;
@@ -37,7 +39,8 @@ public class ItemCrafting extends ItemNamedSubtypesSorted implements IFuelHandle
       Names.MAGNIFYING_GLASS, Names.PLUME, Names.SHINY_PLUME, Names.ENDER_FROST, Names.NETHER_SHARD,
       Names.NETHER_CLUSTER, Names.GILDED_STRING, Names.YARN_BALL, Names.RAWHIDE_BONE,
       Names.ARMOR_LATTICE_MUNDANE, Names.ARMOR_LATTICE_REGULAR, Names.ARMOR_LATTICE_SUPER,
-      Names.BLAZESTONE, Names.MYSTERY_GOO };
+      Names.BLAZESTONE, Names.MYSTERY_GOO, Names.SENTIENT_STONE_SHARD, Names.SENTIENT_DIRT_SHARD,
+      Names.SENTIENT_GRAVEL_SHARD, Names.SENTIENT_SAND_SHARD };
 
   public static final String[] SORTED_NAMES = { //
       Names.CHAOS_ESSENCE, Names.CHAOS_ESSENCE_PLUS, Names.CHAOS_ESSENCE_PLUS_2,
@@ -47,7 +50,8 @@ public class ItemCrafting extends ItemNamedSubtypesSorted implements IFuelHandle
       Names.ARMOR_LATTICE_REGULAR, Names.ARMOR_LATTICE_SUPER, Names.GILDED_STRING, Names.BLAZESTONE,
       Names.MYSTERY_GOO, Names.CHAOS_CORE, Names.IRON_POTATO, Names.FLUFFY_FABRIC, Names.PLUME,
       Names.SHINY_PLUME, Names.YARN_BALL, Names.RAWHIDE_BONE, Names.MAGNIFYING_GLASS,
-      Names.NAME_PLATE, Names.UPGRADE_BASE };
+      Names.NAME_PLATE, Names.UPGRADE_BASE, Names.SENTIENT_STONE_SHARD, Names.SENTIENT_DIRT_SHARD,
+      Names.SENTIENT_GRAVEL_SHARD, Names.SENTIENT_SAND_SHARD };
 
   public final ItemStack armorLatticeMundane = getStack(Names.ARMOR_LATTICE_MUNDANE);
   public final ItemStack armorLatticeRegular = getStack(Names.ARMOR_LATTICE_REGULAR);
@@ -77,6 +81,10 @@ public class ItemCrafting extends ItemNamedSubtypesSorted implements IFuelHandle
   public final ItemStack toolRodSilver = getStack(Names.ORNATE_STICK_SILVER);
   public final ItemStack upgradeBase = getStack(Names.UPGRADE_BASE);
   public final ItemStack yarnBall = getStack(Names.YARN_BALL);
+  public final ItemStack sentientStoneShard = getStack(Names.SENTIENT_STONE_SHARD);
+  public final ItemStack sentientDirtShard = getStack(Names.SENTIENT_DIRT_SHARD);
+  public final ItemStack sentientGravelShard = getStack(Names.SENTIENT_GRAVEL_SHARD);
+  public final ItemStack sentientSandShard = getStack(Names.SENTIENT_SAND_SHARD);
 
   public final Map<Integer, IRecipe> guideRecipeMap = Maps.newHashMap();
 
@@ -196,6 +204,12 @@ public class ItemCrafting extends ItemNamedSubtypesSorted implements IFuelHandle
     guideRecipeMap.put(armorLatticeRegular.getItemDamage(), recipeLatticeRegular);
     recipeLatticeSuper = recipes.addSurroundOre("armor_lattice_super", getStack(Names.ARMOR_LATTICE_SUPER, 24), "gemLapis", "gemDiamond", chaosEssenceEnriched);
     guideRecipeMap.put(armorLatticeSuper.getItemDamage(), recipeLatticeSuper);
+
+    // Sentient Blocks
+    recipes.addShaped("sentient_stone", new ItemStack(ModBlocks.sentientBlock, 1, BlockSentient.Type.STONE.ordinal()), "sss", "sss", "sss", 's', sentientStoneShard);
+    recipes.addShaped("sentient_dirt", new ItemStack(ModBlocks.sentientBlock, 1, BlockSentient.Type.DIRT.ordinal()), "sss", "sss", "sss", 's', sentientDirtShard);
+    recipes.addShaped("sentient_gravel", new ItemStack(ModBlocks.sentientBlock, 1, BlockSentient.Type.GRAVEL.ordinal()), "sss", "sss", "sss", 's', sentientGravelShard);
+    recipes.addShaped("sentient_sand", new ItemStack(ModBlocks.sentientBlock, 1, BlockSentient.Type.SAND.ordinal()), "sss", "sss", "sss", 's', sentientSandShard);
 
     // @formatter:on
   }

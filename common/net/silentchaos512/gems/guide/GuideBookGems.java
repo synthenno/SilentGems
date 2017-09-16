@@ -413,7 +413,8 @@ public class GuideBookGems extends GuideBook {
       "How do you craft the upgrades?@Everyone Ever",
       "Scathing comments since 2017!",
       "Muffin button not included.",
-      "Now with more enchantments!"
+      "Now with more enchantments!",
+      "./build.bat"
   };//@formatter:on
 
   @Override
