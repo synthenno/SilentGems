@@ -2,7 +2,7 @@ import sys
 import re
 import os
 
-GEMS = ['ruby', 'garnet', 'topaz', 'amber', 'heliodor', 'peridot', 'beryl', 'indicolite',
+GEMS = ['ruby', 'garnet', 'topaz', 'amber', 'heliodor', 'peridot', 'green_sapphire', 'indicolite',
     'aquamarine', 'sapphire', 'iolite', 'amethyst', 'agate', 'morganite', 'onyx', 'opal',
     'carnelian', 'spinel', 'citrine', 'jasper', 'golden_beryl', 'moldavite', 'malachite',
     'turquoise', 'moonstone', 'blue_topaz', 'tanzanite', 'violet_sapphire', 'lepidolite',
@@ -11,16 +11,16 @@ GEMS = ['ruby', 'garnet', 'topaz', 'amber', 'heliodor', 'peridot', 'beryl', 'ind
     'kunzite', 'rose_quartz', 'tektite', 'pearl']
 
 def getNewTextureName(gem):
-    return gem + '_bricks'
+    return 'head_' + gem
 
 def getGemIndex(filename):
     numbers = re.findall(r'\d+', filename)
     if not len(numbers) == 1: return -1;
     num = int(numbers[0])
-    
+
     matchesDark = re.compile('.*dark\d+').match(filename)
     matchesLight = re.compile('.*light\d+').match(filename)
-    
+
     if matchesDark:
         return num + 16
     elif matchesLight:
