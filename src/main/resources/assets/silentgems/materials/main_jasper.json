@@ -1,0 +1,37 @@
+{
+    "type": "main",
+    "stats": [
+        {"name": "durability",      "value": 512},
+        {"name": "enchantability",  "value": 16},
+        {"name": "harvest_level",   "value": 2},
+        {"name": "harvest_speed",   "value": 7},
+        {"name": "melee_damage",    "value": 3},
+        {"name": "magic_damage",    "value": 3},
+        {"name": "attack_speed",    "value": 0},
+        {"name": "armor",           "value": 18},
+        {"name": "armor_toughness", "value": 4},
+        {"name": "magic_armor",     "value": 8},
+        {"name": "ranged_damage",   "value": 1},
+        {"name": "ranged_speed",    "value": -0.1},
+        {"name": "rarity",          "value": 30}
+    ],
+    "crafting_items": {
+        "normal": {
+            "item": "silentgems:jasper"
+        },
+        "small": {
+            "item": "silentgear:jasper_shard"
+        }
+    },
+    "display": {
+        "hidden": false,
+        "texture_suffix": "jasper",
+        "texture_color": "FFFFFF",
+        "broken_color": "A38800"
+    },
+    "availability": {
+        "enabled": true,
+        "tier": 2,
+        "tool_blacklist": []
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "all": "silentgems:blocks/rose_quartz_glass"
+    },
+    "model": "cube_all"
+  },
+  "variants": {
+    "inventory": [{}],
+    "normal": [{}]
+  }
+}

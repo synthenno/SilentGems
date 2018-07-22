@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.entity.EntityChaosProjectile;
 import net.silentchaos512.gems.entity.EntityEnderSlime;
 
 public class RenderEnderSlime extends RenderLiving<EntityEnderSlime> {

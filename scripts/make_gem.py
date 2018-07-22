@@ -1,18 +1,25 @@
 import re
 from subprocess import call
 
-NAME = 'GemGlass'
-TEXTURE = 'GemGlass'
-MODE = 'block'
-INCLUDE_DARK = True
+GEMS = ['ruby', 'garnet', 'topaz', 'amber', 'heliodor', 'peridot', 'beryl', 'indicolite',
+    'aquamarine', 'sapphire', 'iolite', 'amethyst', 'agate', 'morganite', 'onyx', 'opal',
+    'carnelian', 'spinel', 'citrine', 'jasper', 'golden_beryl', 'moldavite', 'malachite',
+    'turquoise', 'moonstone', 'blue_topaz', 'tanzanite', 'violet_sapphire', 'lepidolite',
+    'ametrine', 'black_diamond', 'alexandrite', 'pyrope', 'coral', 'sunstone', 'cats_eye',
+    'zircon', 'jade', 'chrysoprase', 'apatite', 'fluorite', 'kyanite', 'sodalite', 'ammolite',
+    'kunzite', 'rose_quartz', 'tektite', 'pearl']
 
-for i in range(16):
-    line = 'python makejson.py %s %s texture=%s'
-    command1 = line % (MODE, NAME + str(i), TEXTURE + str(i))
-    command2 = line % (MODE, NAME + 'Dark' + str(i), TEXTURE + 'Dark' + str(i))
+MODE = 'item'
+TEXTURE_KEY = 'all'
 
-    print(command1)
-    call(command1, shell=True)
-    if INCLUDE_DARK:
-        print(command2)
-        call(command2, shell=True)
+def nameFor(gem):
+    return gem + '_shard'
+
+def textureFor(gem):
+    return nameFor(gem)
+
+for gem in GEMS:
+    line = 'python makejson3.py %s %s texture=%s texture_key=%s' \
+        % (MODE, nameFor(gem), textureFor(gem), TEXTURE_KEY)
+    print(line)
+    call(line, shell=True)

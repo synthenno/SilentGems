@@ -1,0 +1,37 @@
+{
+    "type": "main",
+    "stats": [
+        {"name": "durability",      "value": 768},
+        {"name": "enchantability",  "value": 13},
+        {"name": "harvest_level",   "value": 2},
+        {"name": "harvest_speed",   "value": 9},
+        {"name": "melee_damage",    "value": 5},
+        {"name": "magic_damage",    "value": 4},
+        {"name": "attack_speed",    "value": 0},
+        {"name": "armor",           "value": 22},
+        {"name": "armor_toughness", "value": 4},
+        {"name": "magic_armor",     "value": 8},
+        {"name": "ranged_damage",   "value": 3},
+        {"name": "ranged_speed",    "value": 0},
+        {"name": "rarity",          "value": 35}
+    ],
+    "crafting_items": {
+        "normal": {
+            "item": "silentgems:tektite"
+        },
+        "small": {
+            "item": "silentgear:tektite_shard"
+        }
+    },
+    "display": {
+        "hidden": false,
+        "texture_suffix": "tektite",
+        "texture_color": "FFFFFF",
+        "broken_color": "8F7C6B"
+    },
+    "availability": {
+        "enabled": true,
+        "tier": 2,
+        "tool_blacklist": []
+    }
+}

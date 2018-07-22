@@ -1,0 +1,48 @@
+Ruby,2,25,1024,10,2,8,5,2,-0.3,14,2,4,1,-0.2,ruby,FFFFFF,E61D1D
+Garnet,2,25,512,12,2,7,4,3,-0.1,16,2,6,1,-0.1,garnet,FFFFFF,E64F1D
+Topaz,2,25,768,10,2,9,4,2,-0.1,20,4,6,2,-0.1,topaz,FFFFFF,E6711D
+Amber,2,25,256,17,2,5,2,4,0.1,12,0,12,0,0.4,amber,FFFFFF,E6A31D
+Heliodor,2,25,384,10,2,12,4,3,0,12,0,6,0,0.2,heliodor,FFFFFF,E6C51D
+Peridot,2,25,512,14,2,6,4,3,-0.4,14,0,6,2,-0.2,peridot,FFFFFF,A3E61D
+Green Sapphire,2,25,1024,16,2,10,4,2,0.1,14,2,10,2,0,green_sapphire,FFFFFF,1DE61D
+Indicolite,2,25,512,12,2,11,2,5,0,12,0,8,1,-0.1,indicolite,FFFFFF,1DE682
+Aquamarine,2,25,384,12,2,10,3,4,0.1,14,0,10,3,-0.1,aquamarine,FFFFFF,1DE6E6
+Sapphire,2,25,1024,10,2,8,4,4,-0.2,16,2,4,1,-0.2,sapphire,FFFFFF,1D1DE6
+Iolite,2,25,768,11,2,6,2,4,0,20,4,6,0,0,iolite,FFFFFF,601DE6
+Amethyst,2,25,512,12,2,9,3,3,-0.1,18,2,8,0,0.2,amethyst,FFFFFF,A31DE6
+Agate,2,25,384,14,2,8,3,3,0.1,16,4,6,1,0.1,agate,FFFFFF,E61DE6
+Morganite,2,25,512,12,2,9,4,2,-0.1,14,0,8,2,0.1,morganite,FFFFFF,FF88FE
+Onyx,2,25,256,8,2,8,6,2,-0.4,12,0,4,0,-0.2,onyx,FFFFFF,2F2F2F
+Opal,2,25,384,13,2,8,3,5,-0.4,16,2,10,0,0.3,opal,FFFFFF,E4E4E4E
+Carnelian,2,30,512,12,2,9,2,3,0,16,2,4,4,0,carnelian,FFFFFF,A30E00
+Spinel,2,30,1024,18,2,8,5,2,-0.3,20,4,6,2,-0.2,spinel,FFFFFF,A34400
+Citrine,2,30,768,16,2,10,4,2,0.1,16,2,4,3,0.1,citrine,FFFFFF,A35F00
+Jasper,2,30,512,16,2,7,3,3,0,18,4,8,1,-0.1,jasper,FFFFFF,A38800
+Golden Beryl,2,30,768,12,2,10,2,5,-0.3,14,0,6,2,0.3,golden_beryl,FFFFFF,A3A300
+Moldavite,2,30,384,16,2,6,5,2,-0.2,16,2,8,3,0,moldavite,FFFFFF,88A300
+Malachite,2,30,512,14,2,8,4,2,0.3,18,2,8,2,0.2,malachite,FFFFFF,00A336
+Turquoise,2,30,512,15,2,9,3,3,-0.1,16,2,10,3,0.3,turquoise,FFFFFF,00A388
+Moonstone,2,30,384,17,2,10,3,5,0.1,14,0,10,2,0,moonstone,FFFFFF,006DA3
+Blue Topaz,2,30,768,16,2,9,3,3,-0.3,16,2,4,4,-0.3,blue_topaz,FFFFFF,001BA3
+Tanzanite,2,30,512,12,2,6,3,4,-0.3,18,2,4,3,0.4,tanzanite,FFFFFF,5F00A3
+Violet Sapphire,2,30,1024,18,2,8,4,3,0,14,0,6,4,-0.1,violet_sapphire,FFFFFF,9500A3
+Lepidolite,2,30,256,14,2,4,3,7,0.1,20,4,10,2,0,lepidolite,FFFFFF,A3007A
+Ametrine,2,30,512,15,2,8,4,2,-0.3,16,4,12,3,0.2,ametrine,FFFFFF,A30052
+Black Diamond,2,30,1536,17,2,10,3,4,-0.2,18,2,6,2,-0.2,black_diamond,FFFFFF,1E1E1E
+Alexandrite,2,30,768,20,2,8,3,3,-0.2,14,0,10,3,0.1,alexandrite,FFFFFF,898989
+Pyrope,2,35,1024,12,2,9,7,3,0,10,2,8,2,0,pyrope,FFFFFF,FF4574
+Coral,2,35,512,10,2,10,4,6,0.2,12,0,12,1,0.2,coral,FFFFFF,FF5545
+Sunstone,2,35,768,16,2,8,6,6,-0.1,14,2,8,3,0.1,sunstone,FFFFFF,FF7445
+Cat's Eye,2,35,1280,8,2,10,4,5,0.1,12,0,10,2,0.2,cats_eye,FFFFFF,FFC145
+Zircon,2,35,768,13,2,9,5,4,0.4,12,0,8,3,0,zircon,FFFFFF,FFFF45
+Jade,2,35,512,14,2,7,5,5,0,18,4,14,1,0.3,jade,FFFFFF,A2FF45
+Chrysoprase,2,35,768,10,2,8,4,3,0.1,15,2,8,4,-0.1,chrysoprase,FFFFFF,64FF45
+Apatite,2,35,512,11,2,10,3,5,0,12,0,10,3,0.1,apatite,FFFFFF,45FFD1
+Fluorite,2,35,768,12,2,8,3,6,-0.1,24,6,10,1,0.1,fluorite,FFFFFF,45D1FF
+Kyanite,2,35,1280,14,2,14,5,7,0.3,17,2,8,2,0.2,kyanite,FFFFFF,4583FF
+Sodalite,2,35,768,14,2,9,4,4,0,12,0,8,3,-0.1,sodalite,FFFFFF,5445FF
+Ammolite,2,35,512,11,2,12,4,7,0.3,20,4,14,2,0.3,ammolite,FFFFFF,E045FF
+Kunzite,2,35,768,10,2,8,6,5,-0.2,18,2,8,1,0.1,kunzite,FFFFFF,FF45E0
+Rose Quartz,2,35,1024,20,2,10,5,4,0,15,0,10,2,-0.1,rose_quartz,FFFFFF,FF78B6
+Tektite,2,35,768,13,2,9,5,4,0,22,4,8,3,0,tektite,FFFFFF,8F7C6B
+Pearl,2,35,512,17,2,8,4,5,0.3,26,4,10,2,0.2,pearl,FFFFFF,E2E8F1

@@ -1,0 +1,8 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "silentgems:items/drawing_compass0",
+    "layer1": "silentgems:items/drawing_compass1"
+  }
+}
+

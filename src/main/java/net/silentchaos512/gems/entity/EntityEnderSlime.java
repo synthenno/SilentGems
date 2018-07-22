@@ -30,6 +30,6 @@ public class EntityEnderSlime extends EntityMagmaCube {
   @Override
   protected @Nullable ResourceLocation getLootTable() {
 
-    return new ResourceLocation(SilentGems.MODID, "ender_slime");
+    return new ResourceLocation(SilentGems.MOD_ID, "ender_slime");
   }
 }

@@ -1,10 +1,5 @@
 package net.silentchaos512.gems.tile;
 
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -13,13 +8,13 @@ import net.minecraft.util.math.BlockPos.MutableBlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumSkyBlock;
 import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.init.ModBlocks;
-import net.silentchaos512.gems.lib.EnumModParticles;
 import net.silentchaos512.lib.tile.SyncVariable;
 import net.silentchaos512.lib.tile.TileInventorySL;
-import net.silentchaos512.lib.util.Color;
 import net.silentchaos512.lib.util.StackHelper;
+
+import javax.annotation.Nonnull;
+import java.util.Random;
 
 public class TileChaosFlowerPot extends TileInventorySL implements ITickable {
 
@@ -48,9 +43,6 @@ public class TileChaosFlowerPot extends TileInventorySL implements ITickable {
     final int delay = ticksExisted < 600 ? 10 : TRY_LIGHT_DELAY;
     if (++ticksExisted % delay == 0) {
       boolean result = tryPlacePhantomLight();
-    }
-    if (!world.isRemote && GemsConfig.DEBUG_LOG_POTS_AND_LIGHTS
-        && ticksExisted % GemsConfig.DEBUG_LOT_POTS_AND_LIGHTS_DELAY == 0) {
     }
   }
 
@@ -85,21 +77,21 @@ public class TileChaosFlowerPot extends TileInventorySL implements ITickable {
     MutableBlockPos tryPos = new MutableBlockPos(x, y, z);
 
     // Debug particles
-    if (SilentGems.proxy.isClientPlayerHoldingDebugItem()) {
-      // Debug particles: try position
-      Color debugColor = new Color(0.4f, 0f, 1f);
-      for (int i = 0; i < 100; ++i) {
-        SilentGems.proxy.spawnParticles(EnumModParticles.CHAOS, debugColor, world, x + 0.5, y,
-            z + 0.5, 0.005f * rand.nextGaussian(), 0.25f * rand.nextGaussian(),
-            0.005f * rand.nextGaussian());
-      }
-      // Debug particles: ring
-      for (float f = 0; f < 2 * Math.PI; f += Math.PI / 32) {
-        Vec3d v = new Vec3d(dist, 0, 0).rotateYaw(f);
-        SilentGems.proxy.spawnParticles(EnumModParticles.CHAOS, debugColor, world,
-            pos.getX() + 0.5 + v.x, pos.getY() + 0.5, pos.getZ() + 0.5 + v.z, 0, 0, 0);
-      }
-    }
+//    if (SilentGems.proxy.isClientPlayerHoldingDebugItem()) {
+//      // Debug particles: try position
+//      Color debugColor = new Color(0.4f, 0f, 1f);
+//      for (int i = 0; i < 100; ++i) {
+//        SilentGems.proxy.spawnParticles(EnumModParticles.CHAOS, debugColor, world, x + 0.5, y,
+//            z + 0.5, 0.005f * rand.nextGaussian(), 0.25f * rand.nextGaussian(),
+//            0.005f * rand.nextGaussian());
+//      }
+//      // Debug particles: ring
+//      for (float f = 0; f < 2 * Math.PI; f += Math.PI / 32) {
+//        Vec3d v = new Vec3d(dist, 0, 0).rotateYaw(f);
+//        SilentGems.proxy.spawnParticles(EnumModParticles.CHAOS, debugColor, world,
+//            pos.getX() + 0.5 + v.x, pos.getY() + 0.5, pos.getZ() + 0.5 + v.z, 0, 0, 0);
+//      }
+//    }
 
     if (canPlacePhantomLightAt(tryPos)) {
       placePhantomLightAt(tryPos);

@@ -1,14 +1,10 @@
 package net.silentchaos512.gems.tile;
 
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.silentchaos512.gems.SilentGems;
-import net.silentchaos512.gems.config.GemsConfig;
 import net.silentchaos512.gems.init.ModBlocks;
 
 public class TilePhantomLight extends TileEntity implements ITickable {
@@ -26,10 +22,6 @@ public class TilePhantomLight extends TileEntity implements ITickable {
       if (!checkSpawnerStillExists()) {
         world.setBlockToAir(this.pos);
       }
-    }
-    if (!world.isRemote && GemsConfig.DEBUG_LOG_POTS_AND_LIGHTS
-        && ticksExisted % GemsConfig.DEBUG_LOT_POTS_AND_LIGHTS_DELAY == 0) {
-      SilentGems.instance.logHelper.info("DEBUG: Phantom Light @ " + pos);
     }
   }
 

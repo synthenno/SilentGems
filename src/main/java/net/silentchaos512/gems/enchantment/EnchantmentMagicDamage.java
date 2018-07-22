@@ -5,9 +5,6 @@ import net.minecraft.enchantment.EnchantmentDamage;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.silentchaos512.gems.api.lib.EnumMaterialTier;
-import net.silentchaos512.gems.item.tool.ItemGemSword;
-import net.silentchaos512.gems.util.ToolHelper;
 
 public class EnchantmentMagicDamage extends Enchantment {
 
@@ -33,9 +30,11 @@ public class EnchantmentMagicDamage extends Enchantment {
     if (!ENABLED) {
       return true;
     }
-    return stack.getItem() instanceof ItemGemSword
-        && ToolHelper.getToolTier(stack).ordinal() >= EnumMaterialTier.SUPER.ordinal()
-        && super.canApplyAtEnchantingTable(stack);
+//    return stack.getItem() instanceof ItemGemSword
+//        && ToolHelper.getToolTier(stack).ordinal() >= EnumMaterialTier.SUPER.ordinal()
+//        && super.canApplyAtEnchantingTable(stack);
+    // TODO
+    return false;
   }
 
   @Override

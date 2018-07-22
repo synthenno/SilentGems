@@ -1,15 +1,15 @@
 package net.silentchaos512.gems.lib.module;
 
-import java.util.Random;
-
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
 import net.silentchaos512.gems.SilentGems;
 import net.silentchaos512.gems.config.GemsConfig;
-import net.silentchaos512.gems.init.ModItems;
+import net.silentchaos512.gems.lib.Foods;
 import net.silentchaos512.lib.util.StackHelper;
+
+import java.util.Random;
 
 public class ModuleCoffee {
 
@@ -108,10 +108,10 @@ public class ModuleCoffee {
     // return null;
     // }
 
-    return ModItems.food.coffeeCup;
+    return Foods.COFFEE_CUP.getStack();
   }
 
-  private static final int getIntervalToNextCoffee(EntityRabbit rabbit, Random rand) {
+  private static int getIntervalToNextCoffee(EntityRabbit rabbit, Random rand) {
 
     return INTERVAL_MIN + rand.nextInt(INTERVAL_MAX - INTERVAL_MIN);
   }

@@ -1,0 +1,28 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "silentgems:items/drawing_compass0",
+    "layer1": "silentgems:items/drawing_compass1"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "state": 0
+      },
+      "model": "silentgems:item/drawing_compass0"
+    },
+    {
+      "predicate": {
+        "state": 1
+      },
+      "model": "silentgems:item/drawing_compass1"
+    },
+    {
+      "predicate": {
+        "state": 2
+      },
+      "model": "silentgems:item/drawing_compass1"
+    }
+  ]
+}
+
