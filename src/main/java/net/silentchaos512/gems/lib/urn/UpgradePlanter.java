@@ -124,6 +124,15 @@ public class UpgradePlanter extends UrnUpgrade {
         PLANTS.put(Items.WHEAT_SEEDS, new Plant(1, random -> dropsWithChance(random,
                 new ItemStack(Items.WHEAT), 1.0,
                 new ItemStack(Items.WHEAT_SEEDS), 0.5)));
+        PLANTS.put(Items.COAL_SEEDS, new Plant(1, random -> dropsWithChance(random,
+                new ItemStack(Items.COAL_ESSENCE, random.nextInt(2)), 1.0,
+                new ItemStack(Items.COAL_SEEDS), 1.0)));
+        PLANTS.put(Items.NETHERITE_SEEDS, new Plant(1, random -> dropsWithChance(random,
+                new ItemStack(Items.NETHERITE_ESSENCE), 1.0,
+                new ItemStack(Items.NETHERITE_SEEDS), 1.0)));
+        PLANTS.put(Items.EMERALD_SEEDS, new Plant(1, random -> dropsWithChance(random,
+                new ItemStack(Items.EMERALD_ESSENCE), 1.0,
+                new ItemStack(Items.EMERALD_SEEDS), 1.0)));
     }
 
     private static boolean isGrowablePlant(ItemStack stack) {
